@@ -1,9 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Login.css";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { FaShieldAlt } from "react-icons/fa";
+import "./Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+
+      // Save token and role
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
+
+      // Redirect based on role
+      if (res.data.user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/employee-dashboard");
+      }
+
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Login failed!");
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -13,19 +44,33 @@ const Login = () => {
           <p>Login to your account</p>
         </div>
 
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email Address</label>
-            <input type="email" placeholder="Enter your email" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Password</label>
-            <input type="password" placeholder="Enter your password" required />
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-options">
-            <label>
+            <label className="checkbox-label">
               <input type="checkbox" /> Remember me
             </label>
             <Link to="/forgot-password" className="forgot-link">
@@ -36,8 +81,10 @@ const Login = () => {
           <button type="submit" className="btn-login">Login</button>
         </form>
 
+        {message && <p className="error-message">{message}</p>}
+
         <p className="register-text">
-          Don’t have an account? <Link to="/register">Register here</Link>
+          Don't have an account? <Link to="/register" className="register-link">Register here</Link>
         </p>
       </div>
     </div>
