@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Policies from "./pages/Policies";
-import Training from "./pages/Training";
-import Reports from "./pages/Reports";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import AdminDashboard from "./pages/AdminDashboard";
-import EmployeeDashboard from "./pages/EmployeeDashboard";
+import Policies from "./pages/Policies/Policies";
+import Training from "./pages/Training/Training";
+import Reports from "./pages/Reports/Reports";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Login/Register";
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import "./App.css";
 
 function App() {
