@@ -1,0 +1,59 @@
+.awareness-section {
+  position: relative;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.awareness-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  max-width: 700px;
+  transform: translateY(30px);
+  opacity: 0;
+  animation: fadeUp 1s ease-out forwards;
+}
+
+/* Fade + slide up effect */
+@keyframes fadeUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Subtle hover effect */
+.awareness-overlay:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.awareness-overlay h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+.awareness-overlay p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  animation: fadeIn 1.8s ease forwards;
+}
+
+/* Staggered fade-in for text */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
