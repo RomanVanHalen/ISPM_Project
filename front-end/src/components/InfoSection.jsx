@@ -6,7 +6,7 @@ import backimg from "../images/welcome.png";
 const AwarenessSection = () => {
   return (
     <section
-      className="awareness-section"
+      className="info-section"
       style={{ backgroundImage: `url(${backimg})` }}
     >
      
