@@ -1,0 +1,43 @@
+/* Container */
+.admin-actions-container {
+  display: flex;
+  justify-content: flex-end; /* push buttons to the right */
+  gap: 20px;
+  margin-top: 40px;
+}
+
+
+/* Base button styling */
+.admin-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  color: white;
+}
+
+/* Account Settings button - green theme */
+.account-btn {
+  background-color: #2e7d32; /* dark green */
+}
+
+.account-btn:hover {
+  background-color: #388e3c; /* lighter green */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+
+/* Logout button - red theme but still harmonizing */
+.logout-btn {
+  background-color: #c62828; /* deep red */
+}
+
+.logout-btn:hover {
+  background-color: #e53935; /* lighter red */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(198, 40, 40, 0.3);
+}

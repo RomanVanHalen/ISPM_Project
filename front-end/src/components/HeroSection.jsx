@@ -22,8 +22,12 @@ const HeroSection = () => {
       >
         <Icon />
       </div>
+
+      
     );
   });
+
+  
 
   return (
     <header className="hero">
