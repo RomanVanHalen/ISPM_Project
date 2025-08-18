@@ -1,20 +1,21 @@
 /* Container */
 .admin-users-container {
-  padding: 2rem;
+  padding: 3rem;
   background-color: #f5fdf8; /* soft green background */
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(76, 175, 135, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(76, 175, 135, 0.2);
   margin: 2rem auto;
-  max-width: 1200px; /* broader table container */
+  max-width: 1400px; /* larger table container */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Section Title */
 .section-title {
   color: #2e7d32; /* dark green */
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
-  font-weight: 600;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 /* Table Styles */
@@ -22,15 +23,16 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background-color: white;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(76, 175, 135, 0.1);
+  box-shadow: 0 6px 20px rgba(76, 175, 135, 0.1);
+  font-size: 1.1rem;
 }
 
 .users-table th,
 .users-table td {
-  padding: 14px 18px;
+  padding: 20px 24px;
   text-align: left;
   border-bottom: 1px solid #c8e6c9;
 }
@@ -38,8 +40,9 @@
 .users-table th {
   background-color: #2e7d32;
   color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
 }
 
 .users-table tr:nth-child(even) {
@@ -48,6 +51,8 @@
 
 .users-table tr:hover {
   background-color: #d0f0d6;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
 }
 
 /* Buttons */
@@ -55,14 +60,15 @@
 .delete-btn,
 .save-btn,
 .cancel-btn {
-  padding: 6px 14px;
-  margin-right: 5px;
+  padding: 8px 18px;
+  margin-right: 6px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  text-transform: uppercase;
 }
 
 /* Edit Button */
@@ -74,7 +80,7 @@
 .edit-btn:hover {
   background-color: #66bb6a;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(67, 160, 71, 0.3);
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
 }
 
 /* Delete Button */
@@ -86,7 +92,7 @@
 .delete-btn:hover {
   background-color: #e53935;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(198, 40, 40, 0.3);
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
 }
 
 /* Save Button */
@@ -98,7 +104,7 @@
 .save-btn:hover {
   background-color: #388e3c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
 
 /* Cancel Button */
@@ -110,7 +116,7 @@
 .cancel-btn:hover {
   background-color: #bdbdbd;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(158, 158, 158, 0.3);
+  box-shadow: 0 4px 12px rgba(158, 158, 158, 0.3);
 }
 
 /* Loading */
@@ -118,10 +124,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 400px;
 }
 
 .loading-text {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #2e7d32;
+  font-weight: 600;
 }
