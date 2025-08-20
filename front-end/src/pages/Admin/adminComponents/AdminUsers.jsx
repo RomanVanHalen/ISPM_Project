@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../api/axiosInstance"; // Axios instance with JWT
 import "../adminStyles/AdminUsers.css";
 
 function AdminUsers() {
@@ -7,14 +7,17 @@ function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState(null); // store user being edited
   const [newRole, setNewRole] = useState(""); // new role selected
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("/api/admin/users");
+        setLoading(true);
+        const res = await api.get("/admin/users"); // use Axios instance with JWT
         setUsers(res.data);
       } catch (err) {
-        console.error(err);
+        console.error(err.response?.data || err.message);
+        setError(err.response?.data?.message || "Failed to fetch users");
       } finally {
         setLoading(false);
       }
@@ -26,11 +29,11 @@ function AdminUsers() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`/api/admin/users/${id}`);
+      await api.delete(`/admin/users/${id}`);
       setUsers(users.filter((user) => user._id !== id));
     } catch (err) {
-      console.error("Delete failed:", err);
-      alert("Failed to delete user.");
+      console.error("Delete failed:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Failed to delete user.");
     }
   };
 
@@ -42,15 +45,15 @@ function AdminUsers() {
   const handleSave = async () => {
     if (!editingUser) return;
     try {
-      const res = await axios.put(`/api/admin/users/${editingUser._id}`, {
+      const res = await api.put(`/admin/users/${editingUser._id}`, {
         role: newRole,
       });
-      setUsers(users.map((u) => (u._id === editingUser._id ? res.data : u)));
+      setUsers(users.map((u) => (u._id === editingUser._id ? res.data.user || res.data : u)));
       setEditingUser(null);
       setNewRole("");
     } catch (err) {
-      console.error("Update failed:", err);
-      alert("Failed to update user.");
+      console.error("Update failed:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Failed to update user.");
     }
   };
 
@@ -70,6 +73,7 @@ function AdminUsers() {
   return (
     <div className="admin-users-container">
       <h2 className="section-title">Users List</h2>
+      {error && <p className="error-message">{error}</p>}
 
       <table className="users-table">
         <thead>
@@ -78,7 +82,7 @@ function AdminUsers() {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Actions</th> {/* new column for buttons */}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -93,8 +97,8 @@ function AdminUsers() {
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value)}
                   >
-                    <option value="Admin">Admin</option>
-                    <option value="Employee">Employee</option>
+                    <option value="admin">Admin</option>
+                    <option value="employee">Employee</option>
                   </select>
                 ) : (
                   user.role

@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaChartLine, FaBell } from "react-icons/fa";
-import Navbar from "../../components/Navbar";
 import AdminActions from "./adminComponents/AdminActions";
-
+import api from "../../api/axiosInstance"; // Axios instance with JWT
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
+  const [loadingCount, setLoadingCount] = useState(true);
 
-  // Fetch user count from backend
+  // Fetch user count
   useEffect(() => {
     const fetchUserCount = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/count", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (data.count !== undefined) setUserCount(data.count);
+        setLoadingCount(true);
+        const res = await api.get("/admin/count");
+        if (res.data.count !== undefined) setUserCount(res.data.count);
       } catch (err) {
-        console.error("Failed to fetch user count:", err);
+        console.error("Failed to fetch user count:", err.response?.data || err.message);
+      } finally {
+        setLoadingCount(false);
       }
     };
 
@@ -29,8 +29,6 @@ function AdminDashboard() {
 
   return (
     <>
-      <Navbar />
-
       {/* Animated background */}
       <div className="dashboard-bg">
         <div className="bubble"></div>
@@ -55,7 +53,9 @@ function AdminDashboard() {
               <FaUsers />
             </div>
             <div className="dashboard-card-title">Users</div>
-            <div className="dashboard-card-count">{userCount}</div>
+            <div className="dashboard-card-count">
+              {loadingCount ? "..." : userCount}
+            </div>
           </div>
 
           {/* Analytics Card */}
