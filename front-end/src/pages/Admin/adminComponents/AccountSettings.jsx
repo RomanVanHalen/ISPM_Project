@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../../../components/Navbar";
 import "../adminStyles/accountSettings.css"; 
 
 const AccountSettings = () => {
@@ -11,7 +10,7 @@ const AccountSettings = () => {
   });
   const [preview, setPreview] = useState("");
   const [message, setMessage] = useState("");
-  const fileInputRef = useRef(null); // Add this ref for the file input
+  const fileInputRef = useRef(null); 
   const token = localStorage.getItem("token");
 
   // Fetch logged-in user info
@@ -92,84 +91,81 @@ const AccountSettings = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="account-settings-container">
-        <h2>Account Settings</h2>
+    <div className="account-settings-container">
+      <h2>Account Settings</h2>
 
-        <form className="account-form" onSubmit={handleSubmit}>
-          {/* Profile picture - Left Side */}
-          <div className="profile-pic-section">
-            <img 
-              src={preview} 
-              alt="Profile Preview" 
-              className="profile-preview"
-              onClick={handleProfilePictureClick}
-              style={{ cursor: 'pointer' }}
-            />
+      <form className="account-form" onSubmit={handleSubmit}>
+        {/* Profile picture - Left Side */}
+        <div className="profile-pic-section">
+          <img 
+            src={preview} 
+            alt="Profile Preview" 
+            className="profile-preview"
+            onClick={handleProfilePictureClick}
+            style={{ cursor: 'pointer' }}
+          />
+          <input
+            ref={fileInputRef}
+            type="file"
+            name="profilePicture"
+            accept="image/*"
+            onChange={handleChange}
+            style={{ display: 'none' }}
+          />
+          <button 
+            type="button" 
+            className="profile-upload-btn"
+            onClick={handleProfilePictureClick}
+          >
+            Click to change profile picture
+          </button>
+        </div>
+
+        {/* Form Fields - Right Side */}
+        <div className="form-fields-container">
+          <div className="form-group">
+            <label>Name:</label>
             <input
-              ref={fileInputRef}
-              type="file"
-              name="profilePicture"
-              accept="image/*"
+              type="text"
+              name="name"
+              value={userData.name}
               onChange={handleChange}
-              style={{ display: 'none' }}
+              required
             />
-            <button 
-              type="button" 
-              className="profile-upload-btn"
-              onClick={handleProfilePictureClick}
-            >
-              Click to change profile picture
-            </button>
           </div>
 
-          {/* Form Fields - Right Side */}
-          <div className="form-fields-container">
-            <div className="form-group">
-              <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={userData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>New Password:</label>
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleChange}
-                placeholder="Leave blank to keep current password"
-              />
-            </div>
-
-            <button type="submit" className="submit-button">Save Changes</button>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
-        </form>
 
-        {message && (
-          <p className={`form-message ${message.includes('successfully') ? 'success' : 'error'}`}>
-            {message}
-          </p>
-        )}
-      </div>
-    </>
+          <div className="form-group">
+            <label>New Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              placeholder="Leave blank to keep current password"
+            />
+          </div>
+
+          <button type="submit" className="submit-button">Save Changes</button>
+        </div>
+      </form>
+
+      {message && (
+        <p className={`form-message ${message.includes('successfully') ? 'success' : 'error'}`}>
+          {message}
+        </p>
+      )}
+    </div>
   );
 };
 
