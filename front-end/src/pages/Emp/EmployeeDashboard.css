@@ -1,0 +1,188 @@
+/* General */
+.anya-employee-portal {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa, #f9fafb);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar */
+.anya-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* required for center positioning */
+  background: linear-gradient(90deg, #43cea2, #185a9d);
+  color: #ffffff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Left side: company name */
+.anya-navbar-left h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Center: Employee Portal title */
+.anya-navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.anya-navbar-center h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Right side actions */
+.anya-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.anya-notification {
+  position: relative;
+  cursor: pointer;
+}
+
+.anya-badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.anya-user-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.anya-user-logout:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Grid layout */
+.anya-content-grid {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media(min-width: 768px) {
+  .anya-content-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Cards */
+.anya-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.anya-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Trainings */
+.anya-training-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.anya-training-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+.anya-training-item:hover {
+  transform: scale(1.02);
+  background: #f0f9ff;
+}
+
+.anya-progress-container {
+  margin-top: 0.75rem;
+}
+
+.anya-progress-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #43cea2, #185a9d);
+}
+
+.anya-progress-text {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #185a9d;
+}
+
+.anya-certificates {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+/* Notifications */
+.anya-notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.anya-notification-item {
+  padding: 0.9rem;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.anya-notification-item:hover {
+  background: #dbeafe;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
