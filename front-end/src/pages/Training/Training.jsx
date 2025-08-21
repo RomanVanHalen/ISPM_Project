@@ -1,3 +1,18 @@
-export default function Training() {
-  return <h2>Training Page</h2>;
-}
+
+// src/pages/Training/Training.jsx
+import React from "react";
+import Header from "../../components/Navbar";
+import Landpage from "./components/Landpage"; // Adjust path based on folder structure
+import Courses from "./components/Courses";
+
+
+const Training = () => {
+  return (
+    <div>
+      <Header />
+      <Landpage /> {/* This renders your Landpage component */}
+    </div>
+  );
+};
+
+export default Training;

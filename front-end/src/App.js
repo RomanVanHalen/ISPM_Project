@@ -9,6 +9,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import "./App.css";
+import Courses from "./pages/Training/components/Courses";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/policies" element={<Policies />} />
         <Route path="/training" element={<Training />} />
+        <Route path="/Courses" element={<Courses/>} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

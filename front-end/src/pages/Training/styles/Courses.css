@@ -1,0 +1,61 @@
+.vikmodule-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+  padding: 70px;
+  background-color: #f8f9fa;
+}
+
+.vikmodule-box {
+  background-color: #ffffff;
+  border-radius: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  width: 300px;
+  padding: 50px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.vikmodule-box:hover {
+  transform: translateY(-5px);
+}
+
+.vikmodule-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1c1c1c;
+  margin-bottom: 10px;
+}
+
+.vikexpiry {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.vikstart-button,
+.vikview-button {
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.vikstart-button {
+  background-color: #2e7d32; /* Green */
+  color: white;
+}
+
+.vikview-button {
+  background-color: white;
+  color: #2e7d32;
+  border: 2px solid #2e7d32;
+}
+
+.vikstart-button:hover,
+.vikview-button:hover {
+  opacity: 0.9;
+}
+
