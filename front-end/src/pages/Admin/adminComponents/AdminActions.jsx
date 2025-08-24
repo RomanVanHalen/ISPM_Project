@@ -5,29 +5,49 @@ import "../adminStyles/adminActions.css";
 const AdminActions = () => {
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  const [userInfo, setUserInfo] = useState({ name: "", profilePic: "" });
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    profilePic: "https://i.pravatar.cc/150?img=3",
+  });
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Fetch logged-in user info
+  // Function to fetch user info
+  const fetchUserInfo = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const data = await res.json();
+
+      const picUrl = data.profilePicture
+        ? `${data.profilePicture}?t=${Date.now()}` // cache-buster
+        : "https://i.pravatar.cc/150?img=3";
+
+      setUserInfo({ name: data.name, profilePic: picUrl });
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+    }
+  };
+
+  // Fetch user info on mount
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/users/profile", {
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem("token")}` 
-          }
-        });
-        const data = await res.json();
-        setUserInfo({
-          name: data.name,
-          profilePic: data.profilePic || "https://i.pravatar.cc/150?img=3",
-        });
-      } catch (err) {
-        console.error("Failed to fetch user info:", err);
+    fetchUserInfo();
+
+    // Listen for profile picture updates from AccountSettings
+    const handleProfileUpdate = (e) => {
+      if (e.detail?.profilePic) {
+        setUserInfo((prev) => ({
+          ...prev,
+          profilePic: `${e.detail.profilePic}?t=${Date.now()}`, // cache-buster
+        }));
+      } else {
+        // fallback: refetch full user info
+        fetchUserInfo();
       }
     };
 
-    fetchUserInfo();
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+    return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
   }, []);
 
   // Close dropdown if clicked outside
@@ -57,26 +77,17 @@ const AdminActions = () => {
 
   return (
     <div className="admin-actions-container">
-      {/* Profile section */}
       <div className="admin-profile">
-        <img
-          src={userInfo.profilePic}
-          alt="Profile"
-          className="admin-profile-pic"
-        />
+        <img src={userInfo.profilePic} alt="Profile" className="admin-profile-pic" />
         <span className="admin-name">{userInfo.name}</span>
       </div>
 
-      {/* Buttons / Dropdown section */}
       <div className="admin-buttons" ref={dropdownRef}>
         <button onClick={handleAccountSettings} className="admin-btn account-btn">
           Account Settings
         </button>
 
-        <button 
-          onClick={() => setMenuOpen(!menuOpen)} 
-          className="admin-btn menu-btn"
-        >
+        <button onClick={() => setMenuOpen(!menuOpen)} className="admin-btn menu-btn">
           Menu ▼
         </button>
 

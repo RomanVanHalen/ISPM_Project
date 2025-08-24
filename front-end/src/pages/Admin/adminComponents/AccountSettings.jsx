@@ -18,23 +18,27 @@ const AccountSettings = () => {
     const fetchProfile = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/users/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
+        const pic = data.profilePicture
+          ? `${data.profilePicture}?t=${Date.now()}`
+          : "https://i.pravatar.cc/150?img=3";
+
         setUserData({
           name: data.name || "",
           email: data.email || "",
           password: "",
-          profilePicture: data.profilePicture || "",
+          profilePicture: pic,
         });
-        setPreview(data.profilePicture || "https://i.pravatar.cc/150?img=3");
+        setPreview(pic);
+
+        // Save current profile picture in localStorage
+        localStorage.setItem("profilePic", pic);
       } catch (err) {
         console.error("Failed to fetch profile:", err);
       }
     };
-
     fetchProfile();
   }, [token]);
 
@@ -51,7 +55,6 @@ const AccountSettings = () => {
     }
   };
 
-  // Handle profile picture click
   const handleProfilePictureClick = () => {
     fileInputRef.current?.click();
   };
@@ -72,15 +75,25 @@ const AccountSettings = () => {
     try {
       const res = await fetch("http://localhost:5000/api/users/profile", {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       const data = await res.json();
       if (res.ok) {
+        // Add cache-buster and update preview
+        const updatedPic = data.user.profilePicture
+          ? `${data.user.profilePicture}?t=${Date.now()}`
+          : "https://i.pravatar.cc/150?img=3";
+        setPreview(updatedPic);
+        setUserData((prev) => ({ ...prev, profilePicture: updatedPic }));
         setMessage("Profile updated successfully!");
+
+        // Update localStorage so other components can see the change
+        localStorage.setItem("profilePic", updatedPic);
+
+        // Trigger storage event for other tabs/components
+        window.dispatchEvent(new Event("storage"));
       } else {
         setMessage(data.message || "Failed to update profile");
       }
@@ -95,7 +108,6 @@ const AccountSettings = () => {
       <h2>Account Settings</h2>
 
       <form className="account-form" onSubmit={handleSubmit}>
-        {/* Profile picture - Left Side */}
         <div className="profile-pic-section">
           <img 
             src={preview} 
@@ -121,7 +133,6 @@ const AccountSettings = () => {
           </button>
         </div>
 
-        {/* Form Fields - Right Side */}
         <div className="form-fields-container">
           <div className="form-group">
             <label>Name:</label>
