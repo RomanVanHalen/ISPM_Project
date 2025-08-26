@@ -1,61 +1,133 @@
-.vikmodule-container {
+/* Container for all cards */
+.vik-course-container {
   display: flex;
+  gap: 60px;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  padding: 100px;
   flex-wrap: wrap;
-  gap: 30px;
-  justify-content: flex-start;
-  padding: 70px;
-  background-color: #f8f9fa;
+  background-color: #f5f7fa; /* light background */
+  font-family: "Poppins", sans-serif;
 }
 
-.vikmodule-box {
+/* Individual course card */
+.vik-course-card {
   background-color: #ffffff;
-  border-radius: 30px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  width: 300px;
-  padding: 50px;
-  transition: transform 0.2s ease-in-out;
-}
-
-.vikmodule-box:hover {
-  transform: translateY(-5px);
-}
-
-.vikmodule-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1c1c1c;
-  margin-bottom: 10px;
-}
-
-.vikexpiry {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 20px;
-}
-
-.vikstart-button,
-.vikview-button {
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);  
+  padding: 40px;
+  width: 380px;
+  height: 260px;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  border: 1px solid rgba(122, 218, 165, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);  
 }
 
-.vikstart-button {
-  background-color: #2e7d32; /* Green */
-  color: white;
+.vik-course-card:hover {
+
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(122, 218, 165, 0.15);
+  border-color: rgba(122, 218, 165, 0.4);
+  background: #ffffff;
 }
 
-.vikview-button {
-  background-color: white;
-  color: #2e7d32;
-  border: 2px solid #2e7d32;
+.vik-course-card:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #7ADAA5, #4caf87);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  border-radius: 20px 20px 0 0;
 }
 
-.vikstart-button:hover,
-.vikview-button:hover {
-  opacity: 0.9;
+.vik-course-card:hover:before {
+  transform: scaleX(1);
+}
+
+
+/* Optional: responsive for smaller screens */
+@media (max-width: 1000px) {
+  .vik-course-container {
+    justify-content: center;
+  }
+  .vik-course-card {
+    width: 80%;
+  }
+}
+
+
+/* Page entry animation */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vik-course-container {
+  animation: fadeSlideIn 0.8s ease-out;
+}
+
+/* Optional: card stagger effect */
+.vik-course-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.6s ease-out forwards;
+}
+
+.vik-course-card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.vik-course-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.vik-course-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.vik-course-title {
+
+   font-size: 1.3rem;
+  font-weight: 700;
+  color: #07462c;
+  margin-bottom: 1rem;
+
+}
+
+
+
+
+/* Domain text (top line) */
+.vik-course-domain {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0b7937;   /* teal green for emphasis */
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Title text (below domain) */
+.vik-course-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: "Raleway", sans-serif;
+  color: #1b7430;
+  line-height: 5;
 }
 

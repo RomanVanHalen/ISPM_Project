@@ -1,0 +1,98 @@
+
+/* ===== Domain Course Detail Page ===== */
+
+.ka3-course-detail {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 40px;
+  background: linear-gradient(135deg, #2e915e, #e1f6ea);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(100, 192, 129, 0.08);
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+/* Title */
+.ka3-course-detail h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #123b25;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Subtitle */
+.ka3-course-detail p {
+  font-size: 1.1rem;
+  color: #105d39;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* Lessons List */
+.ka3-course-detail h2 {
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  color: #208348;
+  border-left: 5px solid #2d7f4a;
+  padding-left: 10px;
+}
+
+.ka3-course-detail ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 40px;
+}
+
+.ka3-course-detail ul li {
+  background: #ffffff;
+  margin: 10px 0;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  color: #222;
+  box-shadow: 0 4px 12px rgba(98, 210, 160, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Hover effect on lessons */
+.ka3-course-detail ul li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(66, 186, 138, 0.15);
+  background: #e5f4e9;
+}
+
+/* Back Button */
+.ka3-back-button {
+  display: inline-block;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #3cb871, #06482e);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(60, 173, 105, 0.2);
+}
+
+.ka3-back-button:hover {
+  background: linear-gradient(135deg, #3cb871, #48da9f);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(64, 173, 80, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
