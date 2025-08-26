@@ -1,91 +1,160 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom"; // ✅ added Link
 import "./Policiesdocuments.css";
-import Navbar from "../../components/Navbar";
 
-export default function PoliciesDocuments() {
-  const [search, setSearch] = useState("");
-  const [selectedDoc, setSelectedDoc] = useState(null);
+export default function Policies() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ role: "employee", name: "John Doe" });
 
-  const documents = [
-    { id: 1, title: "Employee Handbook", version: "1.0", updatedAt: "2025-08-01", fileUrl: "/files/employee-handbook.pdf" },
-    { id: 2, title: "IT Security Policy", version: "2.1", updatedAt: "2025-07-15", fileUrl: "/files/it-security-policy.pdf" },
-    { id: 3, title: "Code of Conduct", version: "1.2", updatedAt: "2025-06-30", fileUrl: "/files/code-of-conduct.pdf" },
+  const policies = [
+    {
+      title: "ISO 27001 / ISO 27000 Series – Information Security Management",
+      why: "They’ll be holding sensitive child and donor data — breaches could be devastating.",
+      keyElements: [
+        "Risk assessment and security controls.",
+        "Data encryption (at rest & in transit).",
+        "Access control & authentication.",
+        "Incident response procedures",
+      ],
+    },
+    {
+      title: "ISO 9001 – Quality Management System",
+      why: "Builds trust with partners & donors through consistent program delivery quality.",
+      keyElements: ["Process improvement.", "Documented procedures.", "Regular audits"],
+    },
+    {
+      title: "ISO 26000 – Social Responsibility",
+      why: "Reinforces NGO ethics, human rights, and sustainable development goals.",
+      keyElements: [
+        "Ethical behavior guidelines.",
+        "Respect for human rights.",
+        "Environmental responsibility",
+      ],
+    },
+    {
+      title: "UN Convention on the Rights of the Child (UNCRC)",
+      why: "As a child-focused NGO, all programs should be aligned with children’s rights.",
+      keyElements: [
+        "Right to education, health, and protection.",
+        "No exploitation or discrimination.",
+        "Child participation in decisions affecting them.",
+      ],
+    },
+    {
+      title: "GDPR (or Equivalent Local Data Protection Law)",
+      why: "Protects personal information of children, families, and donors.",
+      keyElements: [
+        "Consent before collecting personal data.",
+        "Right to access and delete data.",
+        "Data breach notification requirements.",
+      ],
+    },
+    {
+      title: "Sphere Standards – Humanitarian Response Quality",
+      why: "Ensures aid meets international quality & dignity standards.",
+      keyElements: [
+        "Minimum standards for food, shelter, health, and water.",
+        "Community engagement.",
+        "Accountability measures.",
+      ],
+    },
+    {
+      title: "ILO Labour Standards",
+      why: "Ensures HR practices meet fair labor laws & protect staff rights.",
+      keyElements: ["Fair wages.", "Safe working conditions.", "Non-discrimination in employment."],
+    },
+    {
+      title: "ISO 37001 – Anti-Bribery Management",
+      why: "NGOs handling donor funds must prove they’re corruption-free.",
+      keyElements: [
+        "Anti-corruption training.",
+        "Internal reporting & audit mechanisms.",
+        "Supplier/partner vetting.",
+      ],
+    },
+    {
+      title: "Child Safeguarding Alliance Guidelines",
+      why: "Provides practical implementation of child protection principles for NGOs.",
+      keyElements: [
+        "Screening of staff & volunteers.",
+        "Risk assessments in child programs.",
+        "Safeguarding reporting framework.",
+      ],
+    },
+    {
+      title: "Disaster Recovery & Business Continuity Framework",
+      why: "Ensures the NGO can keep operating during crises.",
+      keyElements: [
+        "Backup systems.",
+        "Emergency communication plans.",
+        "Continuity of critical child services.",
+      ],
+    },
   ];
 
-  const filteredDocs = documents.filter(doc =>
-    doc.title.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-  const handleRowClick = (doc) => setSelectedDoc(doc);
-  const closeModal = () => setSelectedDoc(null);
+      try {
+        const res = await fetch("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser({ role: data.role || "employee", name: data.name || "User" });
+        }
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
-    <div className="anya-policies-page">
-      <Navbar />
+    <div className="policies-container">
+      {/* Header with back button */}
+      <div className="policies-header">
+        <button className="back-btn" onClick={() => navigate("/policies")}>
+          ← Back
+        </button>
+        <h1 className="policies-main-title">Policies & Standards</h1>
 
-      {/* ✅ Page title below navbar */}
-      <div className="anya-page-title-container">
-        <h1 className="anya-page-title">Policies & Documents</h1>
+        {/* ✅ User Icon linked to EmpDashboard */}
+        <Link to="/empdashboard" className="user-icon">
+          <span role="img" aria-label="user">👤</span>
+          <span className="user-name">Welcome, {user.name}</span>
+        </Link>
       </div>
 
-      {/* Search bar below the title */}
-      <div className="anya-search-container">
-        <input
-          type="text"
-          placeholder="Search documents..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="anya-search-input"
-        />
-      </div>
+      {/* Policies list */}
+      <div className="policies-list">
+        {policies.map((policy, index) => (
+          <div className="policy-card" key={index}>
+            <h2 className="policy-title">{policy.title}</h2>
+            <p className="policy-why">
+              <strong>Why:</strong> {policy.why}
+            </p>
+            <div className="policy-elements">
+              <strong>Key Elements:</strong>
+              <ul>
+                {policy.keyElements.map((el, idx) => (
+                  <li key={idx}>{el}</li>
+                ))}
+              </ul>
+            </div>
 
-      {/* Table below search */}
-      <div className="anya-table-container">
-        <table className="anya-documents-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Version</th>
-              <th>Last Updated</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDocs.map(doc => (
-              <tr
-                key={doc.id}
-                onClick={() => handleRowClick(doc)}
-                className={selectedDoc?.id === doc.id ? "anya-selected-row" : ""}
-              >
-                <td>{doc.title}</td>
-                <td>{doc.version}</td>
-                <td>{doc.updatedAt}</td>
-                <td>
-                  <a href={doc.fileUrl} download className="anya-download-button">
-                    Download
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Popup Modal */}
-      {selectedDoc && (
-        <div className="anya-modal-overlay" onClick={closeModal}>
-          <div className="anya-modal" onClick={e => e.stopPropagation()}>
-            <h2>{selectedDoc.title}</h2>
-            <p><strong>Version:</strong> {selectedDoc.version}</p>
-            <p><strong>Last Updated:</strong> {selectedDoc.updatedAt}</p>
-            <a href={selectedDoc.fileUrl} download className="anya-download-button">
-              Download
-            </a>
-            <button className="anya-close-button" onClick={closeModal}>Close</button>
+            {user.role === "admin" && (
+              <div className="policy-admin-buttons">
+                <button className="update-btn">Update</button>
+                <button className="delete-btn">Delete</button>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }
-

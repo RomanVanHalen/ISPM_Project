@@ -1,188 +1,213 @@
-/* General */
-.anya-employee-portal {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e0f7fa, #f9fafb);
+.siri-dashboard-container {
+  display: flex;
+  height: 100vh;
+  background: #f5f7f5;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Navbar */
-.anya-navbar {
+.siri-sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, #064e3b, #14532d);
+  color: white;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  position: relative; /* required for center positioning */
-  background: linear-gradient(90deg, #43cea2, #185a9d);
-  color: #ffffff;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  padding: 25px 15px;
 }
 
-/* Left side: company name */
-.anya-navbar-left h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-/* Center: Employee Portal title */
-.anya-navbar-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+.siri-sidebar-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
   text-align: center;
 }
 
-.anya-navbar-center h2 {
-  font-size: 1.8rem;
-  margin: 0;
+.siri-sidebar-user-icon {
+  width: 80px;
+  height: 80px;
+  padding: 15px;
+  border-radius: 50%;
+  background: #166534;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+}
+
+.siri-sidebar-profile:hover .siri-sidebar-user-icon {
+  transform: scale(1.05);
+  background: #79cf98;
+}
+
+.siri-sidebar-profile h3 {
+  margin: 5px 0;
+  font-size: 18px;
   font-weight: 600;
 }
 
-/* Right side actions */
-.anya-navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
+.siri-sidebar-profile p {
+  font-size: 14px;
+  opacity: 0.8;
 }
 
-.anya-notification {
-  position: relative;
-  cursor: pointer;
-}
-
-.anya-badge {
-  position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
-  background: #ef4444;
-  color: #fff;
-  font-size: 0.65rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-.anya-user-logout {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  cursor: pointer;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.anya-user-logout:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Grid layout */
-.anya-content-grid {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-@media(min-width: 768px) {
-  .anya-content-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Cards */
-.anya-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.anya-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Trainings */
-.anya-training-list {
+.siri-sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  width: 100%;
+  gap: 8px;
 }
 
-.anya-training-item {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease, background 0.3s ease;
-  cursor: pointer;
-}
-
-.anya-training-item:hover {
-  transform: scale(1.02);
-  background: #f0f9ff;
-}
-
-.anya-progress-container {
-  margin-top: 0.75rem;
-}
-
-.anya-progress-bar {
-  height: 12px;
+.siri-sidebar-menu button {
+  background: transparent;
+  border: none;
+  padding: 12px;
+  text-align: left;
   border-radius: 6px;
-  background: linear-gradient(90deg, #43cea2, #185a9d);
-}
-
-.anya-progress-text {
-  margin-top: 0.5rem;
-  font-weight: bold;
-  color: #185a9d;
-}
-
-.anya-certificates {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #555;
-}
-
-/* Notifications */
-.anya-notification-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.anya-notification-item {
-  padding: 0.9rem;
-  background: #eef2ff;
-  border: 1px solid #c7d2fe;
-  border-radius: 0.75rem;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  color: white;
+  font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-.anya-notification-item:hover {
-  background: #dbeafe;
+.siri-sidebar-menu button:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.siri-sidebar-menu .siri-active-tab {
+  background: #22c55e;
+  font-weight: bold;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.siri-logout-btn {
+  margin-top: auto;
+  background: #c9c0c0;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.siri-logout-btn:hover {
+  background: #c0b0b0;
+}
+
+.siri-main-content {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.siri-card-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.siri-card-section h2 {
+  margin-bottom: 15px;
+  color: #166534;
+  font-size: 20px;
+}
+
+.siri-card {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.siri-card-btn {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #4e9668;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.siri-card-btn:hover {
+  background: #5da477;
+}
+
+.siri-progress-container {
+  background: #e5e7eb;
+  border-radius: 6px;
+  height: 8px;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.siri-progress-bar {
+  background: #22c55e;
+  height: 8px;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.siri-notification-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef9c3;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.siri-user-profile {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.siri-user-profile h2 {
+  text-align: center;
+  color: #166534;
+  margin-bottom: 20px;
+}
+
+.siri-user-profile label {
+  display: block;
+  font-weight: 500;
+  margin: 10px 0 5px;
+  color: #065f46;
+}
+
+.siri-user-profile input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.siri-user-profile button {
+  width: 100%;
+  padding: 12px;
+  background: #62b580;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.siri-user-profile button:hover {
+  background: #16a34a;
 }

@@ -1,0 +1,111 @@
+.dula-welcome-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating shapes for depth */
+.dula-floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: dula-float 6s ease-in-out infinite alternate;
+}
+
+.dula-shape-1 {
+  width: 200px;
+  height: 200px;
+  background: #22c55e;
+  top: 50px;
+  left: 30px;
+}
+
+.dula-shape-2 {
+  width: 300px;
+  height: 300px;
+  background: #16a34a;
+  bottom: 50px;
+  right: 50px;
+}
+
+.dula-shape-3 {
+  width: 150px;
+  height: 150px;
+  background: #a7f3d0;
+  top: 200px;
+  right: 150px;
+}
+
+@keyframes dula-float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-20px); }
+}
+
+/* Welcome card */
+.dula-welcome-card {
+  position: relative;
+  text-align: center;
+  background: #ffffff;
+  padding: 50px 60px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  max-width: 450px;
+  width: 90%;
+  animation: dula-fadeInUp 1s ease;
+}
+
+@keyframes dula-fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Welcome image */
+.dula-welcome-image {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+/* Text styling */
+.dula-welcome-title {
+  color: #064e3b;
+  margin-bottom: 10px;
+  font-size: 2.2rem;
+}
+
+.dula-welcome-role {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #065f46;
+}
+
+.dula-subtitle {
+  font-size: 0.95rem;
+  color: #16a34a;
+  margin-bottom: 25px;
+}
+
+/* Button styling */
+.dula-portal-btn {
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background: #22c55e;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+}
+
+.dula-portal-btn:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.5);
+}
