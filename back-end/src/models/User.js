@@ -19,15 +19,14 @@ const userSchema = new mongoose.Schema({
     enum: ["employee", "admin"],
     default: "employee",
   },
-  profilePicture: {
-    type: String,   // store image URL or path
-    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" 
-    // 👆 default avatar (can be replaced when user uploads one)
+  profilePic: {
+    type: String, // store image URL or path
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   },
   bio: {
     type: String,
     default: "",
-  }
+  },
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

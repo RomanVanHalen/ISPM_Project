@@ -1,40 +1,43 @@
-/* ===== Container ===== */
+/* ===== Green-Themed Table Layout ===== */
 .admin-users-container {
-  padding: 2.5rem;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   margin: 2rem auto;
   max-width: 1200px;
   font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f1f8f5; /* light green outer container */
+  padding: 25px;
+  border-radius: 1rem;
+  box-shadow: 0 12px 25px rgba(34, 197, 94, 0.15);
 }
 
 /* ===== Section Title ===== */
 .section-title {
-  color: #1b5e20;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
+  color: #1b5e20; /* dark green title */
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
   font-weight: 700;
   text-align: left;
-  border-left: 5px solid #43a047;
-  padding-left: 12px;
+  padding-left: 8px;
+  border-left: 4px solid #22c55e; /* matching chart green */
 }
 
 /* ===== Table ===== */
 .users-table {
   width: 100%;
-  border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.95rem;
+  background-color: #fff; /* table background white */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* Header */
 .users-table th {
-  background: #2e7d32;
+  background: #22c55e; /* chart green */
   color: white;
   text-align: left;
-  padding: 16px 20px;
+  padding: 14px 18px;
   font-weight: 600;
   letter-spacing: 0.3px;
   font-size: 0.95rem;
@@ -42,19 +45,20 @@
 
 /* Table Cells */
 .users-table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 18px;
+  border-bottom: 1px solid #e5e5e5;
   color: #333;
+  background-color: #fff; /* ensure cells white */
 }
 
 /* Striped Rows */
-.users-table tr:nth-child(even) {
-  background: #f9fdf9;
+.users-table tr:nth-child(even) td {
+  background: #f8fcf9; /* very light green */
 }
 
 /* Row Hover */
-.users-table tr:hover {
-  background: #eaf5ec;
+.users-table tr:hover td {
+  background: #edf7f0; /* slightly darker light green on hover */
   transition: background 0.25s ease;
 }
 
@@ -63,24 +67,25 @@
 .delete-btn,
 .save-btn,
 .cancel-btn {
-  padding: 8px 16px;
+  padding: 6px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.85rem;
   transition: all 0.25s ease;
-  display: inline-block;
+  margin-right: 6px;
 }
 
 /* Edit Button */
 .edit-btn {
-  background-color: #43a047;
+  background-color: #22c55e;
   color: white;
 }
 .edit-btn:hover {
-  background-color: #66bb6a;
-  box-shadow: 0 4px 10px rgba(67, 160, 71, 0.25);
+  background-color: #1e9e4e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.25);
 }
 
 /* Delete Button */
@@ -89,18 +94,20 @@
   color: white;
 }
 .delete-btn:hover {
-  background-color: #e53935;
+  background-color: #d7322e;
+  transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(239, 83, 80, 0.25);
 }
 
 /* Save Button */
 .save-btn {
-  background-color: #2e7d32;
+  background-color: #22c55e;
   color: white;
 }
 .save-btn:hover {
-  background-color: #388e3c;
-  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
+  background-color: #1e9e4e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.25);
 }
 
 /* Cancel Button */
@@ -110,6 +117,7 @@
 }
 .cancel-btn:hover {
   background-color: #757575;
+  transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(117, 117, 117, 0.25);
 }
 
@@ -118,11 +126,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 250px;
+  height: 200px;
 }
 
 .loading-text {
   font-size: 1.1rem;
-  color: #2e7d32;
+  color: #22c55e;
   font-weight: 600;
 }
