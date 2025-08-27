@@ -5,66 +5,102 @@
   padding-top: 100px; /* Adjust to match Navbar height */
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
   padding-left: 2rem;
   padding-right: 2rem;
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1fff1 100%);
+  min-height: 100vh;
+  align-items: center; /* keeps content centered */
 }
 
 /* Cards container under AdminActions */
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
   gap: 2rem;
+  justify-content: center;   /* centers cards horizontally */
+  max-width: 1000px;         /* prevents extra-wide stretching */
+  margin: 0 auto;            /* centers the whole grid */
+  width: 100%;
 }
 
 /* Individual cards */
 .dashboard-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.15);
-  padding: 2rem;
+  background: linear-gradient(145deg, #ffffff, #f0fff4);
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15),
+              0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem; /* reduced padding for slimmer look */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.35s ease;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 300px;  /* keeps them consistent size */
+  width: 100%;
+}
+
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(67, 160, 71, 0.15), transparent 70%);
+  transform: scale(0);
+  transition: transform 0.5s ease;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.dashboard-card:hover::before {
+  transform: scale(1);
 }
 
 .dashboard-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(76, 175, 80, 0.25);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 35px rgba(46, 125, 50, 0.25),
+              0 6px 15px rgba(0, 0, 0, 0.08);
 }
 
 /* Card Icon, Title, Count */
 .dashboard-card-icon {
-  font-size: 2.5rem;
+  font-size: 2.5rem; /* slightly smaller */
   color: #2e7d32;
   margin-bottom: 1rem;
+  z-index: 1;
 }
 
 .dashboard-card-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #2e7d32;
-  margin-bottom: 0.5rem;
+  color: #1b5e20;
+  margin-bottom: 0.4rem;
+  z-index: 1;
 }
 
 .dashboard-card-count {
-  font-size: 1.8rem;
+  font-size: 1.8rem; /* slightly slimmer */
   font-weight: 700;
   color: #43a047;
+  z-index: 1;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .dashboard-cards {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .dashboard-card {
-    padding: 1.8rem;
+    padding: 1.3rem;
+    max-width: 100%;
   }
 
   .dashboard-card-icon {
@@ -72,10 +108,10 @@
   }
 
   .dashboard-card-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .dashboard-card-count {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 }
