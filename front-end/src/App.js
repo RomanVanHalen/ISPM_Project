@@ -10,6 +10,8 @@ import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings'; // Added import
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import "./App.css";
+
+//courses content//
 import Courses from "./pages/Training/components/Courses";
 import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
@@ -22,7 +24,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/policies" element={<Policies />} />
         <Route path="/training" element={<Training />} />
-        <Route path="/Courses" element={<Courses/>} />
+        
         <Route path="/reports" element={<Reports />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -33,12 +35,15 @@ function App() {
         <Route path="/account-settings" element={<AccountSettings />} /> {/* Added */}
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
 
-    {/* Courses routes */}
-        <Route path="/courses/Ddomain1" element={<Ddomain1 />} />
-        <Route path="/courses/Ddomain2" element={<Ddomain2 />} />
-        <Route path="/courses/Ddomain3" element={<Ddomain3 />} />
+        {/* Courses routes */}
+        <Route path="/training/Courses" element={<Courses />}/>
+        <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
+        <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
+        <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
+        
+        
       </Routes>
-    </Router>
+    </Router> 
   );
 }
 

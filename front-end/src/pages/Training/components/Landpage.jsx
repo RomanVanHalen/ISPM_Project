@@ -8,7 +8,7 @@ function Training() {
     const navigate = useNavigate();
 
     const handleStart = () => {
-        navigate("/Courses"); // redirect to Courses page
+        navigate("/training/Courses"); // redirect to Courses page
     };
 
     return (
@@ -18,10 +18,10 @@ function Training() {
                 <h1 className="katraining-title">
                     <span> Training Courses </span>
                 </h1>
-                <p className="katraining-text">
+                <p className="katraining-text"> 
                     "Gain the knowledge and skills to navigate company policies
-                    effectively. This training ensures employees act responsibly and
-                    maintain workplace integrity."
+                     effectively. This training ensures employees act responsibly and
+                     maintain workplace integrity."
                 </p>
 
                 <button className="katraining-btn" onClick={handleStart}>
