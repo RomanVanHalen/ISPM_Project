@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes } from "react-icons/fa";
 import "../styles/Navbar.css";
 
@@ -32,15 +32,54 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <ul className="nav-links">
-          <li><Link to="/" className="nav-link active">Home</Link></li>
-          <li><Link to="/policies" className="nav-link">Policies</Link></li>
-          <li><Link to="/training" className="nav-link">Training</Link></li>
-          <li><Link to="/reports" className="nav-link">Reports</Link></li>
-          <li><Link to="/analytics" className="nav-link">Analytics</Link></li>
+          <li>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/policies"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              Policies
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/training"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              Training
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/reports"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              Reports & Analytics
+            </NavLink>
+          </li>
         </ul>
 
         {/* Mobile Menu Toggle */}
-        <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -49,11 +88,44 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="mobile-nav">
           <div className="mobile-nav-links">
-            <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-            <Link to="/policies" onClick={() => setIsMobileMenuOpen(false)}>Policies</Link>
-            <Link to="/training" onClick={() => setIsMobileMenuOpen(false)}>Training</Link>
-            <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)}>Reports</Link>
-            <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)}>Analytics</Link>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                isActive ? "active" : ""
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/policies"
+              className={({ isActive }) =>
+                isActive ? "active" : ""
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Policies
+            </NavLink>
+            <NavLink
+              to="/training"
+              className={({ isActive }) =>
+                isActive ? "active" : ""
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Training
+            </NavLink>
+            <NavLink
+              to="/reports & analytics"
+              className={({ isActive }) =>
+                isActive ? "active" : ""
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Reports
+            </NavLink>
+
           </div>
         </div>
       )}
@@ -62,3 +134,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

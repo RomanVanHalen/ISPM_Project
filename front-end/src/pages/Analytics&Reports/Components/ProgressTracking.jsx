@@ -4,9 +4,7 @@ import {
   RadialBar,
   ResponsiveContainer,
 } from "recharts";
-import Header from "../../components/Navbar";
-import "./ProgressTracking.css";
-import Footer2 from "../../components/Footer2";
+import "../Styles/ProgressTracking.css";
 
 // ✅ Animated number counter
 const AnimatedNumber = ({ value, duration = 1000 }) => {
@@ -14,7 +12,7 @@ const AnimatedNumber = ({ value, duration = 1000 }) => {
 
   useEffect(() => {
     let start = 0;
-    const end = parseInt(value);
+    const end = parseInt(value || 0);
     const increment = end / (duration / 20);
 
     const timer = setInterval(() => {
@@ -38,7 +36,7 @@ const AnimatedBar = ({ progress }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setWidth(progress);
+      setWidth(progress || 0);
     }, 100);
     return () => clearTimeout(timer);
   }, [progress]);
@@ -54,51 +52,71 @@ const AnimatedBar = ({ progress }) => {
 };
 
 const ProgressTracking = () => {
-  const userProgress = {
-    policiesAcknowledged: 4,
-    totalPolicies: 5,
-    trainingsCompleted: 3,
-    totalTrainings: 4,
-    quizAvgScore: 85,
-    compliance: 88,
-    details: [
-      {
-        type: "Policy",
-        title: "Data Security Policy",
-        status: "Acknowledged",
-        lastUpdated: "Tue Aug 12 2025",
-      },
-      {
-        type: "Training",
-        title: "Phishing Awareness",
-        status: "Completed",
-        lastUpdated: "Sun Aug 10 2025",
-      },
-      {
-        type: "Quiz",
-        title: "Security Basics Quiz",
-        status: "80% Score",
-        lastUpdated: "Sat Aug 09 2025",
-      },
-    ],
+  const [userProgress, setUserProgress] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Example static data (used while API is commented)
+  const exampleData = {
+    policiesAcknowledged: 0,
+    totalPolicies: 0,
+    trainingsCompleted: 0,
+    totalTrainings: 0,
+    quizAvgScore: 0,
+    compliance: 0,
+    details: [],
   };
 
+  useEffect(() => {
+    // Uncomment this block to fetch data from API
+    /*
+    const fetchUserProgress = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Replace with your API endpoint
+        const response = await fetch("/api/user/progress");
+        if (!response.ok) {
+          throw new Error("Failed to fetch user progress");
+        }
+
+        const data = await response.json();
+        setUserProgress(data);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProgress();
+    */
+
+    // Use static example data for now
+    setUserProgress(exampleData);
+  }, []);
+
+  if (loading) return <p>Loading progress...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!userProgress) return null;
+
   const policyProgress =
-    (userProgress.policiesAcknowledged / userProgress.totalPolicies) * 100;
+    (userProgress.policiesAcknowledged / userProgress.totalPolicies) * 100 || 0;
   const trainingProgress =
-    (userProgress.trainingsCompleted / userProgress.totalTrainings) * 100;
+    (userProgress.trainingsCompleted / userProgress.totalTrainings) * 100 || 0;
 
   const quizData = [
-    { name: "Quiz Avg Score", value: userProgress.quizAvgScore, fill: "#16a34a" },
+    { name: "Quiz Avg Score", value: userProgress.quizAvgScore || 0, fill: "#16a34a" },
   ];
 
   const complianceData = [
-    { name: "Compliance", value: userProgress.compliance, fill: "#16a34a" },
+    { name: "Compliance", value: userProgress.compliance || 0, fill: "#16a34a" },
   ];
 
   return (
     <>
-      <Header />
 
       <main className="sa01progress-container">
         <h2 className="sa01progress-title">📊 My Progress </h2>
@@ -134,15 +152,9 @@ const ProgressTracking = () => {
                 barSize={12}
                 data={quizData}
               >
-                <RadialBar
-                  minAngle={15}
-                  clockWise
-                  dataKey="value"
-                  cornerRadius={10}
-                />
+                <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
               </RadialBarChart>
             </ResponsiveContainer>
-            {/* Overlay animated number */}
             <div
               style={{
                 position: "absolute",
@@ -170,15 +182,9 @@ const ProgressTracking = () => {
                 barSize={12}
                 data={complianceData}
               >
-                <RadialBar
-                  minAngle={15}
-                  clockWise
-                  dataKey="value"
-                  cornerRadius={10}
-                />
+                <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
               </RadialBarChart>
             </ResponsiveContainer>
-            {/* Overlay animated number */}
             <div
               style={{
                 position: "absolute",
@@ -208,7 +214,7 @@ const ProgressTracking = () => {
               </tr>
             </thead>
             <tbody>
-              {userProgress.details.map((item, idx) => (
+              {userProgress.details?.map((item, idx) => (
                 <tr key={idx}>
                   <td>{item.type}</td>
                   <td className="sa01highlight">{item.title}</td>
@@ -221,11 +227,8 @@ const ProgressTracking = () => {
           <button className="sa01download-btn">⬇ Download My Report</button>
         </div>
       </main>
-
-      <Footer2 />
     </>
   );
 };
 
 export default ProgressTracking;
-
