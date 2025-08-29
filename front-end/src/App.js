@@ -22,12 +22,19 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Dashboard routes */}
+        
+
+        {/* Admin  */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUsers />} /> 
         <Route path="/account-settings" element={<AccountSettings />} />
+
+
+
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
       </Routes>
+
+      
     </Router>
   );
 }
