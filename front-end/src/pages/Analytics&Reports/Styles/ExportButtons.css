@@ -1,0 +1,14 @@
+.sa02-actions { display: flex; gap: 10px; }
+
+.sa02-btn {
+  background: #4ade80 ;
+  color: var(--text);
+  border: 1px solid #254c33;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.sa02-btn:hover { border-color: var(--accent); box-shadow: 0 0 8px var(--accent-2); }
+.sa02-btn-primary { background: #4ade80; border-color: #000000; }
+.sa02-btn-primary:hover { filter: brightness(1.1); box-shadow: 0 0 12px var(--accent-2); }
