@@ -20,30 +20,38 @@ router.use("/uploads", express.static(path.join(process.cwd(), UPLOADS_FOLDER)))
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_FOLDER),
   filename: (req, file, cb) => {
-    cb(
-      null,
-      req.user.id + "_" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, req.user.id + "_" + Date.now() + path.extname(file.originalname));
   },
 });
 const upload = multer({ storage });
 
-// 🟢 Get logged-in user's profile
+// ================== Get logged-in user's profile =================
 router.get("/profile", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+
+    // Send consistent field names
+    const userObj = {
+      name: user.name,
+      email: user.email,
+      bio: user.bio || "",
+      profilePicture: user.profilePicture
+        ? `${req.protocol}://${req.get("host")}${user.profilePicture}`
+        : null,
+    };
+
+    res.json(userObj);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
-// 🟡 Update logged-in user's profile
+// ================== Update logged-in user's profile ==================
 router.put(
   "/profile",
   authMiddleware,
-  upload.single("profilePicture"), // handle file upload
+  upload.single("profilePicture"),
   async (req, res) => {
     try {
       const { name, email, password, bio } = req.body;
@@ -57,22 +65,29 @@ router.put(
       if (bio) user.bio = bio;
 
       if (req.file) {
-        // Use relative URL so frontend can access
-        user.profilePicture = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+        // Store relative path in DB
+        user.profilePicture = `/uploads/${req.file.filename}`;
       }
 
       await user.save();
-      const userObj = user.toObject();
-      delete userObj.password;
 
-      res.json({ message: "Profile updated successfully", user: userObj });
+      const updatedUser = {
+        name: user.name,
+        email: user.email,
+        bio: user.bio || "",
+        profilePicture: user.profilePicture
+          ? `${req.protocol}://${req.get("host")}${user.profilePicture}`
+          : null,
+      };
+
+      res.json({ message: "Profile updated successfully", user: updatedUser });
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
   }
 );
 
-// 🔴 Admin-only route: get all users
+// ================== Admin-only route: get all users ==================
 router.get(
   "/all-users",
   authMiddleware,
@@ -80,7 +95,17 @@ router.get(
   async (req, res) => {
     try {
       const users = await User.find().select("-password");
-      res.json(users);
+
+      const usersWithFullURL = users.map((u) => ({
+        name: u.name,
+        email: u.email,
+        bio: u.bio || "",
+        profilePicture: u.profilePicture
+          ? `${req.protocol}://${req.get("host")}${u.profilePicture}`
+          : null,
+      }));
+
+      res.json(usersWithFullURL);
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }

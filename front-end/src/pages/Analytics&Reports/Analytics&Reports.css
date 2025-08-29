@@ -1,0 +1,50 @@
+/* --- Main Page Layout ------------------------------------------------- */
+.sa02-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f9fafb;   /* light gray background */
+  font-family: "Inter", Arial, sans-serif;
+  color: #111827; /* dark gray text */
+}
+
+/* Header stays at top */
+.sa02-body header {
+  flex-shrink: 0;
+}
+
+/* Main content grows to fill space between header and footer */
+.sa02-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Footer stays at bottom */
+.sa02-body footer {
+  flex-shrink: 0;
+}
+
+/* Guest prompt alignment */
+.sa02-main .auth-prompt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sa02-main {
+    padding: 1rem;
+  }
+}
+
+
+
+
+
+

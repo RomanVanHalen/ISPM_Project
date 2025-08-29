@@ -21,15 +21,14 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      profilePic: profilePic || "https://via.placeholder.com/150", // default avatar
+      profilePic: profilePic || "https://via.placeholder.com/150",
+      isVerified: true, // auto-verified since no email verification
     });
 
-    // Create token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    // Create JWT token
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.status(201).json({
       token,
@@ -40,6 +39,7 @@ export const registerUser = async (req, res) => {
         role: user.role,
         profilePic: user.profilePic,
       },
+      message: "Registration successful!",
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,11 +60,9 @@ export const loginUser = async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     // Create token
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.json({
       token,
@@ -79,6 +77,16 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+// ================== Forgot Password ==================
+export const forgotPassword = async (req, res) => {
+  res.status(501).json({ message: "Forgot password not implemented yet." });
+};
+
+// ================== Reset Password ==================
+export const resetPassword = async (req, res) => {
+  res.status(501).json({ message: "Reset password not implemented yet." });
 };
 
 // ================== Update Profile ==================
