@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes } from "react-icons/fa";
 import "../styles/Navbar.css";
 
