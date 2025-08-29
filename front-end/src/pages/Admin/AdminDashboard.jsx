@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaChartLine, FaBell } from "react-icons/fa";
 import AdminActions from "./adminComponents/AdminActions";
-import api from "../../api/axiosInstance"; // Axios instance with JWT
+import AdminCharts from "./adminComponents/AdminCharts"; // ⬅️ Import the charts component
+import api from "../../api/axiosInstance"; 
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
@@ -81,6 +82,11 @@ function AdminDashboard() {
             <div className="dashboard-card-title">Notifications</div>
             <div className="dashboard-card-count">—</div>
           </div>
+        </div>
+
+        {/* 📊 Admin Charts Section */}
+        <div className="admin-charts-section">
+          <AdminCharts />
         </div>
       </div>
     </>

@@ -31,7 +31,8 @@ app.use(
   })
 );
 
-// Serve uploaded profile pictures
+// ✅ Serve static files from uploads directory
+// Example: http://localhost:5000/uploads/filename.jpg
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
@@ -39,11 +40,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Default route (optional health check)
+// Health check
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send("✅ API is running...");
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
