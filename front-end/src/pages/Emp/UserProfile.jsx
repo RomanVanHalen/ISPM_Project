@@ -22,7 +22,7 @@ export default function UserProfile({ onClose }) {
   };
 
   return (
-    <div className="anya-user-profile-page">
+    <div className="anya-user-profile-page">   
       <div className="anya-profile-header">
         <h2>Edit Profile</h2>
         <button className="anya-back-btn" onClick={onClose}>

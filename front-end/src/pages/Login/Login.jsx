@@ -25,8 +25,12 @@ const Login = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
 
-      // Redirect to Welcome page first
-      navigate("/welcome");
+      // Redirect based on role
+      if (res.data.user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/employee-dashboard");
+      }
 
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed!");

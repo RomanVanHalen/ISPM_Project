@@ -1,213 +1,144 @@
-.siri-dashboard-container {
+/* Dashboard Wrapper */
+.dashboard-wrapper {
   display: flex;
-  height: 100vh;
-  background: #f5f7f5;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.siri-sidebar {
+/* Navbar */
+.navbar {
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Sidebar + Main Content Container */
+.dull-dashboard-container {
+  display: flex;
+  flex: 1;
+  padding-top: 70px; /* leave space for fixed navbar */
+}
+
+/* Sidebar */
+.dull-sidebar {
   width: 250px;
-  background: linear-gradient(180deg, #064e3b, #14532d);
-  color: white;
+  background: linear-gradient(180deg, #8ae7ac, #14532d);
+  color: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 25px 15px;
+  justify-content: space-between;
+  padding: 20px 0;
+  min-height: calc(100vh - 70px);
 }
 
-.siri-sidebar-profile {
+/* Sidebar User Info */
+.dull-sidebar-user {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.dull-user-icon {
+  font-size: 2rem;
+  margin-right: 10px;
+}
+
+.dull-user-info-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-  text-align: center;
 }
 
-.siri-sidebar-user-icon {
-  width: 80px;
-  height: 80px;
-  padding: 15px;
-  border-radius: 50%;
-  background: #166534;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
+.dull-username {
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
-.siri-sidebar-profile:hover .siri-sidebar-user-icon {
-  transform: scale(1.05);
-  background: #79cf98;
-}
-
-.siri-sidebar-profile h3 {
-  margin: 5px 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.siri-sidebar-profile p {
-  font-size: 14px;
+.dull-user-role {
+  font-size: 0.9rem;
   opacity: 0.8;
 }
 
-.siri-sidebar-menu {
+.dull-sidebar-menu {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  gap: 8px;
+  margin-top: 10px;
 }
 
-.siri-sidebar-menu button {
+.dull-sidebar-menu button {
+  padding: 12px 20px;
+  text-align: left;
   background: transparent;
   border: none;
-  padding: 12px;
-  text-align: left;
-  border-radius: 6px;
-  color: white;
-  font-size: 16px;
+  color: #fff;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s;
 }
 
-.siri-sidebar-menu button:hover {
+.dull-sidebar-menu button:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.siri-sidebar-menu .siri-active-tab {
-  background: #22c55e;
-  font-weight: bold;
-}
-
-.siri-logout-btn {
-  margin-top: auto;
-  background: #c9c0c0;
+/* Logout Button */
+.dull-logout-btn {
+  margin: 20px;
+  padding: 12px;
   border: none;
-  padding: 12px 20px;
   border-radius: 8px;
-  color: white;
+  background: #d0c1c1;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
-  width: 100%;
-}
-
-.siri-logout-btn:hover {
-  background: #c0b0b0;
-}
-
-.siri-main-content {
-  flex: 1;
-  padding: 25px;
-  overflow-y: auto;
-}
-
-.siri-card-section {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
-}
-
-.siri-card-section h2 {
-  margin-bottom: 15px;
-  color: #166534;
-  font-size: 20px;
-}
-
-.siri-card {
-  background: #f9fafb;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.06);
-}
-
-.siri-card-btn {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background: #4e9668;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.siri-card-btn:hover {
-  background: #5da477;
-}
-
-.siri-progress-container {
-  background: #e5e7eb;
-  border-radius: 6px;
-  height: 8px;
-  width: 100%;
-  margin: 8px 0;
-}
-
-.siri-progress-bar {
-  background: #22c55e;
-  height: 8px;
-  border-radius: 6px;
-  transition: width 0.4s ease;
-}
-
-.siri-notification-card {
+  transition: 0.3s;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fef9c3;
-  border: 1px solid #fcd34d;
-  color: #92400e;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  justify-content: center;
 }
 
-.siri-user-profile {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
+.dull-logout-btn:hover {
+  background: #cbb6b6;
+}
+
+/* Main Content */
+.dull-main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f9fafb;
+  overflow-y: auto;
+}
+
+/* Card Sections */
+.dull-card-section {
   background: #fff;
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.siri-user-profile h2 {
-  text-align: center;
-  color: #166534;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
-.siri-user-profile label {
-  display: block;
-  font-weight: 500;
-  margin: 10px 0 5px;
-  color: #065f46;
+.dull-card-section h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #085c46;
 }
 
-.siri-user-profile input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.siri-user-profile button {
-  width: 100%;
-  padding: 12px;
-  background: #62b580;
-  border: none;
-  color: white;
+.dull-card-section p {
   font-size: 1rem;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  color: #333;
 }
 
-.siri-user-profile button:hover {
-  background: #16a34a;
+.dull-card-section ul {
+  list-style: disc;
+  padding-left: 20px;
 }
+
+.dull-card-section li {
+  margin: 5px 0;
+}
+
+

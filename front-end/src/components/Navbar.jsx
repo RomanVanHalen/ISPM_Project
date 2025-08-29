@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes } from "react-icons/fa";
 import "../styles/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,9 +19,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="logo">
           <div className="logo-icon-wrapper">
-            <div className="logo-icon">
-              <FaShieldAlt />
-            </div>
+            <div className="logo-icon"><FaShieldAlt /></div>
             <span className="logo-status"></span>
           </div>
           <div className="logo-text">
@@ -34,10 +32,19 @@ const Navbar = () => {
         <ul className="nav-links">
           <li><Link to="/" className="nav-link active">Home</Link></li>
           <li><Link to="/policies" className="nav-link">Policies</Link></li>
-
           <li><Link to="/training" className="nav-link">Training</Link></li>
           <li><Link to="/reports" className="nav-link">Reports</Link></li>
           <li><Link to="/analytics" className="nav-link">Analytics</Link></li>
+
+          {/* ------------------ ADDED PROFILE ICON ------------------ */}
+          {/* Show profile icon only if user is logged in */}
+          {user && (
+            <li className="nav-profile">
+              <Link to="/profile" className="nav-link" title="Profile">
+                👤
+              </Link>
+            </li>
+          )}
         </ul>
 
         {/* Mobile Menu Toggle */}
@@ -55,6 +62,10 @@ const Navbar = () => {
             <Link to="/training" onClick={() => setIsMobileMenuOpen(false)}>Training</Link>
             <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)}>Reports</Link>
             <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)}>Analytics</Link>
+
+            {/* ------------------ ADDED PROFILE ICON FOR MOBILE ------------------ */}
+            {user && <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>👤 Profile</Link>}
+            
           </div>
         </div>
       )}
@@ -63,3 +74,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

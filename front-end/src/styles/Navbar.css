@@ -45,7 +45,7 @@
 
 .logo-status {
   position: absolute;
-  bottom: -2px;   /* adjust placement */
+  bottom: -2px;
   right: -2px;
   width: 10px;
   height: 10px;
@@ -149,6 +149,26 @@
 
 .mobile-nav-links a:hover {
   color: #4caf87;
+}
+
+/* ------------------ PROFILE ICON ------------------ */
+.nav-profile {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  margin-left: 1rem; /* spacing from other links */
+}
+
+.nav-profile .nav-link {
+  display: flex;
+  align-items: center;
+  color: #111827; /* same as other links */
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.nav-profile .nav-link:hover {
+  color: #4caf87; /* same green hover as other links */
 }
 
 /* Responsive */
