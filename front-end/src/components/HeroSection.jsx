@@ -1,46 +1,39 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaShieldAlt, FaUsers, FaBug, FaHackerNews, FaLock, FaSkullCrossbones, FaNetworkWired } from "react-icons/fa";
+import { FaShieldAlt, FaUsers } from "react-icons/fa";
 import "../styles/HeroSection.css";
 
-// Cyber icons for falling effect
-const icons = [FaBug, FaHackerNews, FaLock, FaSkullCrossbones, FaNetworkWired];
-
 const HeroSection = () => {
-  // Render multiple instances of icons randomly positioned
-  const fallingIcons = Array.from({ length: 30 }, (_, index) => {
-    const Icon = icons[Math.floor(Math.random() * icons.length)];
-    return (
-      <div
-        key={index}
-        className="falling-icon"
-        style={{
-          left: `${Math.random() * 90}%`,
-          animationDuration: `${6 + Math.random() * 6}s`,
-          fontSize: `${20 + Math.random() * 30}px`,
-        }}
-      >
-        <Icon />
-      </div>
-
-      
-    );
-  });
-
-  
+  // Floating particles
+  const particles = Array.from({ length: 50 }, (_, i) => (
+    <div
+      key={i}
+      className="particle"
+      style={{
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        animationDuration: `${2 + Math.random() * 3}s`
+      }}
+    ></div>
+  ));
 
   return (
     <header className="hero">
       <div className="hero-bg-pattern"></div>
 
-      {/* Falling icons */}
-      <div className="falling-icons">{fallingIcons}</div>
+      {/* Cyberpunk neon grid */}
+      <div className="cyber-grid"></div>
+
+      {/* Floating Particles */}
+      <div className="particles-container">
+        {particles}
+      </div>
 
       <div className="hero-content">
         <div className="hero-text">
           <div className="hero-badge">
             <div className="status-dot"></div>
-            <span>All-inclusive Security training</span>
+            <span>All-inclusive Security Training</span>
           </div>
           <h1>Welcome to Cyber Warriors</h1>
           <p>Empowering employees to stay aware, stay compliant, and stay secure.</p>
