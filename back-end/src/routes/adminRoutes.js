@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// 🟢 Get total user count
+// Get total user count
 router.get("/count", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   try {
     const count = await User.countDocuments();
@@ -35,7 +35,7 @@ router.get("/count", authMiddleware, authorizeRoles("admin"), async (req, res) =
   }
 });
 
-// 🟢 Get all users
+//  Get all users
 router.get("/users", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   try {
     const users = await User.find({}, "name email role profilePic createdAt").sort({ createdAt: -1 });
@@ -46,7 +46,7 @@ router.get("/users", authMiddleware, authorizeRoles("admin"), async (req, res) =
   }
 });
 
-// 🟢 Get user registration stats (line chart)
+//  Get user registration stats (line chart)
 router.get("/user-stats", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   try {
     const stats = await User.aggregate([
@@ -62,7 +62,7 @@ router.get("/user-stats", authMiddleware, authorizeRoles("admin"), async (req, r
   }
 });
 
-// 🟢 Get role stats (pie chart)
+//  Get role stats (pie chart)
 router.get("/role-stats", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   try {
     const employees = await User.countDocuments({ role: "employee" });
@@ -78,7 +78,7 @@ router.get("/role-stats", authMiddleware, authorizeRoles("admin"), async (req, r
   }
 });
 
-// 🔴 Delete a user
+// Delete a user
 router.delete("/users/:id", authMiddleware, authorizeRoles("admin"), async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -96,7 +96,7 @@ router.delete("/users/:id", authMiddleware, authorizeRoles("admin"), async (req,
   }
 });
 
-// 🟡 Update user
+// Update user
 router.put("/users/:id", authMiddleware, authorizeRoles("admin"), upload.single("profilePic"), async (req, res) => {
   try {
     const { name, email, role } = req.body;
