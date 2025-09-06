@@ -65,12 +65,12 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
-              to="/reports"
+              to="/reports&analytics"
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
             >
-              Reports & Analytics
+              Reports&Analytics
             </NavLink>
           </li>
         </ul>
@@ -117,13 +117,13 @@ const Navbar = () => {
               Training
             </NavLink>
             <NavLink
-              to="/reports & analytics"
+              to="/reports&analytics"
               className={({ isActive }) =>
                 isActive ? "active" : ""
               }
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Reports
+              Reports & Analytics
             </NavLink>
 
           </div>

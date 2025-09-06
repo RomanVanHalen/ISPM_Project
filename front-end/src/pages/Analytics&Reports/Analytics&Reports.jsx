@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/axiosInstance"; // ✅ axios instance with interceptors
 
 import Header from "../../components/Navbar";
 import Footer from "../../components/Footer2";
@@ -11,9 +12,36 @@ import AuthPrompt from "./Components/Unregister";
 export default function MainPage() {
   const navigate = useNavigate();
 
-  // Get the logged-in user from localStorage
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const role = storedUser?.role || "guest"; 
+  const [role, setRole] = useState("guest");
+  const [loading, setLoading] = useState(true);
+
+  // Check user role from backend
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser?.role) {
+          setRole(storedUser.role); // quick set from localStorage
+        }
+
+        // Verify token with backend
+        const res = await api.get("/auth/me"); // ✅ adjust endpoint to your backend
+        if (res.data?.role) {
+          setRole(res.data.role);
+          localStorage.setItem("user", JSON.stringify(res.data)); // keep fresh
+        } else {
+          setRole("guest");
+        }
+      } catch (err) {
+        console.warn("User not authenticated:", err.message);
+        setRole("guest");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkUser();
+  }, []);
 
   // Choose content based on role
   let content;
@@ -25,8 +53,8 @@ export default function MainPage() {
     // Guest / unregistered user
     content = (
       <AuthPrompt
-        onLogin={() => navigate("/login")}       // redirect to Sign In page
-        onRegister={() => navigate("/register")} // redirect to Register page
+        onLogin={() => navigate("/login")}
+        onRegister={() => navigate("/register")}
       />
     );
   }
@@ -34,16 +62,19 @@ export default function MainPage() {
   // Only show Header/Footer if user is admin or registered
   const showHeaderFooter = role === "admin" || role === "user";
 
+  if (loading) {
+    return <div className="sa02-loading">Checking authentication...</div>;
+  }
+
   return (
     <div className="sa02-body">
       {showHeaderFooter && <Header />}
-      <main className="sa02-main">
-        {content}
-      </main>
+      <main className="sa02-main">{content}</main>
       {showHeaderFooter && <Footer />}
     </div>
   );
 }
+
 
 
 
