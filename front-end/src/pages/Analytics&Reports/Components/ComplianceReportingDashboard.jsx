@@ -1,5 +1,5 @@
 //Admin
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react"; // ✅ removed unused useEffect
 
 import Filters from "./Filters";
 import KPIs from "./KPIs";
@@ -11,10 +11,6 @@ import StatusBreakdownChart from "./Charts/StatusBreakdownChart";
 import QuizScoreChart from "./Charts/QuizScoreChart";
 
 import ReportTable from "./ReportTable";
-
-//import jsPDF from "jspdf";
-//import "jspdf-autotable";
-
 import "../Styles/ComplianceReportingDashboard.css";
 
 const fmt = new Intl.NumberFormat();
@@ -22,7 +18,7 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 const toISO = (d) => new Date(d).toISOString().slice(0, 10);
 
 export default function ComplianceReportingDashboard() {
-  const [rows, setRows] = useState([]);   // start with empty
+  const [rows] = useState([]);      // ✅ no setter until API is enabled
   const [dateFrom, setDateFrom] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 30);
@@ -31,26 +27,9 @@ export default function ComplianceReportingDashboard() {
   const [dateTo, setDateTo] = useState(todayISO());
   const [course, setCourse] = useState("All");
   const [reportType, setReportType] = useState("management");
-  const [courses, setCourses] = useState([]); // courses fetched dynamically
+  const [courses] = useState([]);   // ✅ no setter until API is enabled
 
-  /*
-  // --- API Fetch (Enable when backend is ready) ---
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/compliance-data"); 
-        const data = await res.json();
-
-        setRows(data);
-        const uniqueCourses = [...new Set(data.map(r => r.course))];
-        setCourses(uniqueCourses);
-      } catch (err) {
-        console.error("Failed to fetch compliance data:", err);
-      }
-    }
-    fetchData();
-  }, []);
-  */
+  // --- API fetch is commented, re-enable later ---
 
   // Filtered rows
   const filtered = useMemo(() => {
@@ -77,7 +56,7 @@ export default function ComplianceReportingDashboard() {
     return { total, completed, pendingAck, overdue, avgCompletion };
   }, [filtered]);
 
-  // Charts data
+  // Charts data (unchanged) ...
   const completionTrend = useMemo(() => {
     const map = new Map();
     for (const r of filtered) {
@@ -121,9 +100,8 @@ export default function ComplianceReportingDashboard() {
     }));
   }, [filtered]);
 
-  // Export functions (still placeholders)
-  const exportCSV = () => { /* implement CSV export */ };
-  const exportPDF = () => { /* implement PDF export */ };
+  const exportCSV = () => {};
+  const exportPDF = () => {};
 
   return (
     <div className="sa02-body">
@@ -141,7 +119,7 @@ export default function ComplianceReportingDashboard() {
           dateTo={dateTo} setDateTo={setDateTo}
           course={course} setCourse={setCourse}
           reportType={reportType} setReportType={setReportType}
-          courses={["All", ...courses]} // dynamic courses (empty until API added)
+          courses={["All", ...courses]}
         />
 
         <KPIs kpis={kpis} />
@@ -154,8 +132,6 @@ export default function ComplianceReportingDashboard() {
         </section>
 
         <ReportTable rows={filtered} fmt={fmt} />
-
-        <footer className="sa02-footer"></footer>
       </div>
     </div>
   );

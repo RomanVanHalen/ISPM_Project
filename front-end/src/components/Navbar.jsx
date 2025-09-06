@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes } from "react-icons/fa";
 import "../styles/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,9 +19,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="logo">
           <div className="logo-icon-wrapper">
-            <div className="logo-icon">
-              <FaShieldAlt />
-            </div>
+            <div className="logo-icon"><FaShieldAlt /></div>
             <span className="logo-status"></span>
           </div>
           <div className="logo-text">
@@ -32,6 +30,17 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <ul className="nav-links">
+
+          {/* ------------------ ADDED PROFILE ICON ------------------ */}
+          {/* Show profile icon only if user is logged in */}
+          {user && (
+            <li className="nav-profile">
+              <Link to="/profile" className="nav-link" title="Profile">
+                👤
+              </Link>
+            </li>
+          )}
+
           <li>
             <NavLink
               to="/"
@@ -88,6 +97,10 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="mobile-nav">
           <div className="mobile-nav-links">
+
+            {/* ------------------ ADDED PROFILE ICON FOR MOBILE ------------------ */}
+            {user && <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>👤 Profile</Link>}
+
             <NavLink
               to="/"
               end
@@ -125,11 +138,10 @@ const Navbar = () => {
             >
               Reports & Analytics
             </NavLink>
-
           </div>
         </div>
       )}
-    </nav>
+    </nav>  
   );
 };
 
