@@ -27,25 +27,26 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/policies" element={<Policies />} />
         <Route path="/training" element={<Training />} />
-        
         <Route path="/reports" element={<Reports />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Dashboard routes */}
+        {/* Admin */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUsers />} /> 
         <Route path="/account-settings" element={<AccountSettings />} />
+
+        {/* Employee */}
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
 
-        {/* Courses routes */}
+        {/* Courses */}
         <Route path="/training/Courses" element={<Courses />}/>
         <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
         <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
         <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
         
       </Routes>
-    </Router> 
+    </Router>
   );
 }
 
