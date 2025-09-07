@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
-import Navbar from "../../components/Navbar"; 
-import Footer2 from "../../components/Footer2"; 
-import UserProfile from "./UserProfile";
-// Adjust path if needed
+import Navbar from "../../components/Navbar";
+import Footer2 from "../../components/Footer2";
 import axios from "axios";
-
+import UserProfile from "./UserProfile"; 
 import "./EmployeeDashboard.css";
-import Welcome from "./Employeecomponents/Welcome";
 
 export default function EmployeeDashboard() {
-  const [user, setUser] = useState({ username: "", role: "" });
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [user, setUser] = useState({ username: "", role: "", avatar: "" });
   const [currentTab, setCurrentTab] = useState("Trainings");
   const [trainings, setTrainings] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -20,7 +16,6 @@ export default function EmployeeDashboard() {
 
   const roleTabs = ["Trainings", "Courses", "Progress", "Notifications"];
 
-  // Fetch user & dashboard data
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -31,9 +26,12 @@ export default function EmployeeDashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
+        const profile = profileRes.data;
+
         setUser({
-          username: profileRes.data.username || profileRes.data.name,
-          role: "Employee",
+          username: profile.username || "Employee",
+          role: profile.role || "employee",
+          avatar: profile.profilePic || "",
         });
 
         const dataRes = await axios.get("http://localhost:5000/api/dashboard", {
@@ -57,53 +55,50 @@ export default function EmployeeDashboard() {
     window.location.reload();
   };
 
-  // Show welcome screen first
-  if (showWelcome) {
-    return <Welcome user={user} onGoToPortal={() => setShowWelcome(false)} />;
-  }
-
   return (
     <div className="dashboard-wrapper">
       <Navbar />
 
       <div className="dull-dashboard-container">
-        {/* Sidebar */}
         <aside className="dull-sidebar">
-          {/* User Info / Profile Link */}
+          {/* Sidebar User Info */}
           <div
             className="dull-sidebar-user"
             onClick={() => setCurrentTab("Profile")}
             style={{ cursor: "pointer" }}
           >
-            <span className="dull-user-icon" role="img" aria-label="user">
-              👤
-            </span>
+            {user.avatar ? (
+              <img src={user.avatar} alt="User Avatar" className="dull-user-avatar" />
+            ) : (
+              <span className="dull-user-icon" role="img" aria-label="user">
+                👤
+              </span>
+            )}
             <div className="dull-user-info-text">
               <p className="dull-username">{user.username || "Guest"}</p>
               <p className="dull-user-role">{user.role}</p>
             </div>
           </div>
 
-          {/* Sidebar Menu */}
+          {/* Sidebar Tabs */}
           <nav className="dull-sidebar-menu">
             {roleTabs.map((tab) => (
               <button
                 key={tab}
-                onClick={() => setCurrentTab(tab)}
                 className={currentTab === tab ? "active-tab" : ""}
+                onClick={() => setCurrentTab(tab)}
               >
                 {tab}
               </button>
             ))}
           </nav>
 
-          {/* Logout Button */}
+          {/* Logout */}
           <button className="dull-logout-btn" onClick={handleLogout}>
             <LogOut /> Logout
           </button>
         </aside>
 
-        {/* Main Content */}
         <main className="dull-main-content">
           {currentTab === "Trainings" && (
             <div className="dull-card-section">
@@ -141,19 +136,17 @@ export default function EmployeeDashboard() {
             </div>
           )}
 
+          {/* Profile Tab */}
           {currentTab === "Profile" && (
-            <UserProfile onClose={() => setCurrentTab("Trainings")} />
+            <UserProfile
+              onClose={() => setCurrentTab("Trainings")}
+              onProfileUpdate={(updatedUser) => setUser(updatedUser)}
+            />
           )}
         </main>
       </div>
 
-      {/* Footer */}
       <Footer2 />
     </div>
   );
 }
-
-
-
-
-

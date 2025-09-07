@@ -135,14 +135,17 @@ const Navbar = () => {
             </NavLink>
 
             {/* Profile + Notifications + Logout for Mobile */}
-            {isLoggedIn && (
-              <>
-                <Link
-                  to="/employee-dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  👤 Dashboard
-                </Link>
+           {isLoggedIn && (
+  <>
+    <Link
+      to="/employee-dashboard"
+      className="mobile-nav-link"
+      onClick={() => setIsMobileMenuOpen(false)}
+      title="Employee Dashboard"
+    >
+      <FaUserCircle size={18} style={{ marginRight: "8px" }} />
+      Dashboard
+    </Link>
                 <Link
                   to="/notifications"
                   onClick={() => setIsMobileMenuOpen(false)}

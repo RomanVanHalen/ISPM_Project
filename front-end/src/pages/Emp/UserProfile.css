@@ -61,7 +61,6 @@
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #2196f3;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .anya-profile-pic:hover {
