@@ -1,5 +1,4 @@
-
-   /* ================= Page Wrapper ================= */
+/* ================= Page Wrapper ================= */
 .shri-policies-page {
   display: flex;
   flex-direction: column;
@@ -9,7 +8,6 @@
 /* ================= Content Wrapper ================= */
 .shri-policies-content {
   flex: 1;
-  
 }
 
 /* ================= Policies Container ================= */
@@ -26,7 +24,7 @@
 /* ================= Header ================= */
 .shri-policies-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* center the title now */
   align-items: center;
   border-bottom: 2px solid #c8e6c9;
   padding-bottom: 12px;
@@ -37,18 +35,6 @@
   font-size: 32px; /* slightly larger for wider page */
   font-weight: bold;
   color: #2e7d32;
-}
-
-.shri-user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: #2e7d32;
-}
-
-.shri-user-name {
-  font-weight: 600;
 }
 
 /* ================= Policies List ================= */
@@ -155,4 +141,5 @@
   .shri-policy-elements ul {
     font-size: 14px;
   }
+  
 }

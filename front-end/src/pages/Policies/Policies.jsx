@@ -98,10 +98,6 @@ export default function Policies() {
 
       <div className="shri-policies-header" style={{ marginTop: "20px" }}>
         <h1 className="shri-policies-main-title">Policies & Standards</h1>
-        <div className="shri-user-info">
-          <span role="img" aria-label="user">👤</span>
-          <span className="shri-user-name">Welcome, {user?.name || "Guest"}</span>
-        </div>
       </div>
 
       <div className="shri-policies-list">
