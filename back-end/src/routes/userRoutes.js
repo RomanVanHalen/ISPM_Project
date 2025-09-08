@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import bcrypt from "bcrypt";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
@@ -6,6 +6,7 @@ import User from "../models/User.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+
 
 const router = express.Router();
 
@@ -112,4 +113,118 @@ router.get(
   }
 );
 
+export default router;    */
+
+
+
+import express from "express";
+import bcrypt from "bcrypt";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import User from "../models/User.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Point to same folder as server.js
+const UPLOADS_FOLDER = path.join(__dirname, "../uploads");
+fs.mkdirSync(UPLOADS_FOLDER, { recursive: true });
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOADS_FOLDER),
+  filename: (req, file, cb) => {
+    cb(null, req.user.id + "_" + Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
+// Build full URL for image
+function toPublicUrl(req, relativePath) {
+  if (!relativePath) return null;
+  return `${req.protocol}://${req.get("host")}${relativePath}`;
+}
+
+// Standardized user object
+function userResponse(u, req) {
+  return {
+    username: u.username || u.name || "",
+    email: u.email,
+    role: u.role || "employee",
+    bio: u.bio || "",
+    profilePic: u.profilePicture ? toPublicUrl(req, u.profilePicture) : null,
+  };
+}
+
+// ================== Get profile ==================
+router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(userResponse(user, req));
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// ================== Update profile ==================
+router.put(
+  "/profile",
+  authMiddleware,
+  upload.single("profilePicture"),
+  async (req, res) => {
+    try {
+      const { username, email, password, bio, removeProfilePicture } = req.body;
+      const user = await User.findById(req.user.id);
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      // Fields
+      if (username?.trim()) {
+        user.username = username.trim();
+        user.name = username.trim(); // backward compatibility
+      }
+      if (email?.trim()) user.email = email.trim();
+      if (bio !== undefined) user.bio = bio;
+      if (password?.trim()) user.password = await bcrypt.hash(password, 10);
+
+      if (String(removeProfilePicture).toLowerCase() === "true") {
+        user.profilePicture = undefined;
+      }
+
+      if (req.file) {
+        user.profilePicture = `/uploads/${req.file.filename}`;
+      }
+
+      await user.save();
+      res.json(userResponse(user, req));
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  }
+);
+
+// ================== Admin-only route ==================
+router.get(
+  "/all-users",
+  authMiddleware,
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const users = await User.find().select("-password");
+      res.json(users.map((u) => userResponse(u, req)));
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  }
+);
+
 export default router;
+
+
+
