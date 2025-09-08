@@ -1,42 +1,58 @@
+/* User Profile Page Wrapper */
 .anya-user-profile-page {
   max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-  font-family: "Segoe UI", sans-serif;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Header Section */
 .anya-profile-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
 }
 
+.anya-profile-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+/* Back Button */
 .anya-back-btn {
   padding: 0.5rem 1rem;
-  background-color: #ddd;
+  background-color: #e0e0e0;
+  color: #333;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
-}
-.anya-back-btn:hover {
-  background-color: #bbb;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
+.anya-back-btn:hover {
+  background-color: #cfcfcf;
+  transform: translateY(-2px);
+}
+
+/* Form Layout */
 .anya-profile-form {
-  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
-/* Profile Picture */
+/* Profile Picture Section */
 .anya-profile-pic-section {
-  text-align: center;
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .anya-profile-pic {
@@ -47,41 +63,68 @@
   border: 3px solid #2196f3;
 }
 
-.anya-upload-btn {
-  display: inline-block;
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  background-color: #2196f3;
-  color: #fff;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  cursor: pointer;
+.anya-profile-pic:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Upload Button */
+.anya-upload-btn {
+  padding: 0.5rem 1rem;
+  background-color: #2196f3;
+  color: #fff;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.anya-upload-btn:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+/* Form Groups */
 .anya-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
+}
+
+.anya-form-group label {
+  font-weight: 500;
+  color: #555;
 }
 
 .anya-form-group input {
-  padding: 0.6rem;
+  padding: 0.7rem 0.9rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.anya-form-group input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+  outline: none;
+}
+
+/* Save Button */
 .anya-save-btn {
-  margin-top: 1rem;
-  padding: 0.7rem 1rem;
+  padding: 0.8rem 1rem;
   background-color: #4caf50;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  transition: 0.2s;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .anya-save-btn:hover {
   background-color: #43a047;
+  transform: translateY(-2px);
 }
+

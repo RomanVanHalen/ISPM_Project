@@ -20,6 +20,9 @@
   position: relative;
   overflow: hidden;
   z-index: 0; /* keeps background below card */
+
+  /* ✅ Fix: push content below navbar */
+  margin-top: 60px; /* adjust to your navbar height */
 }
 
 /* Floating Circles in Background */
@@ -100,4 +103,3 @@
   background-color: #f1f8e9;
   transform: translateY(-3px);
 }
-
