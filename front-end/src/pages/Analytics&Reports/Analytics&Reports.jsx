@@ -11,7 +11,7 @@ import AuthPrompt from "./Components/Unregister";
 export default function MainPage() {
   const navigate = useNavigate();
 
-  const [role, setRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,31 +21,26 @@ export default function MainPage() {
         console.log("Stored token:", token);
 
         if (!token) {
-          setRole("unregistered");
+          setIsLoggedIn(false);
           setLoading(false);
           return;
         }
 
-        // ✅ use your /profile endpoint
-        const res = await api.get("/profile");
-        console.log("Response from /profile:", res.data);
+        // ✅ call backend to validate token
+        const res = await api.get("/users/profile");
+        console.log("Response from /users/profile:", res.data);
 
-        // Your backend returns the user directly (not nested)
-        const userData = res.data;
-        const userRole = userData.role;
-
-        // ✅ match role correctly (employee in your DB)
-        if (userRole === "employee") {
-          setRole("user"); // internally we treat employee as user
-          localStorage.setItem("user", JSON.stringify(userData));
+        if (res.data && res.data.email) {
+          setIsLoggedIn(true);
+          localStorage.setItem("user", JSON.stringify(res.data));
         } else {
-          setRole("unregistered");
+          setIsLoggedIn(false);
         }
       } catch (err) {
-        console.warn("Auth check failed:", err);
+        console.warn("Auth check failed:", err.response?.data || err.message);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        setRole("unregistered");
+        setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }
@@ -55,9 +50,9 @@ export default function MainPage() {
   }, []);
 
   let content;
-  if (role === "user") {
+  if (isLoggedIn) {
     content = <ProgressTracking />;
-  } else if (role === "unregistered") {
+  } else {
     content = (
       <AuthPrompt
         onLogin={() => navigate("/login")}
@@ -66,7 +61,7 @@ export default function MainPage() {
     );
   }
 
-  const showHeaderFooter = role === "user";
+  const showHeaderFooter = isLoggedIn;
 
   if (loading) {
     return <div className="sa02-loading">Checking authentication...</div>;
@@ -80,6 +75,10 @@ export default function MainPage() {
     </div>
   );
 }
+
+
+
+
 
 
 
