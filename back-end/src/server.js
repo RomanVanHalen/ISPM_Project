@@ -1,4 +1,4 @@
-/*import express from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
@@ -48,62 +48,7 @@ app.get("/", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));     */
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));  
 
 
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import connectDB from "./config/db.js";
-import authRoutes from "./routes/authRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
-
-dotenv.config();
-
-// Fix __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const app = express();
-
-// Connect to DB
-connectDB();
-
-// Middleware
-app.use(express.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-
-// ✅ Ensure uploads folder exists in back-end/uploads
-const UPLOADS_DIR = path.join(__dirname, "uploads");
-fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-
-// ✅ Serve static files globally
-// Example: http://localhost:5000/uploads/filename.png
-app.use("/uploads", express.static(UPLOADS_DIR));
-
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes);
-
-
-// Health check
-app.get("/", (req, res) => {
-  res.send("✅ API is running...");
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📂 Serving uploads from: ${UPLOADS_DIR}`);
-});
 
