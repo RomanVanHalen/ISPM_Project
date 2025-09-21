@@ -1,91 +1,36 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../../components/Navbar"; 
-import PoliciesHome from "./policiescomponents/PoliciesHome";
+import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
+import PoliciesHome from "./policiescomponents/PoliciesHome";
 import "./Policiesdocuments.css";
 
 export default function Policies() {
   const [user, setUser] = useState(null);
   const [showHome, setShowHome] = useState(true);
-
-  const policies = [
-    {
-      title: "ISO 27001 / ISO 27000 Series – Information Security Management",
-      why: "They’ll be holding sensitive child and donor data — breaches could be devastating.",
-      keyElements: [
-        "Risk assessment and security controls.",
-        "Data encryption (at rest & in transit).",
-        "Access control & authentication.",
-        "Incident response procedures",
-      ],
-    },
-    {
-      title: "ISO 9001 – Quality Management System",
-      why: "Builds trust with partners & donors through consistent program delivery quality.",
-      keyElements: ["Process improvement.", "Documented procedures.", "Regular audits"],
-    },
-    {
-      title: "ISO 26000 – Social Responsibility",
-      why: "Reinforces NGO ethics, human rights, and sustainable development goals.",
-      keyElements: ["Ethical behavior guidelines.", "Respect for human rights.", "Environmental responsibility"],
-    },
-    {
-      title: "UN Convention on the Rights of the Child (UNCRC)",
-      why: "As a child-focused NGO, all programs should be aligned with children’s rights.",
-      keyElements: ["Right to education, health, and protection.", "No exploitation or discrimination.", "Child participation in decisions affecting them."],
-    },
-    {
-      title: "GDPR (or Equivalent Local Data Protection Law)",
-      why: "Protects personal information of children, families, and donors.",
-      keyElements: ["Consent before collecting personal data.", "Right to access and delete data.", "Data breach notification requirements."],
-    },
-    {
-      title: "Sphere Standards – Humanitarian Response Quality",
-      why: "Ensures aid meets international quality & dignity standards.",
-      keyElements: ["Minimum standards for food, shelter, health, and water.", "Community engagement.", "Accountability measures."],
-    },
-    {
-      title: "ILO Labour Standards",
-      why: "Ensures HR practices meet fair labor laws & protect staff rights.",
-      keyElements: ["Fair wages.", "Safe working conditions.", "Non-discrimination in employment."],
-    },
-    {
-      title: "ISO 37001 – Anti-Bribery Management",
-      why: "NGOs handling donor funds must prove they’re corruption-free.",
-      keyElements: ["Anti-corruption training.", "Internal reporting & audit mechanisms.", "Supplier/partner vetting."],
-    },
-    {
-      title: "Child Safeguarding Alliance Guidelines",
-      why: "Provides practical implementation of child protection principles for NGOs.",
-      keyElements: ["Screening of staff & volunteers.", "Risk assessments in child programs.", "Safeguarding reporting framework."],
-    },
-    {
-      title: "Disaster Recovery & Business Continuity Framework",
-      why: "Ensures the NGO can keep operating during crises.",
-      keyElements: ["Backup systems.", "Emergency communication plans.", "Continuity of critical child services."],
-    },
-  ];
+  const [policies, setPolicies] = useState([]);
+  const [selectedPolicy, setSelectedPolicy] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setUser({ role: "employee", name: "Guest" });
-        return;
-      }
+    const token = localStorage.getItem("token");
 
+    if (!token) {
+      setUser({ role: "employee", name: "Guest" });
+    } else {
+      setUser({ role: "admin", name: "Admin User" });
+    }
+
+    // Fetch policies from backend
+    const fetchPolicies = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser({ role: res.data.role || "employee", name: res.data.name || "User" });
+        const res = await axios.get("http://localhost:5000/api/policies");
+        setPolicies(res.data);
       } catch (err) {
-        console.error("Failed to fetch user info:", err);
-        setUser({ role: "employee", name: "Guest" });
+        console.error("Failed to fetch policies:", err);
       }
     };
-    fetchUser();
+
+    fetchPolicies();
   }, []);
 
   const handleContinue = () => setShowHome(false);
@@ -93,37 +38,95 @@ export default function Policies() {
   if (showHome) return <PoliciesHome user={user} onContinue={handleContinue} />;
 
   return (
-    <div className="shri-policies-container">
+    <div className="shri-policies-page">
       <Navbar />
 
-      <div className="shri-policies-header" style={{ marginTop: "20px" }}>
-        <h1 className="shri-policies-main-title">Policies & Standards</h1>
-      </div>
-
-      <div className="shri-policies-list">
-        {policies.map((policy, idx) => (
-          <section className="shri-policy-section" key={idx}>
-            <div className="shri-policy-header">
-              <h2 className="shri-policy-title">{policy.title}</h2>
+      <div className="shri-policies-container">
+        {!selectedPolicy ? (
+          <>
+            <div className="shri-policies-header">
+              <h1 className="shri-policies-main-title">Policies & Standards</h1>
             </div>
-            <p className="shri-policy-why"><strong>Why:</strong> {policy.why}</p>
-            <div className="shri-policy-elements">
+
+            <div className="shri-policies-list">
+              {policies.map((policy, idx) => (
+                <section
+                  className="shri-policy-section"
+                  key={idx}
+                  onClick={() => setSelectedPolicy(policy)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="shri-policy-header">
+                    <h2 className="shri-policy-title">{policy.title}</h2>
+                  </div>
+                  <p className="shri-policy-why">
+                    <strong>Why:</strong> {policy.why}
+                  </p>
+                  <div className="shri-policy-elements">
+                    <strong>Key Elements:</strong>
+                    <ul>
+                      {policy.keyElements.map((el, i) => (
+                        <li key={i}>{el}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  {policy.pdf && (
+                    <p>
+                      <a
+                        href={policy.pdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View PDF
+                      </a>
+                    </p>
+                  )}
+                </section>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="shri-policy-detail">
+            <button
+              className="shri-back-btn"
+              onClick={() => setSelectedPolicy(null)}
+            >
+              ← Back to Policies
+            </button>
+            <h2 className="shri-detail-title">{selectedPolicy.title}</h2>
+            <p className="shri-detail-why">
+              <strong>Why:</strong> {selectedPolicy.why}
+            </p>
+            <div className="shri-detail-elements">
               <strong>Key Elements:</strong>
               <ul>
-                {policy.keyElements.map((el, i) => <li key={i}>{el}</li>)}
+                {selectedPolicy.keyElements.map((el, i) => (
+                  <li key={i}>{el}</li>
+                ))}
               </ul>
             </div>
-            {user?.role === "admin" && (
-              <div className="shri-policy-admin-buttons">
-                <button className="shri-update-btn">Update</button>
-                <button className="shri-delete-btn">Delete</button>
-              </div>
+            <div className="shri-detail-description">
+              <strong>More Details:</strong>
+              <pre>{selectedPolicy.details}</pre>
+            </div>
+            {selectedPolicy.pdf && (
+              <p>
+                <a
+                  href={selectedPolicy.pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download/View PDF
+                </a>
+              </p>
             )}
-          </section>
-        ))}
+          </div>
+        )}
       </div>
 
       <Footer2 />
     </div>
   );
 }
+
+

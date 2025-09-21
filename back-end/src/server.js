@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import policiesRouter from "./routes/policies.js"; // ✅ Added policies router
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -33,13 +34,17 @@ app.use(
 
 // ✅ Serve static files from uploads directory
 // Example: http://localhost:5000/uploads/filename.jpg
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve PDFs from the correct folder
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 
+// ✅ Policies JSON route
+app.use("/api/policies", policiesRouter);
 
 // Health check
 app.get("/", (req, res) => {
@@ -48,5 +53,7 @@ app.get("/", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));     
+
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+  
 
