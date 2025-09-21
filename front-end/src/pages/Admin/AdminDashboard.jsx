@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaChartLine, FaBell } from "react-icons/fa";
 import AdminActions from "./adminComponents/AdminActions";
-import AdminCharts from "./adminComponents/AdminCharts"; // ⬅️ Import the charts component
+import AdminCharts from "./adminComponents/AdminCharts"; 
 import api from "../../api/axiosInstance"; 
 import "./AdminDashboard.css";
 

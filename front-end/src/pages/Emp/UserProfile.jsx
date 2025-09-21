@@ -1,169 +1,189 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./UserProfile.css";
+import React, { useState, useEffect, useRef } from "react";
+import "./EmployeeDashboard.css";
 
-export default function UserProfile({ onClose, onProfileUpdate }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [previewPic, setPreviewPic] = useState(null);
-  const [file, setFile] = useState(null); // <-- keep raw file here
-  const [loading, setLoading] = useState(true);
-
+const EmpSettings = () => {
+  const [empData, setEmpData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    profilePic: "",
+  });
+  const [preview, setPreview] = useState("");
+  const [message, setMessage] = useState("");
+  const fileInputRef = useRef(null);
   const token = localStorage.getItem("token");
-  const apiBase = "http://localhost:5000";
 
+  // Fetch logged-in employee info
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`${apiBase}/api/users/profile`, {
+        const res = await fetch("http://localhost:5000/api/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        const data = await res.json();
 
-        setUsername(res.data.username || "");
-        setEmail(res.data.email || "");
-        setPreviewPic(res.data.profilePic || null);
+        const pic = data.profilePic
+          ? `${data.profilePic}?t=${Date.now()}`
+          : "https://i.pravatar.cc/150?img=8";
+
+        setEmpData({
+          name: data.name || "",
+          email: data.email || "",
+          password: "",
+          profilePic: pic,
+        });
+        setPreview(pic);
+
+        localStorage.setItem("empProfilePic", pic);
       } catch (err) {
-        console.error(err);
-        alert("❌ Failed to load profile.");
-      } finally {
-        setLoading(false);
+        console.error("Failed to fetch employee profile:", err);
       }
     };
     fetchProfile();
   }, [token]);
 
-  const handleImageUpload = (e) => {
-    const f = e.target.files?.[0];
-    if (f) {
-      setFile(f);
-      // Show a temporary preview
-      const objectUrl = URL.createObjectURL(f);
-      setPreviewPic(objectUrl);
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === "profilePic" && files.length > 0) {
+      const file = files[0];
+      setPreview(URL.createObjectURL(file));
+      setEmpData((prev) => ({ ...prev, profilePic: file }));
+    } else {
+      setEmpData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleDeletePicture = async () => {
-    if (!window.confirm("Remove profile picture?")) return;
-
-    try {
-      const res = await axios.put(
-        `${apiBase}/api/users/profile`,
-        { username, email, removeProfilePicture: true },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setFile(null);
-      setPreviewPic(null);
-      onProfileUpdate?.({
-        username: res.data.username,
-        role: res.data.role,
-        avatar: res.data.profilePic,
-      });
-      alert("✅ Profile picture removed");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Failed to delete profile picture");
-    }
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      let res;
-      if (file) {
-        // Use FormData when uploading a file
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("email", email);
-        if (password) formData.append("password", password);
-        formData.append("profilePicture", file);
+    setMessage("");
 
-        res = await axios.put(`${apiBase}/api/users/profile`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      } else {
-        // No file -> simple JSON PUT
-        res = await axios.put(
-          `${apiBase}/api/users/profile`,
-          { username, email, password },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+    try {
+      const formData = new FormData();
+      formData.append("name", empData.name);
+      formData.append("email", empData.email);
+      if (empData.password) formData.append("password", empData.password);
+      if (empData.profilePic instanceof File) {
+        formData.append("profilePic", empData.profilePic);
       }
 
-      alert("✅ Profile updated");
-      setPassword("");
-      onProfileUpdate?.({
-        username: res.data.username,
-        role: res.data.role,
-        avatar: res.data.profilePic,
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
       });
 
-      // If server returned a final image URL, lock it in preview
-      setPreviewPic(res.data.profilePic || null);
+      const data = await res.json();
+
+      if (res.ok) {
+        const updatedPic = data.user.profilePic
+          ? `${data.user.profilePic}?t=${Date.now()}`
+          : "https://i.pravatar.cc/150?img=8";
+
+        setPreview(updatedPic);
+        setEmpData((prev) => ({ ...prev, profilePic: updatedPic }));
+        setMessage("Profile updated successfully!");
+
+        localStorage.setItem("empProfilePic", updatedPic);
+        window.dispatchEvent(new Event("storage"));
+      } else {
+        setMessage(data.message || "Failed to update profile");
+      }
     } catch (err) {
       console.error(err);
-      alert("❌ Failed to update profile");
+      setMessage("Server error");
     }
   };
 
-  if (loading) return <p>Loading profile...</p>;
-
   return (
-    <div className="anya-user-profile-page">
-      <div className="anya-profile-header">
-        <h2>Edit Profile</h2>
-        <button className="anya-back-btn" onClick={onClose}>⬅ Back</button>
-      </div>
+    <div className="account-settings-container">
+      <h2>Employee Settings</h2>
 
-      <form className="anya-profile-form" onSubmit={handleSubmit}>
+      <form className="account-form" onSubmit={handleSubmit}>
         {/* Profile Picture */}
-        <div className="anya-profile-pic-section">
+        <div className="profile-pic-section">
           <img
-            src={previewPic || "https://via.placeholder.com/120"}
-            alt="Profile"
-            className="anya-profile-pic"
+            src={preview}
+            alt="Profile Preview"
+            className="profile-preview"
+            onClick={handleProfilePictureClick}
+            style={{ cursor: "pointer" }}
           />
-          <div style={{ display: "flex", gap: "8px", marginTop: "0.5rem" }}>
-            <label className="anya-upload-btn">
-              Upload Picture
-              <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
-            </label>
-            {previewPic && (
-              <button type="button" className="anya-upload-btn" onClick={handleDeletePicture}>
-                Delete Picture
-              </button>
-            )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            name="profilePic"
+            accept="image/*"
+            onChange={handleChange}
+            style={{ display: "none" }}
+          />
+          <button
+            type="button"
+            className="profile-upload-btn"
+            onClick={handleProfilePictureClick}
+          >
+            Click to change profile picture
+          </button>
+        </div>
+
+        {/* Other fields */}
+        <div className="form-fields-container">
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={empData.name}
+              onChange={handleChange}
+              required
+            />
           </div>
-        </div>
 
-        {/* Username */}
-        <div className="anya-form-group">
-          <label>Username:</label>
-          <input type="text" value={username}
-                 onChange={(e) => setUsername(e.target.value)} required />
-        </div>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={empData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        {/* Email */}
-        <div className="anya-form-group">
-          <label>Email:</label>
-          <input type="email" value={email}
-                 onChange={(e) => setEmail(e.target.value)} required />
-        </div>
+          <div className="form-group">
+            <label>New Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={empData.password}
+              onChange={handleChange}
+              placeholder="Leave blank to keep current password"
+            />
+          </div>
 
-        {/* Password */}
-        <div className="anya-form-group">
-          <label>New Password:</label>
-          <input type="password" value={password}
-                 onChange={(e) => setPassword(e.target.value)}
-                 placeholder="Enter new password" />
+          <button type="submit" className="submit-button">
+            Save Changes
+          </button>
         </div>
-
-        <button type="submit" className="anya-save-btn">Save Changes</button>
       </form>
+
+      {message && (
+        <p
+          className={`form-message ${
+            message.includes("successfully") ? "success" : "error"
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
-}
+};
+
+export default EmpSettings;
