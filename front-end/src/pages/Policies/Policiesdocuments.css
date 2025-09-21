@@ -1,0 +1,188 @@
+/* ================= Page Wrapper ================= */
+.shri-policies-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ================= Content Wrapper ================= */
+.shri-policies-container {
+  max-width: 1300px;
+  width: 95%;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f9fdf8;
+}
+
+/* ================= Header ================= */
+.shri-policies-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #c8e6c9;
+  padding-bottom: 12px;
+  margin-bottom: 25px;
+}
+
+.shri-policies-main-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+/* ================= Policies List ================= */
+.shri-policies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.shri-policy-section {
+  background-color: #ffffff;
+  border-left: 6px solid #2e7d32;
+  border-radius: 10px;
+  padding: 20px 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.shri-policy-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* ================= Policy Header ================= */
+.shri-policy-header {
+  margin-bottom: 12px;
+}
+
+.shri-policy-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1b5e20;
+  margin: 0;
+}
+
+.shri-policy-why {
+  font-size: 15px;
+  margin: 10px 0;
+}
+
+.shri-policy-elements ul {
+  margin: 6px 0 0 20px;
+  font-size: 15px;
+  list-style-type: disc;
+  line-height: 1.6;
+}
+
+/* ================= Admin Buttons ================= */
+.shri-policy-admin-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 12px;
+}
+
+.shri-update-btn,
+.shri-delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  transition: background 0.2s ease-in-out;
+}
+
+.shri-update-btn {
+  background-color: #43a047;
+}
+.shri-update-btn:hover {
+  background-color: #1b5e20;
+}
+
+.shri-delete-btn {
+  background-color: #e53935;
+}
+.shri-delete-btn:hover {
+  background-color: #9a0007;
+}
+
+/* ================= Detail Page ================= */
+.shri-policy-detail {
+  background-color: #fff;
+  border-left: 6px solid #15c057;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+}
+
+.shri-back-btn {
+  background: none;
+  border: none;
+  color: #15c03a;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.shri-back-btn:hover {
+  text-decoration: underline;
+}
+
+.shri-detail-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #1b5e20;
+}
+
+.shri-detail-why {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.shri-detail-elements ul {
+  margin: 6px 0 0 20px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.shri-detail-description {
+  margin-top: 15px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ================= Footer ================= */
+.shri-footer {
+  padding: 15px 20px;
+  margin-top: auto;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 768px) {
+  .shri-policies-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .shri-policies-main-title {
+    font-size: 26px;
+  }
+
+  .shri-policy-title {
+    font-size: 18px;
+  }
+
+  .shri-policy-why,
+  .shri-policy-elements ul {
+    font-size: 14px;
+  }
+
+  .shri-detail-title {
+    font-size: 20px;
+  }
+}

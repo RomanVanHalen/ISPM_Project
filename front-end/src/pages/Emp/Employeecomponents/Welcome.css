@@ -1,0 +1,105 @@
+/* Page Wrapper */
+.welcome-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full height page */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Welcome Section (main body) */
+.welcome-container {
+  flex: 1; /* takes remaining height between navbar and footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #4caf50, #a5d6a7); /* Green gradient */
+  color: #fff;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0; /* keeps background below card */
+
+  /* ✅ Fix: push content below navbar */
+  margin-top: 60px; /* adjust to your navbar height */
+}
+
+/* Floating Circles in Background */
+.welcome-container::before,
+.welcome-container::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 15s infinite linear;
+  z-index: 0; /* stays behind everything */
+}
+
+.welcome-container::before {
+  width: 200px;
+  height: 200px;
+  top: -50px;
+  left: -50px;
+}
+
+.welcome-container::after {
+  width: 300px;
+  height: 300px;
+  bottom: -100px;
+  right: -100px;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) translateX(0px);}
+  50% { transform: translateY(30px) translateX(30px);}
+  100% { transform: translateY(0px) translateX(0px);}
+}
+
+/* Welcome Card */
+.welcome-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  z-index: 2; /* stays above background */
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Headings and Text */
+.welcome-card h1 {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+
+.welcome-card p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  color: #f1f8e9;
+}
+
+/* Portal Button */
+.welcome-portal-btn {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #4caf50;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.welcome-portal-btn:hover {
+  background-color: #f1f8e9;
+  transform: translateY(-3px);
+}

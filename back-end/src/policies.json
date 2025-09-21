@@ -1,0 +1,114 @@
+[
+  {
+    "title": "ISO 27001 / ISO 27000 Series – Information Security Management",
+    "why": "They’ll be holding sensitive child and donor data — breaches could be devastating.",
+    "keyElements": [
+      "Risk assessment and security controls.",
+      "Data encryption (at rest & in transit).",
+      "Access control & authentication.",
+      "Incident response procedures"
+    ],
+    "details": "ISO 27001 is the leading standard for information security management...",
+    "pdf": "/uploads/ISO27001.pdf"
+  },
+  {
+    "title": "ISO 9001 – Quality Management System",
+    "why": "Builds trust with partners & donors through consistent program delivery quality.",
+    "keyElements": [
+      "Process improvement.",
+      "Documented procedures.",
+      "Regular audits"
+    ],
+    "details": "ISO 9001 ensures quality across all operations...",
+    "pdf": "/uploads/ISO9001.pdf"
+  },
+  {
+    "title": "ISO 26000 – Social Responsibility",
+    "why": "Reinforces NGO ethics, human rights, and sustainable development goals.",
+    "keyElements": [
+      "Ethical behavior guidelines.",
+      "Respect for human rights.",
+      "Environmental responsibility"
+    ],
+    "details": "ISO 26000 provides guidance for organizations to operate in a socially responsible manner...",
+    "pdf": "/uploads/ISO26000.pdf"
+  },
+  {
+    "title": "UN Convention on the Rights of the Child (UNCRC)",
+    "why": "As a child-focused NGO, all programs should be aligned with children’s rights.",
+    "keyElements": [
+      "Right to education, health, and protection.",
+      "No exploitation or discrimination.",
+      "Child participation in decisions affecting them."
+    ],
+    "details": "The UNCRC sets international standards for children's rights...",
+    "pdf": "/uploads/UNCRC.pdf"
+  },
+  {
+    "title": "GDPR (or Equivalent Local Data Protection Law)",
+    "why": "Protects personal information of children, families, and donors.",
+    "keyElements": [
+      "Consent before collecting personal data.",
+      "Right to access and delete data.",
+      "Data breach notification requirements."
+    ],
+    "details": "GDPR is a comprehensive data protection regulation...",
+    "pdf": "/uploads/GDPR.pdf"
+  },
+  {
+    "title": "Sphere Standards – Humanitarian Response Quality",
+    "why": "Ensures aid meets international quality & dignity standards.",
+    "keyElements": [
+      "Minimum standards for food, shelter, health, and water.",
+      "Community engagement.",
+      "Accountability measures."
+    ],
+    "details": "Sphere Standards provide guidelines for humanitarian response quality...",
+    "pdf": "/uploads/SphereStandards.pdf"
+  },
+  {
+    "title": "ILO Labour Standards",
+    "why": "Ensures HR practices meet fair labor laws & protect staff rights.",
+    "keyElements": [
+      "Fair wages.",
+      "Safe working conditions.",
+      "Non-discrimination in employment."
+    ],
+    "details": "ILO standards protect employee rights and welfare...",
+    "pdf": "/uploads/ILO.pdf"
+  },
+  {
+    "title": "ISO 37001 – Anti-Bribery Management",
+    "why": "NGOs handling donor funds must prove they’re corruption-free.",
+    "keyElements": [
+      "Anti-corruption training.",
+      "Internal reporting & audit mechanisms.",
+      "Supplier/partner vetting."
+    ],
+    "details": "ISO 37001 helps organizations prevent, detect, and address bribery...",
+    "pdf": "/uploads/ISO37001.pdf"
+  },
+  {
+    "title": "Child Safeguarding Alliance Guidelines",
+    "why": "Provides practical implementation of child protection principles for NGOs.",
+    "keyElements": [
+      "Screening of staff & volunteers.",
+      "Risk assessments in child programs.",
+      "Safeguarding reporting framework."
+    ],
+    "details": "These guidelines help NGOs operationalize child protection policies...",
+    "pdf": "/uploads/ChildSafeguarding.pdf"
+  },
+  {
+    "title": "Disaster Recovery & Business Continuity Framework",
+    "why": "Ensures the NGO can keep operating during crises.",
+    "keyElements": [
+      "Backup systems.",
+      "Emergency communication plans.",
+      "Continuity of critical child services."
+    ],
+    "details": "Business continuity planning ensures NGOs remain operational during emergencies...",
+    "pdf": "/uploads/DisasterRecovery.pdf"
+  }
+]
+

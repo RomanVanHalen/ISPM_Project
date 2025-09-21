@@ -1,0 +1,61 @@
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f9fafb;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(122, 218, 165, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(122, 218, 165, 0.2);
+  border-color: rgba(122, 218, 165, 0.3);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #7ADAA5;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  color: #4caf87;
+  transform: scale(1.1);
+}
+
+.feature-btn {
+  text-decoration: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7ADAA5, #4caf87);
+  color: white;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(122, 218, 165, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.feature-btn:hover {
+  background: linear-gradient(135deg, #4caf87, #7ADAA5);
+  box-shadow: 0 8px 32px rgba(122, 218, 165, 0.5);
+  transform: translateY(-3px);
+}

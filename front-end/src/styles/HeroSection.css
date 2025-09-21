@@ -1,0 +1,244 @@
+/* Hero Section */
+.hero {
+  text-align: center;
+  min-height: 70vh; 
+  padding: 100px 2rem;
+  background: linear-gradient(135deg, #7ADAA5 30%, #4caf87 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Background pattern */
+.hero-bg-pattern {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.1;
+  background-image: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 60%
+  );
+  transform: skewY(-12deg);
+}
+
+/* Grid lines - vertical & horizontal */
+.cyber-grid {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,255,255,0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,255,255,0.2) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: moveGrid 10s linear infinite;
+}
+
+/* Animate the grid for cyberpunk HUD effect */
+@keyframes moveGrid {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 25px 25px, 25px 25px; }
+  100% { background-position: 50px 50px, 50px 50px; }
+}
+
+/* Abstract animated lines */
+.falling-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.line {
+  position: absolute;
+  width: 5px; /* bolder lines */
+  height: 100px; /* taller lines for visibility */
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(138, 43, 226, 0.9),
+    rgba(0, 255, 255, 0.8),
+    rgba(255, 0, 255, 0.8)
+  );
+  animation: moveLine linear infinite;
+  opacity: 0.85;
+}
+
+@keyframes moveLine {
+  0% { transform: translateY(-120px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* Hero content */
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Hero badge, title, buttons - keep existing colors */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.6; }
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Call to Action Buttons */
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background: white;
+  color: #4caf87;
+}
+
+.btn-primary:hover {
+  background: #f9fafb;
+  color: #3a9a70;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.btn-alt {
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+}
+
+.btn-alt:hover {
+  background: white;
+  color: #4caf87;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.btn:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+/* Cyberpunk Animation Hub + Pulses + Particles */
+.cyberpunk-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cyberhub {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 12px; height: 12px;
+  background: #00ffff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+  transform: translate(-50%, -50%);
+}
+
+.pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 12px; height: 12px;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.7;
+  animation: pulseCyber 2s infinite;
+}
+
+.pulse1 { animation-delay: 0s; }
+.pulse2 { animation-delay: 0.5s; }
+.pulse3 { animation-delay: 1s; }
+
+@keyframes pulseCyber {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50% { opacity: 0.4; }
+  100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ff00ff;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: particleMove linear infinite;
+}
+
+@keyframes particleMove {
+  0% { transform: translate(0,0) scale(1); opacity: 0.5; }
+  50% { transform: translate(-10px, -20px) scale(1.2); opacity: 0.8; }
+  100% { transform: translate(10px, 10px) scale(0.8); opacity: 0; }
+}

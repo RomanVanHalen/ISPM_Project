@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
+import Home from "./pages/Home";
+import Policies from "./pages/Policies/Policies";
+import Training from "./pages/Training/Training";
+import Reports from "./pages/Analytics&Reports/Analytics&Reports";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Login/Register";
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
+import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
+import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
+
+import "./App.css";
+
+//courses content//
+import Courses from "./pages/Training/components/Courses";
+import Ddomain1 from "./pages/Training/components/Ddomain1";
+import Ddomain2 from "./pages/Training/components/Ddomain2";
+import Ddomain3 from "./pages/Training/components/Ddomain3";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <ScrollToTop /> 
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/policies" element={<Policies />} />
+        <Route path="/training" element={<Training />} />
+        <Route path="/reports" element={<Reports />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Admin */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/users" element={<AdminUsers />} /> 
+        <Route path="/account-settings" element={<AccountSettings />} />
+
+        {/* Employee */}
+        <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
+
+        {/* Courses */}
+        <Route path="/training/Courses" element={<Courses />}/>
+        <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
+        <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
+        <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
+        
+      </Routes>
+    </Router>
   );
 }
 

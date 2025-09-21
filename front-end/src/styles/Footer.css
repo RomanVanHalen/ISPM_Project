@@ -1,0 +1,53 @@
+.bottom-cta {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #7ADAA5, #4caf87);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.bottom-cta h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.bottom-cta p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #e0f2e9;
+}
+
+.btn-cta {
+  background: white;
+  color: #4caf87;
+  padding: 1rem 2.5rem;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.btn-cta:hover {
+  background-color: #f9fafb;
+  color: #4caf87;
+  box-shadow: 0 16px 48px rgba(56, 142, 60, 0.4);
+  transform: translateY(-4px);
+  cursor: pointer;
+}

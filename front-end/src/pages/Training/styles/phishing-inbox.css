@@ -1,0 +1,405 @@
+/* phishing-inbox.css - styles for PhishingInboxSimulation.jsx */
+
+/* Basic layout */
+.ph-container {
+  padding: 18px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #1f2937;
+  background: #f3f4f6;
+  min-height: 60vh;
+  box-sizing: border-box;
+}
+
+.ph-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+  overflow: hidden;
+}
+
+.ph-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 0;
+  min-height: 420px;
+}
+
+/* Inbox column */
+.ph-inbox-col {
+  border-right: 1px solid #e6e9ee;
+  padding: 18px;
+  background: #fafafa;
+}
+
+.ph-inbox-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ph-inbox-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.ph-meta {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ph-alert {
+  background: #fff1f2;
+  color: #9f1239;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.ph-list {
+  max-height: 52vh;
+  overflow: auto;
+  padding-right: 8px;
+}
+
+/* Mail item */
+.ph-mail-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ph-mail-item:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.03);
+}
+
+.ph-mail-item.active {
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(99,102,241,0.08);
+  border-left: 3px solid #6366f1;
+}
+
+.ph-checkbox {
+  margin-top: 6px;
+  width: 16px;
+  height: 16px;
+}
+
+.ph-mail-body {
+  min-width: 0;
+}
+
+.ph-mail-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ph-sender {
+  font-weight: 600;
+  font-size: 13px;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ph-time {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-left: 8px;
+}
+
+.ph-subject {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #374151;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ph-preview {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inbox actions */
+.ph-inbox-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.ph-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.ph-btn.primary {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+}
+
+.ph-btn.ghost {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #e6e9ee;
+}
+
+.ph-btn.outline {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #111827;
+}
+
+.ph-btn.danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.ph-score {
+  margin-left: auto;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Tip */
+.ph-tip {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Preview column */
+.ph-preview-col {
+  padding: 22px;
+  position: relative;
+}
+
+/* Empty preview */
+.ph-empty-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  min-height: 260px;
+}
+
+.ph-empty-title {
+  font-weight: 700;
+  color: #374151;
+}
+
+.ph-empty-sub {
+  font-size: 13px;
+}
+
+/* Email view */
+.ph-email-view {
+  max-width: 760px;
+}
+
+.ph-email-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ph-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ph-from {
+  font-weight: 700;
+  color: #111827;
+  font-size: 15px;
+}
+
+.ph-raw {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ph-email-body {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #eef2ff;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.03);
+}
+
+.ph-email-subject {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #111827;
+}
+
+.ph-email-preview {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+/* action row in email */
+.ph-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.ph-result-badge {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.ph-result-badge.good {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.ph-result-badge.bad {
+  background: #fff1f2;
+  color: #9f1239;
+}
+
+/* explanation */
+.ph-explanation {
+  margin-top: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #f1f5f9;
+}
+
+.ph-ex-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.ph-ex-text {
+  font-size: 13px;
+  color: #374151;
+}
+
+.ph-indicators {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* quick actions */
+.ph-quick-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.ph-qa {
+  background: transparent;
+  border: 1px solid #e6e9ee;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* results panel */
+.ph-results-panel {
+  margin-top: 18px;
+  border-radius: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #eef2ff;
+  max-width: 760px;
+}
+
+.ph-results-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ph-small {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ph-large {
+  font-weight: 800;
+  font-size: 22px;
+  color: #111827;
+}
+
+.ph-results-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.ph-result-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px;
+  background: #fbfbff;
+  border-radius: 8px;
+  border: 1px solid #f1f5ff;
+}
+
+.ph-result-id {
+  font-weight: 700;
+  color: #111827;
+  min-width: 44px;
+}
+
+.ph-result-ex {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* small screens */
+@media (max-width: 880px) {
+  .ph-grid {
+    grid-template-columns: 1fr;
+  }
+  .ph-inbox-col {
+    border-right: none;
+    border-bottom: 1px solid #e6e9ee;
+  }
+  .ph-preview-col {
+    padding: 14px;
+  }
+}

@@ -1,0 +1,168 @@
+/* Footer2.css */
+.footer {
+  background: linear-gradient(135deg, #2d5a3d 0%, #1a3d2e 100%);
+  color: #ffffff;
+  padding: 40px 0 15px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #4caf87, #66bb9a, #4caf87, transparent);
+  opacity: 0.8;
+}
+
+.footer-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Main Footer Content */
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.footer-section h3 {
+  color: #4caf87;
+  font-size: 28px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.footer-section h4 {
+  color: #4caf87;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Company Info Section */
+.footer-section p {
+  color: #e8f5e8;
+  line-height: 1.5;
+  font-size: 15px;
+  margin: 0;
+  opacity: 0.95;
+}
+
+/* Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #e8f5e8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 6px 0;
+  display: block;
+  position: relative;
+  opacity: 0.9;
+}
+
+.footer-links a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #4caf87, #66bb9a);
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 1px;
+}
+
+.footer-links a:hover {
+  color: #4caf87;
+  transform: translateX(6px);
+  opacity: 1;
+}
+
+.footer-links a:hover::before {
+  width: 25px;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid rgba(76, 175, 135, 0.15);
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: #b8d4c2;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  
+  .footer-section:first-child {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 0 20px 0;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    text-align: center;
+  }
+  
+  .footer-section h3 {
+    font-size: 28px;
+  }
+  
+  .footer-links a:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 0 15px;
+  }
+  
+  .footer-section h3 {
+    font-size: 24px;
+  }
+  
+  .footer-section h4 {
+    font-size: 16px;
+  }
+}
