@@ -63,7 +63,7 @@ export default function EmployeeDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = "/login"; // ✅ redirect to login page
   };
 
   return (
@@ -177,3 +177,5 @@ export default function EmployeeDashboard() {
     </div>
   );
 }
+
+

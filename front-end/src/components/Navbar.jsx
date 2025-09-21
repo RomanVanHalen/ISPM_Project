@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaShieldAlt, FaBars, FaTimes, FaUserCircle, FaBell, FaSignOutAlt } from "react-icons/fa"; 
+import { FaShieldAlt, FaBars, FaTimes, FaUserCircle, FaBell } from "react-icons/fa"; 
 import "../styles/Navbar.css";
 
 const Navbar = () => {
@@ -21,12 +21,6 @@ const Navbar = () => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/"); // go back home
-  };
 
   return (
     <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
@@ -77,7 +71,7 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-          {/*  Show Profile + Notifications + Logout ONLY when logged in */}
+          {/*  Show Profile + Notifications ONLY when logged in */}
           {isLoggedIn && (
             <>
               <li className="nav-profile">
@@ -96,15 +90,6 @@ const Navbar = () => {
                   title="Notifications"
                 >
                   <FaBell size={20} />
-                </button>
-              </li>
-              <li className="nav-profile">
-                <button
-                  className="nav-link profile-btn"
-                  onClick={handleLogout}
-                  title="Logout"
-                >
-                  <FaSignOutAlt size={20} />
                 </button>
               </li>
             </>
@@ -143,33 +128,24 @@ const Navbar = () => {
               Reports&Analytics
             </NavLink>
 
-            {/* Profile + Notifications + Logout for Mobile */}
-           {isLoggedIn && (
-  <>
-    <Link
-      to="/employee-dashboard"
-      className="mobile-nav-link"
-      onClick={() => setIsMobileMenuOpen(false)}
-      title="Employee Dashboard"
-    >
-      <FaUserCircle size={18} style={{ marginRight: "8px" }} />
-      Dashboard
-    </Link>
+            {/* Profile + Notifications for Mobile */}
+            {isLoggedIn && (
+              <>
+                <Link
+                  to="/employee-dashboard"
+                  className="mobile-nav-link"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  title="Employee Dashboard"
+                >
+                  <FaUserCircle size={18} style={{ marginRight: "8px" }} />
+                  Dashboard
+                </Link>
                 <Link
                   to="/notifications"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   🔔 Notifications
                 </Link>
-                <button
-                  className="mobile-logout-btn"
-                  onClick={() => {
-                    handleLogout();
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  🚪 Logout
-                </button>
               </>
             )}
           </div>
@@ -180,5 +156,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
