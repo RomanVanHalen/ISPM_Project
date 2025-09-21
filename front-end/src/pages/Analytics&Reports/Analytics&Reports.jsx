@@ -1,40 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axiosInstance"; // ✅ axios instance with interceptors
+import api from "../../api/axiosInstance";
 
 import Header from "../../components/Navbar";
 import Footer from "../../components/Footer2";
 
-import ComplianceReportingDashboard from "./Components/ComplianceReportingDashboard";
 import ProgressTracking from "./Components/ProgressTracking";
 import AuthPrompt from "./Components/Unregister";
 
 export default function MainPage() {
   const navigate = useNavigate();
 
-  const [role, setRole] = useState("guest");
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check user role from backend
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser?.role) {
-          setRole(storedUser.role); // quick set from localStorage
+        const token = localStorage.getItem("token");
+        console.log("Stored token:", token);
+
+        if (!token) {
+          setRole("unregistered");
+          setLoading(false);
+          return;
         }
 
-        // Verify token with backend
-        const res = await api.get("/auth/me"); // ✅ adjust endpoint to your backend
-        if (res.data?.role) {
-          setRole(res.data.role);
-          localStorage.setItem("user", JSON.stringify(res.data)); // keep fresh
+        // ✅ use your /profile endpoint
+        const res = await api.get("/profile");
+        console.log("Response from /profile:", res.data);
+
+        // Your backend returns the user directly (not nested)
+        const userData = res.data;
+        const userRole = userData.role;
+
+        // ✅ match role correctly (employee in your DB)
+        if (userRole === "employee") {
+          setRole("user"); // internally we treat employee as user
+          localStorage.setItem("user", JSON.stringify(userData));
         } else {
-          setRole("guest");
+          setRole("unregistered");
         }
       } catch (err) {
-        console.warn("User not authenticated:", err.message);
-        setRole("guest");
+        console.warn("Auth check failed:", err);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setRole("unregistered");
       } finally {
         setLoading(false);
       }
@@ -43,14 +54,10 @@ export default function MainPage() {
     checkUser();
   }, []);
 
-  // Choose content based on role
   let content;
-  if (role === "admin") {
-    content = <ComplianceReportingDashboard />;
-  } else if (role === "user") {
+  if (role === "user") {
     content = <ProgressTracking />;
-  } else {
-    // Guest / unregistered user
+  } else if (role === "unregistered") {
     content = (
       <AuthPrompt
         onLogin={() => navigate("/login")}
@@ -59,8 +66,7 @@ export default function MainPage() {
     );
   }
 
-  // Only show Header/Footer if user is admin or registered
-  const showHeaderFooter = role === "admin" || role === "user";
+  const showHeaderFooter = role === "user";
 
   if (loading) {
     return <div className="sa02-loading">Checking authentication...</div>;
@@ -74,6 +80,9 @@ export default function MainPage() {
     </div>
   );
 }
+
+
+
 
 
 
