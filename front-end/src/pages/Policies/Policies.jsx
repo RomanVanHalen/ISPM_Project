@@ -1,43 +1,36 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../components/Navbar"; 
-import PoliciesHome from "./policiescomponents/PoliciesHome";
+import axios from "axios";
+import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
+import PoliciesHome from "./policiescomponents/PoliciesHome";
 import "./Policiesdocuments.css";
 
 export default function Policies() {
   const [user, setUser] = useState(null);
   const [showHome, setShowHome] = useState(true);
-  const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [policies, setPolicies] = useState([]);
+  const [selectedPolicy, setSelectedPolicy] = useState(null);
 
-  // Fetch user info (optional)
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       setUser({ role: "employee", name: "Guest" });
     } else {
-      // Optionally fetch user profile from backend
-      setUser({ role: "admin", name: "Admin User" }); // Example
+      setUser({ role: "admin", name: "Admin User" });
     }
-  }, []);
 
-  // Fetch policies dynamically from JSON
-  useEffect(() => {
+    // Fetch policies from backend
     const fetchPolicies = async () => {
       try {
-        const res = await fetch("/policies.json"); // Adjust path if needed
-        const data = await res.json();
-        setPolicies(data);
+        const res = await axios.get("http://localhost:5000/api/policies");
+        setPolicies(res.data);
       } catch (err) {
         console.error("Failed to fetch policies:", err);
       }
     };
 
     fetchPolicies();
-
-    // Optional: auto-refresh every 10 seconds to get updated JSON
-    const interval = setInterval(fetchPolicies, 10000);
-    return () => clearInterval(interval);
   }, []);
 
   const handleContinue = () => setShowHome(false);
@@ -66,13 +59,28 @@ export default function Policies() {
                   <div className="shri-policy-header">
                     <h2 className="shri-policy-title">{policy.title}</h2>
                   </div>
-                  <p className="shri-policy-why"><strong>Why:</strong> {policy.why}</p>
+                  <p className="shri-policy-why">
+                    <strong>Why:</strong> {policy.why}
+                  </p>
                   <div className="shri-policy-elements">
                     <strong>Key Elements:</strong>
                     <ul>
-                      {policy.keyElements.map((el, i) => <li key={i}>{el}</li>)}
+                      {policy.keyElements.map((el, i) => (
+                        <li key={i}>{el}</li>
+                      ))}
                     </ul>
                   </div>
+                  {policy.pdf && (
+                    <p>
+                      <a
+                        href={policy.pdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View PDF
+                      </a>
+                    </p>
+                  )}
                 </section>
               ))}
             </div>
@@ -86,7 +94,9 @@ export default function Policies() {
               ← Back to Policies
             </button>
             <h2 className="shri-detail-title">{selectedPolicy.title}</h2>
-            <p className="shri-detail-why"><strong>Why:</strong> {selectedPolicy.why}</p>
+            <p className="shri-detail-why">
+              <strong>Why:</strong> {selectedPolicy.why}
+            </p>
             <div className="shri-detail-elements">
               <strong>Key Elements:</strong>
               <ul>
@@ -99,6 +109,17 @@ export default function Policies() {
               <strong>More Details:</strong>
               <pre>{selectedPolicy.details}</pre>
             </div>
+            {selectedPolicy.pdf && (
+              <p>
+                <a
+                  href={selectedPolicy.pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download/View PDF
+                </a>
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -107,3 +128,5 @@ export default function Policies() {
     </div>
   );
 }
+
+
