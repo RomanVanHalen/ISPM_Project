@@ -7,7 +7,7 @@ import UserProfile from "./UserProfile";
 import "./EmployeeDashboard.css";
 
 export default function EmployeeDashboard() {
-  const [user, setUser] = useState({ username: "", role: "", avatar: "" });
+  const [user, setUser] = useState({ name: "", role: "", avatar: "" });
   const [currentTab, setCurrentTab] = useState("Trainings");
   const [trainings, setTrainings] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -29,11 +29,18 @@ export default function EmployeeDashboard() {
         const profile = profileRes.data;
 
         setUser({
-          username: profile.username || "Employee",
+          name: profile.name || "Employee",
           role: profile.role || "employee",
-          avatar: profile.profilePic || "",
+          avatar: profile.profilePic
+            ? `${profile.profilePic}?t=${Date.now()}`
+            : "", // fallback empty string if no profilePic
         });
+      } catch (err) {
+        console.error("Profile fetch error:", err.response?.data || err.message);
+        setUser({ name: "Employee", role: "employee", avatar: "" });
+      }
 
+      try {
         const dataRes = await axios.get("http://localhost:5000/api/dashboard", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -43,7 +50,11 @@ export default function EmployeeDashboard() {
         setProgress(dataRes.data.progress || 0);
         setNotifications(dataRes.data.notifications || []);
       } catch (err) {
-        console.error("Failed to fetch user data:", err);
+        console.error("Dashboard fetch error:", err.response?.data || err.message);
+        setTrainings([]);
+        setCourses([]);
+        setProgress(0);
+        setNotifications([]);
       }
     };
 
@@ -65,23 +76,31 @@ export default function EmployeeDashboard() {
           <div
             className="dull-sidebar-user"
             onClick={() => setCurrentTab("Profile")}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}
           >
             {user.avatar ? (
-              <img src={user.avatar} alt="User Avatar" className="dull-user-avatar" />
+              <img
+                src={user.avatar}
+                alt="User Avatar"
+                className="dull-user-avatar"
+                style={{ width: "50px", height: "50px", borderRadius: "50%", objectFit: "cover" }}
+              />
             ) : (
-              <span className="dull-user-icon" role="img" aria-label="user">
-                👤
-              </span>
+              <img
+                src="https://via.placeholder.com/50?text=User"
+                alt="Default Avatar"
+                className="dull-user-avatar"
+                style={{ width: "50px", height: "50px", borderRadius: "50%", objectFit: "cover" }}
+              />
             )}
             <div className="dull-user-info-text">
-              <p className="dull-username">{user.username || "Guest"}</p>
-              <p className="dull-user-role">{user.role}</p>
+              <p className="dull-username" style={{ margin: 0 }}>{user.name || "Guest"}</p>
+              <p className="dull-user-role" style={{ margin: 0 }}>{user.role}</p>
             </div>
           </div>
 
           {/* Sidebar Tabs */}
-          <nav className="dull-sidebar-menu">
+          <nav className="dull-sidebar-menu" style={{ marginTop: "20px" }}>
             {roleTabs.map((tab) => (
               <button
                 key={tab}
@@ -94,7 +113,7 @@ export default function EmployeeDashboard() {
           </nav>
 
           {/* Logout */}
-          <button className="dull-logout-btn" onClick={handleLogout}>
+          <button className="dull-logout-btn" onClick={handleLogout} style={{ marginTop: "auto" }}>
             <LogOut /> Logout
           </button>
         </aside>
@@ -140,7 +159,15 @@ export default function EmployeeDashboard() {
           {currentTab === "Profile" && (
             <UserProfile
               onClose={() => setCurrentTab("Trainings")}
-              onProfileUpdate={(updatedUser) => setUser(updatedUser)}
+              onProfileUpdate={(updatedUser) => {
+                setUser({
+                  name: updatedUser.username || updatedUser.name || "Employee",
+                  role: updatedUser.role || "employee",
+                  avatar: updatedUser.avatar
+                    ? `${updatedUser.avatar}?t=${Date.now()}`
+                    : "https://via.placeholder.com/50?text=User",
+                });
+              }}
             />
           )}
         </main>
