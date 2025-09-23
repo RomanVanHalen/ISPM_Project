@@ -10,10 +10,11 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
+import Notifications from "../src/components/Notifications";  
 
 import "./App.css";
 
-//courses content//
+// Courses
 import Courses from "./pages/Training/components/Courses";
 import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
@@ -39,12 +40,14 @@ function App() {
         {/* Employee */}
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
 
+        {/* Notifications */}
+        <Route path="/notifications" element={<Notifications />} />
+
         {/* Courses */}
         <Route path="/training/Courses" element={<Courses />}/>
         <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
         <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
         <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
-        
       </Routes>
     </Router>
   );

@@ -22,12 +22,10 @@ const Navbar = () => {
     const fetchUser = async () => {
       try {
         setIsLoading(true);
-        // Check for token first
         const token = localStorage.getItem("token");
         if (token) {
           const res = await api.get("/users/profile");
           setUser(res.data);
-          // Store user data in localStorage for consistency
           localStorage.setItem("user", JSON.stringify(res.data));
         } else {
           setUser(null);
@@ -40,8 +38,7 @@ const Navbar = () => {
         setIsLoading(false);
       }
     };
-    
-    // Check if we have user data in localStorage first
+
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -49,16 +46,15 @@ const Navbar = () => {
     } else {
       fetchUser();
     }
-    
-    // Listen for storage events to sync across tabs
+
     const handleStorageChange = (e) => {
       if (e.key === "token" || e.key === "user") {
         fetchUser();
       }
     };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleLogout = () => {
@@ -105,7 +101,6 @@ const Navbar = () => {
               Reports
             </NavLink>
           </li>
-          {/* Admin-only link */}
           {user && user.role === "admin" && (
             <li>
               <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
@@ -115,23 +110,14 @@ const Navbar = () => {
           )}
         </ul>
 
-        {/* ===== Right Icons ===== */}
+        {/* ===== Right Side ===== */}
         <div className="nav-actions">
           {isLoading ? (
-            // Show loading skeleton while checking auth state
             <div className="auth-loading">
               <div className="loading-skeleton"></div>
             </div>
           ) : user ? (
             <>
-              {/* Bell icon - only show for employees and admins */}
-              {(user.role === "employee" || user.role === "admin") && (
-                <button className="notification-btn" onClick={() => navigate("/notifications")}>
-                  <FaBell />
-                </button>
-              )}
-
-              {/* Profile circle / picture */}
               <div className="profile-wrapper">
                 <div 
                   className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
@@ -162,15 +148,29 @@ const Navbar = () => {
                       <span className="dropdown-userrole">{user.role}</span>
                     </div>
                     <hr className="dropdown-divider" />
+                    
+                    {/* Profile → EmployeeDashboard */}
                     <button 
                       className="dropdown-btn" 
                       onClick={() => {
-                        navigate("/profile");
+                        navigate("/employee-dashboard");
                         setDropdownOpen(false);
                       }}
                     >
                       <FaUser /> Profile
                     </button>
+
+                    {/* Notifications */}
+                    <button 
+                      className="dropdown-btn" 
+                      onClick={() => {
+                        navigate("/notifications");
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      <FaBell /> Notifications
+                    </button>
+
                     {user.role === "admin" && (
                       <button 
                         className="dropdown-btn" 
@@ -190,7 +190,6 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            // Show login/signup buttons when no user is logged in
             <div className="auth-buttons">
               <button className="login-btn" onClick={() => navigate("/login")}>
                 Login
