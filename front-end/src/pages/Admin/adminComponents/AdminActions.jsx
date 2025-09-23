@@ -97,13 +97,16 @@ const AdminActions = () => {
 
         {menuOpen && (
           <div className="admin-dropdown-menu">
-            <div onClick={() => handleNavigate("/admin/policies")}>Policies</div>
-            <div onClick={() => handleNavigate("/admin/training-modules")}>Training Modules</div>
-            <div onClick={() => handleNavigate("/admin/analytics")}>Analytics</div>
-            <div onClick={() => handleNavigate("/admin/reports")}>Reports</div>
-            <div onClick={() => handleNavigate("/admin/notifications")}>Notifications</div>
-          </div>
-        )}
+  <div onClick={() => handleNavigate("/policies")}>Policies</div>
+  <div onClick={() => handleNavigate("/training")}>Training Modules</div>
+  <div onClick={() => handleNavigate("/reports")}>Analytics</div>
+  <div onClick={() => handleNavigate("/admin/users")}>User Management</div>
+  <div onClick={() => handleNavigate("/account-settings")}>Account Settings</div>
+</div>
+
+
+         )}
+
       </div>
     </div>
   );
