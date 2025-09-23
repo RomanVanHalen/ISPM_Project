@@ -10,44 +10,36 @@ import AuthPrompt from "./Components/Unregister";
 
 export default function MainPage() {
   const navigate = useNavigate();
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState("guest");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkUser = async () => {
+    const fetchUserRole = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setRole("guest");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-        console.log("Stored token:", token);
-
-        if (!token) {
-          setIsLoggedIn(false);
-          setLoading(false);
-          return;
-        }
-
-        // ✅ call backend to validate token
-        const res = await api.get("/users/profile");
-        console.log("Response from /users/profile:", res.data);
-
-        if (res.data && res.data.email) {
-          setIsLoggedIn(true);
-          localStorage.setItem("user", JSON.stringify(res.data));
-        } else {
-          setIsLoggedIn(false);
-        }
+        const res = await fetch("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setRole(data.role || "guest");
       } catch (err) {
-        console.warn("Auth check failed:", err.response?.data || err.message);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setIsLoggedIn(false);
+        console.error("Failed to fetch user info:", err);
+        setRole("guest");
       } finally {
         setLoading(false);
       }
     };
 
-    checkUser();
+    fetchUserRole();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   let content;
   if (isLoggedIn) {
@@ -61,11 +53,7 @@ export default function MainPage() {
     );
   }
 
-  const showHeaderFooter = isLoggedIn;
-
-  if (loading) {
-    return <div className="sa02-loading">Checking authentication...</div>;
-  }
+  const showHeaderFooter = role === "admin" || role === "user";
 
   return (
     <div className="sa02-body">
@@ -75,22 +63,3 @@ export default function MainPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

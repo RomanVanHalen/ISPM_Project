@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaChartLine, FaBell } from "react-icons/fa";
+import Header from "../../components/Navbar"; 
 import AdminActions from "./adminComponents/AdminActions";
 import AdminCharts from "./adminComponents/AdminCharts"; 
 import api from "../../api/axiosInstance"; 
@@ -30,6 +31,9 @@ function AdminDashboard() {
 
   return (
     <>
+      {/* Navbar */}
+      <Header />
+
       {/* Animated background */}
       <div className="dashboard-bg">
         <div className="bubble"></div>
