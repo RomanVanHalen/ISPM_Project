@@ -1,106 +1,113 @@
-/* Navbar Base */
+/* ===== Navbar Base ===== */
 .navbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0; 
+  left: 0; 
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 0.875rem 2rem;
   z-index: 1000;
-  padding: 0.75rem 2rem;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-scrolled {
-  background: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 
-/* Container */
 .nav-container {
+  width: 100%;
   max-width: 1280px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 2rem;
 }
 
-/* Logo */
-.logo {
+/* ===== Logo ===== */
+.nav-left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.nav-left:hover {
+  transform: translateY(-1px);
 }
 
 .logo-icon-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #4caf87, #45a078);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(76, 175, 135, 0.2);
+  transition: all 0.3s ease;
+}
+
+.nav-left:hover .logo-icon-wrapper {
+  box-shadow: 0 4px 12px rgba(76, 175, 135, 0.3);
+  transform: scale(1.05);
 }
 
 .logo-icon {
-  font-size: 1.8rem;
-  color: #4caf87;
-}
-
-.logo-status {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 10px;
-  height: 10px;
-  background: #4caf87;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
+  font-size: 1.5rem;
+  color: #fff;
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
-.logo-title {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #111827;
+.logo-title { 
+  font-weight: 700; 
+  color: #111827; 
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
 }
 
-.logo-subtitle {
-  font-size: 0.8rem;
-  color: #555555;
+.logo-subtitle { 
+  font-size: 0.8rem; 
+  color: #6b7280; 
+  font-weight: 500;
+  opacity: 0.9;
 }
 
-/* Desktop Links */
+/* ===== Center Links ===== */
 .nav-links {
-  list-style: none;
   display: flex;
-  gap: 2rem;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
   text-decoration: none;
   font-weight: 500;
-  color: #111827;
-  transition: color 0.25s ease, border-bottom 0.25s ease;
+  color: #374151;
   position: relative;
-}
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0; bottom: -6px;
-  width: 0%; height: 2px;
-  background: #4caf87;
-  transition: width 0.25s ease;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link:hover {
   color: #4caf87;
-}
-
-.nav-link:hover::after {
-  width: 100%;
 }
 
 .nav-link.active {
@@ -108,139 +115,297 @@
   font-weight: 600;
 }
 
-/* Mobile Menu Button */
-.mobile-menu-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: #111827;
-  cursor: pointer;
-}
-
-/* Mobile Nav */
-.mobile-nav {
-  background: #ffffff;
+.nav-link::after {
+  content: "";
   position: absolute;
-  top: 100%; left: 0; right: 0;
-  padding: 1rem 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  animation: slideDown 0.3s ease forwards;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #4caf87, #45a078);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  border-radius: 1px;
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
 }
 
-.mobile-nav-links {
+/* ===== Right Icons (bell + profile) ===== */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Notification button */
+.notification-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #4caf87;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #4caf87;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.notification-btn:hover {
+  background: #4caf87;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(76, 175, 135, 0.2);
+}
+
+/* Notification badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Auth buttons styling */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.login-btn, .signup-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.login-btn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.login-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.signup-btn {
+  background: #4caf87;
+  border: 1px solid #4caf87;
+  color: white;
+}
+
+.signup-btn:hover {
+  background: #45a078;
+  border-color: #45a078;
+}
+
+/* Loading state */
+.auth-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loading-skeleton {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Profile wrapper */
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Profile picture container */
+.profile-pic-container {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Profile picture and circle */
+.profile-pic, .profile-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: 2px solid #4caf87;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 135, 0.15);
+  overflow: hidden;
+}
+
+.profile-pic {
+  object-fit: cover;
+}
+
+.profile-pic:hover, .profile-circle:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(76, 175, 135, 0.25);
+}
+
+/* Admin badge styling */
+.admin-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced dropdown styling */
+.profile-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 0 1.5rem;
+  min-width: 200px;
+  z-index: 10;
+  overflow: hidden;
+  animation: dropdownFade 0.2s ease-out;
 }
 
-.mobile-nav-links a {
-  text-decoration: none;
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdown-user-info {
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dropdown-username {
+  display: block;
+  font-weight: 600;
   color: #111827;
+  font-size: 0.95rem;
+}
+
+.dropdown-userrole {
+  display: block;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-transform: capitalize;
+  margin-top: 2px;
+}
+
+.dropdown-divider {
+  border: none;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0;
+}
+
+.dropdown-btn {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.25s ease;
-}
-
-.mobile-nav-links a:hover {
-  color: #4caf87;
-}
-
-/* ------------------ PROFILE ICON ------------------ */
-.nav-profile {
+  color: #374151;
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
-  margin-left: 1rem;
+  gap: 10px;
+  transition: all 0.2s ease;
 }
 
-.nav-profile .nav-link {
-  display: flex;
-  align-items: center;
-  color: #111827;
-  text-decoration: none;
-  transition: color 0.25s ease;
-  position: relative;
-}
-
-/* Profile Icon Hover */
-.nav-profile .nav-link.profile-btn {
-  transition: transform 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.nav-profile .nav-link.profile-btn:hover {
+.dropdown-btn:hover {
+  background: #f3f4f6;
   color: #4caf87;
-  transform: scale(1.2) rotate(10deg);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  padding-left: 20px;
 }
 
-/* Bell Icon Hover + Notification */
-.nav-profile .nav-link.bell-btn {
-  transition: transform 0.2s ease, color 0.2s ease;
-  position: relative;
+.logout-btn:hover {
+  color: #ef4444;
 }
 
-.nav-profile .nav-link.bell-btn:hover {
-  color: #4caf87;
-  transform: scale(1.2) rotate(-10deg);
-}
-
-.bell-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  background: #e02424;
-  border-radius: 50%;
-  border: 1px solid #fff;
-  color: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-    display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 1.5s infinite;
-}
-
-/* Pulse Animation for Notification Badge */
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
+/* ===== Responsive ===== */
+@media(max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-links { 
+    display: none; 
   }
 
   .mobile-menu-btn {
     display: block;
   }
-
-  .nav-profile {
-    margin-left: 0.5rem;
-  }
-
-  .bell-badge {
-    top: -4px;
-    right: -4px;
-    min-width: 14px;
-    height: 14px;
-    font-size: 9px;
-    padding: 0 3px;
-  }
 }
 
- 
+@media(max-width: 480px) {
+  .logo-icon-wrapper { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 10px; 
+  }
+  
+  .logo-icon { 
+    font-size: 1.3rem; 
+  }
+  
+  .profile-dropdown {
+    min-width: 180px;
+    right: -10px;
+  }
+}
