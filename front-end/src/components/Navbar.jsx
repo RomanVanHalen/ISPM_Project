@@ -4,7 +4,7 @@ import { FaShieldAlt, FaBell, FaSignOutAlt, FaUser, FaCog } from "react-icons/fa
 import api from "../api/axiosInstance";
 import "../styles/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ notifications = [] }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
@@ -14,12 +15,18 @@ export default function EmployeeDashboard() {
   const [progress, setProgress] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
+  const navigate = useNavigate();
   const roleTabs = ["Trainings", "Courses", "Progress", "Notifications"];
 
+  // Route guard + fetch data
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+
+      if (!token) {
+        navigate("/login", { replace: true }); // redirect if no token
+        return;
+      }
 
       try {
         const profileRes = await axios.get("http://localhost:5000/api/users/profile", {
@@ -31,9 +38,7 @@ export default function EmployeeDashboard() {
         setUser({
           name: profile.name || "Employee",
           role: profile.role || "employee",
-          avatar: profile.profilePic
-            ? `${profile.profilePic}?t=${Date.now()}`
-            : "", // fallback empty string if no profilePic
+          avatar: profile.profilePic ? `${profile.profilePic}?t=${Date.now()}` : "",
         });
       } catch (err) {
         console.error("Profile fetch error:", err.response?.data || err.message);
@@ -59,11 +64,11 @@ export default function EmployeeDashboard() {
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login"; // ✅ redirect to login page
+    navigate("/", { replace: true }); // redirect home & prevent back
   };
 
   return (
@@ -177,5 +182,4 @@ export default function EmployeeDashboard() {
     </div>
   );
 }
-
 
