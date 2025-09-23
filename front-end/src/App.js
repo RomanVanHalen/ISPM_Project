@@ -10,8 +10,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
-import NotificationsPage from "./components/Notifications"; 
-
+import NotificationsPage from "./components/Notifications";   // ✅ keep this
 
 import "./App.css";
 
@@ -32,6 +31,8 @@ function App() {
         <Route path="/reports&analytics" element={<Reports />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
        
         {/* Admin */}
@@ -41,9 +42,6 @@ function App() {
 
         {/* Employee */}
         <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
-
-        {/* Notifications */}
-        <Route path="/notifications" element={<Notifications />} />
 
         {/* Courses */}
         <Route path="/training/Courses" element={<Courses />}/>
