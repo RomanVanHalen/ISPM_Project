@@ -11,6 +11,7 @@ export default function Policies() {
   const [policies, setPolicies] = useState([]);
   const [selectedPolicy, setSelectedPolicy] = useState(null);
 
+  // Fetch user info and policies from backend JSON
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -20,11 +21,11 @@ export default function Policies() {
       setUser({ role: "admin", name: "Admin User" });
     }
 
-    // Fetch policies from backend
+    // Fetch policies from backend route
     const fetchPolicies = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/policies");
-        setPolicies(res.data);
+        const res = await axios.get("http://localhost:5000/api/policies"); 
+        setPolicies(res.data); // dynamically populate from backend/policies.json
       } catch (err) {
         console.error("Failed to fetch policies:", err);
       }
@@ -73,7 +74,7 @@ export default function Policies() {
                   {policy.pdf && (
                     <p>
                       <a
-                        href={policy.pdf}
+                        href={`http://localhost:5000${policy.pdf}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -112,11 +113,11 @@ export default function Policies() {
             {selectedPolicy.pdf && (
               <p>
                 <a
-                  href={selectedPolicy.pdf}
+                  href={`http://localhost:5000${selectedPolicy.pdf}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Download/View PDF
+                  View PDF
                 </a>
               </p>
             )}
