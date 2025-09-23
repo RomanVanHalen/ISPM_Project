@@ -37,6 +37,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
       name: user.name,
       email: user.email,
       bio: user.bio || "",
+      role : user.role,
       profilePicture: user.profilePicture
         ? `${req.protocol}://${req.get("host")}${user.profilePicture}`
         : null,
