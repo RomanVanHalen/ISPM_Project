@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes, FaUserCircle, FaBell } from "react-icons/fa"; 
 import "../styles/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ notifications = [] }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,7 +16,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  //  Check login status
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
@@ -42,33 +41,25 @@ const Navbar = () => {
           <li>
             <NavLink to="/" end className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
-            }>
-              Home
-            </NavLink>
+            }>Home</NavLink>
           </li>
           <li>
             <NavLink to="/policies" className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
-            }>
-              Policies
-            </NavLink>
+            }>Policies</NavLink>
           </li>
           <li>
             <NavLink to="/training" className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
-            }>
-              Training
-            </NavLink>
+            }>Training</NavLink>
           </li>
           <li>
             <NavLink to="/reports" className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
-            }>
-              Reports & Analytics
-            </NavLink>
+            }>Reports & Analytics</NavLink>
           </li>
 
-          {/*  Show Profile + Notifications ONLY when logged in */}
+          {/* Profile + Bell */}
           {isLoggedIn && (
             <>
               <li className="nav-profile">
@@ -77,16 +68,20 @@ const Navbar = () => {
                   onClick={() => navigate("/employee-dashboard")}
                   title="Dashboard"
                 >
-                  <FaUserCircle size={22} />
+                  <FaUserCircle size={24} />
                 </button>
               </li>
-              <li className="nav-profile">
+
+              <li className="nav-profile" style={{ position: "relative" }}>
                 <button
-                  className="nav-link profile-btn"
+                  className="nav-link bell-btn"
                   onClick={() => navigate("/notifications")}
                   title="Notifications"
                 >
-                  <FaBell size={20} />
+                  <FaBell size={22} />
+                  {notifications?.length > 0 && (
+                    <span className="bell-badge">{notifications.length}</span>
+                  )}
                 </button>
               </li>
             </>
@@ -106,37 +101,15 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="mobile-nav">
           <div className="mobile-nav-links">
-            <NavLink to="/" end onClick={() => setIsMobileMenuOpen(false)}>
-              Home
-            </NavLink>
-            <NavLink to="/policies" onClick={() => setIsMobileMenuOpen(false)}>
-              Policies
-            </NavLink>
-            <NavLink to="/training" onClick={() => setIsMobileMenuOpen(false)}>
-              Training
-            </NavLink>
-            <NavLink to="/reports" onClick={() => setIsMobileMenuOpen(false)}>
-              Reports
-            </NavLink>
+            <NavLink to="/" end onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
+            <NavLink to="/policies" onClick={() => setIsMobileMenuOpen(false)}>Policies</NavLink>
+            <NavLink to="/training" onClick={() => setIsMobileMenuOpen(false)}>Training</NavLink>
+            <NavLink to="/reports" onClick={() => setIsMobileMenuOpen(false)}>Reports</NavLink>
 
-            {/* Profile + Notifications for Mobile */}
             {isLoggedIn && (
               <>
-                <Link
-                  to="/employee-dashboard"
-                  className="mobile-nav-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  title="Employee Dashboard"
-                >
-                  <FaUserCircle size={18} style={{ marginRight: "8px" }} />
-                  Dashboard
-                </Link>
-                <Link
-                  to="/notifications"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  🔔 Notifications
-                </Link>
+                <Link to="/employee-dashboard" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</Link>
+                <Link to="/notifications" onClick={() => setIsMobileMenuOpen(false)}>Notifications</Link>
               </>
             )}
           </div>
@@ -147,6 +120,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-

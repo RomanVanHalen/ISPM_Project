@@ -4,13 +4,13 @@
   top: 0; left: 0; right: 0;
   z-index: 1000;
   padding: 0.75rem 2rem;
-  background: #ffffff; /* solid white background */
+  background: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar-scrolled {
-  background: #ffffff; /* stays white on scroll */
+  background: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -32,7 +32,7 @@
 }
 
 .logo-icon-wrapper {
-  position: relative;  /* needed for dot positioning */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@
 
 .logo-icon {
   font-size: 1.8rem;
-  color: #4caf87; /* green accent */
+  color: #4caf87;
 }
 
 .logo-status {
@@ -49,9 +49,9 @@
   right: -2px;
   width: 10px;
   height: 10px;
-  background: #4caf87; /* green status */
+  background: #4caf87;
   border-radius: 50%;
-  border: 2px solid #ffffff; /* white outline */
+  border: 2px solid #ffffff;
 }
 
 .logo-text {
@@ -63,7 +63,7 @@
 .logo-title {
   font-weight: 700;
   font-size: 1.2rem;
-  color: #111827; /* dark text */
+  color: #111827;
 }
 
 .logo-subtitle {
@@ -81,7 +81,7 @@
 .nav-link {
   text-decoration: none;
   font-weight: 500;
-  color: #111827; /* dark links */
+  color: #111827;
   transition: color 0.25s ease, border-bottom 0.25s ease;
   position: relative;
 }
@@ -91,12 +91,12 @@
   position: absolute;
   left: 0; bottom: -6px;
   width: 0%; height: 2px;
-  background: #4caf87; /* green underline */
+  background: #4caf87;
   transition: width 0.25s ease;
 }
 
 .nav-link:hover {
-  color: #4caf87; /* green hover */
+  color: #4caf87;
 }
 
 .nav-link:hover::after {
@@ -104,7 +104,7 @@
 }
 
 .nav-link.active {
-  color: #4caf87; /* active link */
+  color: #4caf87;
   font-weight: 600;
 }
 
@@ -114,13 +114,13 @@
   background: none;
   border: none;
   font-size: 1.8rem;
-  color: #111827; /* dark menu icon */
+  color: #111827;
   cursor: pointer;
 }
 
 /* Mobile Nav */
 .mobile-nav {
-  background: #ffffff; /* white dropdown */
+  background: #ffffff;
   position: absolute;
   top: 100%; left: 0; right: 0;
   padding: 1rem 0;
@@ -142,7 +142,7 @@
 
 .mobile-nav-links a {
   text-decoration: none;
-  color: #111827; /* dark mobile links */
+  color: #111827;
   font-weight: 500;
   transition: color 0.25s ease;
 }
@@ -156,19 +156,67 @@
   display: flex;
   align-items: center;
   font-size: 1.2rem;
-  margin-left: 1rem; /* spacing from other links */
+  margin-left: 1rem;
 }
 
 .nav-profile .nav-link {
   display: flex;
   align-items: center;
-  color: #111827; /* same as other links */
+  color: #111827;
   text-decoration: none;
   transition: color 0.25s ease;
+  position: relative;
 }
 
-.nav-profile .nav-link:hover {
-  color: #4caf87; /* same green hover as other links */
+/* Profile Icon Hover */
+.nav-profile .nav-link.profile-btn {
+  transition: transform 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-profile .nav-link.profile-btn:hover {
+  color: #4caf87;
+  transform: scale(1.2) rotate(10deg);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Bell Icon Hover + Notification */
+.nav-profile .nav-link.bell-btn {
+  transition: transform 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+.nav-profile .nav-link.bell-btn:hover {
+  color: #4caf87;
+  transform: scale(1.2) rotate(-10deg);
+}
+
+.bell-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #e02424;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 1.5s infinite;
+}
+
+/* Pulse Animation for Notification Badge */
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Responsive */
@@ -180,4 +228,19 @@
   .mobile-menu-btn {
     display: block;
   }
+
+  .nav-profile {
+    margin-left: 0.5rem;
+  }
+
+  .bell-badge {
+    top: -4px;
+    right: -4px;
+    min-width: 14px;
+    height: 14px;
+    font-size: 9px;
+    padding: 0 3px;
+  }
 }
+
+ 
