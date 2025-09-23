@@ -1,25 +1,28 @@
-/* === Premium Green Admin Navbar (Fixed Top) === */
+/* === Admin Sidebar (Left Vertical) === */
 .admin-actions-container {
   position: fixed;
-  top: 0;
+  top: 70px; /* space for top navbar */
   left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 32px;
+  width: 80px; /* narrow vertical bar */
+  height: calc(100% - 70px);
   background: linear-gradient(135deg, #ffffff, #f3f7f4);
-  border-bottom: 1px solid #dbe6dd;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #dbe6dd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 20px;
+  z-index: 1000;
+  box-shadow: 2px 0 14px rgba(0, 0, 0, 0.1);
   font-family: "Poppins", sans-serif;
 }
 
-/* Profile Section */
+/* Profile section */
 .admin-profile {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   cursor: pointer;
 }
 
@@ -39,53 +42,48 @@
 
 .admin-name {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 12px;
   color: #1b5e20;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* Buttons section */
+.admin-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
   position: relative;
 }
 
-.admin-name::before {
-  content: "Hello, ";
-  display: block;
-  font-size: 22px;   /* Bigger Hello */
-  font-weight: 700;  
-  color: #2e7d32;
-  margin-bottom: 3px;
-  line-height: 1.2;
-}
-
-/* Buttons Section */
-.admin-buttons {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
-/* Base Button Style */
+/* Base button style */
 .admin-btn {
-  padding: 10px 22px;
-  font-size: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
   font-weight: 500;
-  border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
   border: none;
   outline: none;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
 }
 
 /* Account button */
 .account-btn {
   background: linear-gradient(135deg, #1b5e20, #388e3c);
-  color: white;
-  box-shadow: 0 3px 8px rgba(27, 94, 32, 0.25);
+  color: #fff;
 }
 
 .account-btn:hover {
   background: linear-gradient(135deg, #154a1a, #2e7d32);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(27, 94, 32, 0.35);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(27, 94, 32, 0.3);
 }
 
 /* Menu button */
@@ -97,50 +95,47 @@
 
 .menu-btn:hover {
   background: linear-gradient(135deg, #66bb6a, #388e3c);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(56, 142, 60, 0.25);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(56, 142, 60, 0.3);
 }
 
-/* Logout button with animation */
+/* Logout button */
 .logout-btn {
-  background: linear-gradient(135deg, #ffffff, #f9f9f9);
-  color: #c62828; /* deep red */
+  background: linear-gradient(135deg, #fff, #f9f9f9);
+  color: #c62828;
   border: 1px solid #ef9a9a;
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-
 
 .logout-btn:hover {
   background: linear-gradient(135deg, #ef5350, #e53935);
-  color: white;
+  color: #fff;
   border-color: #e57373;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(229, 57, 53, 0.35);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
 }
 
-.logout-btn:hover::after {
-  transform: translateX(-4px); /* animate arrow left */
-}
-
-/* Dropdown Menu */
+/* Dropdown menu */
 .admin-dropdown-menu {
   position: absolute;
-  top: 55px;
-  right: 0;
-  background: white;
+  top: 0;
+  left: 80px;
+  background: #fff;
   border-radius: 12px;
-  min-width: 220px;
+  min-width: 180px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   animation: dropdownFade 0.3s ease forwards;
   z-index: 1000;
   border: 1px solid #dfe9e2;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-dropdown-menu div {
-  padding: 12px 18px;
+  padding: 10px 14px;
   cursor: pointer;
   transition: all 0.25s ease;
   color: #2e7d32;
@@ -162,26 +157,32 @@
 /* Responsive */
 @media (max-width: 768px) {
   .admin-actions-container {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 16px 20px;
-    gap: 10px;
+    flex-direction: row;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding: 8px 0;
+    gap: 12px;
+    justify-content: center;
+    border-right: none;
+    border-top: 1px solid #dbe6dd;
+  }
+
+  .admin-profile {
+    flex-direction: row;
+    gap: 6px;
   }
 
   .admin-buttons {
-    width: 100%;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .admin-btn {
-    flex: 1;
-    text-align: center;
+    flex-direction: row;
+    gap: 8px;
   }
 
   .admin-dropdown-menu {
-    top: 50px;
-    right: 0;
-    min-width: 100%;
+    left: auto;
+    bottom: 60px;
+    top: auto;
   }
 }

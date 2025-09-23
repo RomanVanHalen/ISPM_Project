@@ -1,0 +1,6 @@
+.drag-drop-container { padding: 20px; }
+.zones { display: flex; gap: 20px; }
+.zone { border: 2px dashed #ccc; padding: 20px; width: 50%; min-height: 200px; }
+.zone.safe { background-color: #e0ffe0; }
+.zone.unsafe { background-color: #ffe0e0; }
+.draggable-item { padding: 10px; margin: 5px 0; background: #fff; border: 1px solid #ccc; cursor: grab; }
