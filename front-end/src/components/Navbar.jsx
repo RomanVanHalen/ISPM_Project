@@ -77,7 +77,7 @@ const Navbar = ({ notifications = [] }) => {
             <span className="logo-title">Cyber Warriors</span>
             <span className="logo-subtitle">Security Platform</span>
           </div>
-        </div>
+        </div> 
 
         {/* ===== Center Links ===== */}
         <ul className="nav-links">
