@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaShieldAlt, FaBars, FaTimes, FaUserCircle, FaBell } from "react-icons/fa"; 
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaShieldAlt, FaBell, FaSignOutAlt, FaUser, FaCog } from "react-icons/fa";
+import api from "../api/axiosInstance";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -16,20 +18,64 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  //  Check login status
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const fetchUser = async () => {
+      try {
+        setIsLoading(true);
+        // Check for token first
+        const token = localStorage.getItem("token");
+        if (token) {
+          const res = await api.get("/users/profile");
+          setUser(res.data);
+          // Store user data in localStorage for consistency
+          localStorage.setItem("user", JSON.stringify(res.data));
+        } else {
+          setUser(null);
+          localStorage.removeItem("user");
+        }
+      } catch (err) {
+        setUser(null);
+        localStorage.removeItem("user");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    // Check if we have user data in localStorage first
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsLoading(false);
+    } else {
+      fetchUser();
+    }
+    
+    // Listen for storage events to sync across tabs
+    const handleStorageChange = (e) => {
+      if (e.key === "token" || e.key === "user") {
+        fetchUser();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/", { replace: true });
+    setDropdownOpen(false);
+  };
 
   return (
     <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
       <div className="nav-container">
-        {/* Logo */}
-        <div className="logo">
+        {/* ===== Logo ===== */}
+        <div className="nav-left" onClick={() => navigate("/")}>
           <div className="logo-icon-wrapper">
-            <div className="logo-icon"><FaShieldAlt /></div>
-            <span className="logo-status"></span>
+            <FaShieldAlt className="logo-icon" />
           </div>
           <div className="logo-text">
             <span className="logo-title">Cyber Warriors</span>
@@ -37,116 +83,127 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Desktop Links */}
+        {/* ===== Center Links ===== */}
         <ul className="nav-links">
           <li>
-            <NavLink to="/" end className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }>
+            <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/policies" className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }>
+            <NavLink to="/policies" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
               Policies
             </NavLink>
           </li>
           <li>
-            <NavLink to="/training" className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }>
+            <NavLink to="/training" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
               Training
             </NavLink>
           </li>
           <li>
-            <NavLink to="/reports" className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }>
-              Reports & Analytics
+            <NavLink to="/reports" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              Reports
             </NavLink>
           </li>
-
-          {/*  Show Profile + Notifications ONLY when logged in */}
-          {isLoggedIn && (
-            <>
-              <li className="nav-profile">
-                <button
-                  className="nav-link profile-btn"
-                  onClick={() => navigate("/employee-dashboard")}
-                  title="Dashboard"
-                >
-                  <FaUserCircle size={22} />
-                </button>
-              </li>
-              <li className="nav-profile">
-                <button
-                  className="nav-link profile-btn"
-                  onClick={() => navigate("/notifications")}
-                  title="Notifications"
-                >
-                  <FaBell size={20} />
-                </button>
-              </li>
-            </>
+          {/* Admin-only link */}
+          {user && user.role === "admin" && (
+            <li>
+              <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                Admin
+              </NavLink>
+            </li>
           )}
         </ul>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
-      </div>
+        {/* ===== Right Icons ===== */}
+        <div className="nav-actions">
+          {isLoading ? (
+            // Show loading skeleton while checking auth state
+            <div className="auth-loading">
+              <div className="loading-skeleton"></div>
+            </div>
+          ) : user ? (
+            <>
+              {/* Bell icon - only show for employees and admins */}
+              {(user.role === "employee" || user.role === "admin") && (
+                <button className="notification-btn" onClick={() => navigate("/notifications")}>
+                  <FaBell />
+                </button>
+              )}
 
-      {/* Mobile Nav */}
-      {isMobileMenuOpen && (
-        <div className="mobile-nav">
-          <div className="mobile-nav-links">
-            <NavLink to="/" end onClick={() => setIsMobileMenuOpen(false)}>
-              Home
-            </NavLink>
-            <NavLink to="/policies" onClick={() => setIsMobileMenuOpen(false)}>
-              Policies
-            </NavLink>
-            <NavLink to="/training" onClick={() => setIsMobileMenuOpen(false)}>
-              Training
-            </NavLink>
-            <NavLink to="/reports" onClick={() => setIsMobileMenuOpen(false)}>
-              Reports
-            </NavLink>
-
-            {/* Profile + Notifications for Mobile */}
-            {isLoggedIn && (
-              <>
-                <Link
-                  to="/employee-dashboard"
-                  className="mobile-nav-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  title="Employee Dashboard"
+              {/* Profile circle / picture */}
+              <div className="profile-wrapper">
+                <div 
+                  className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
-                  <FaUserCircle size={18} style={{ marginRight: "8px" }} />
-                  Dashboard
-                </Link>
-                <Link
-                  to="/notifications"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  🔔 Notifications
-                </Link>
-              </>
-            )}
-          </div>
+                  {user.profilePic ? (
+                    <img
+                      src={user.profilePic}
+                      alt="Profile"
+                      className="profile-pic"
+                    />
+                  ) : (
+                    <div className="profile-circle">
+                      <FaUser />
+                    </div>
+                  )}
+                  {user.role === "admin" && (
+                    <span className="admin-indicator" title="Admin User">
+                      <FaCog />
+                    </span>
+                  )}
+                </div>
+                
+                {dropdownOpen && (
+                  <div className="profile-dropdown">
+                    <div className="dropdown-user-info">
+                      <span className="dropdown-username">{user.name}</span>
+                      <span className="dropdown-userrole">{user.role}</span>
+                    </div>
+                    <hr className="dropdown-divider" />
+                    <button 
+                      className="dropdown-btn" 
+                      onClick={() => {
+                        navigate("/profile");
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      <FaUser /> Profile
+                    </button>
+                    {user.role === "admin" && (
+                      <button 
+                        className="dropdown-btn" 
+                        onClick={() => {
+                          navigate("/admin");
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        <FaCog /> Admin Panel
+                      </button>
+                    )}
+                    <button className="dropdown-btn logout-btn" onClick={handleLogout}>
+                      <FaSignOutAlt /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            // Show login/signup buttons when no user is logged in
+            <div className="auth-buttons">
+              <button className="login-btn" onClick={() => navigate("/login")}>
+                Login
+              </button>
+              <button className="signup-btn" onClick={() => navigate("/signup")}>
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
 
 export default Navbar;
-
-
-
