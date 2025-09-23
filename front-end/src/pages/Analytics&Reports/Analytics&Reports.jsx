@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Navbar";
@@ -10,48 +10,58 @@ import AuthPrompt from "./Components/Unregister";
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const [role, setRole] = useState("guest");
+  const [loading, setLoading] = useState(true);
 
-  // Get the logged-in user from localStorage
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const role = storedUser?.role || "guest"; 
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setRole("guest");
+        setLoading(false);
+        return;
+      }
 
-  // Choose content based on role
+      try {
+        const res = await fetch("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setRole(data.role || "guest");
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+        setRole("guest");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
   let content;
   if (role === "admin") {
     content = <ComplianceReportingDashboard />;
   } else if (role === "user") {
     content = <ProgressTracking />;
   } else {
-    // Guest / unregistered user
     content = (
       <AuthPrompt
-        onLogin={() => navigate("/login")}       // redirect to Sign In page
-        onRegister={() => navigate("/register")} // redirect to Register page
+        onLogin={() => navigate("/login")}
+        onRegister={() => navigate("/register")}
       />
     );
   }
 
-  // Only show Header/Footer if user is admin or registered
   const showHeaderFooter = role === "admin" || role === "user";
 
   return (
     <div className="sa02-body">
       {showHeaderFooter && <Header />}
-      <main className="sa02-main">
-        {content}
-      </main>
+      <main className="sa02-main">{content}</main>
       {showHeaderFooter && <Footer />}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
