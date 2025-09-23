@@ -101,8 +101,8 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/reports" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-              Reports
+            <NavLink to="/reports&analytics" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              Reports & Analytics
             </NavLink>
           </li>
           {/* Admin-only link */}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axiosInstance";
 
 import Header from "../../components/Navbar";
 import Footer from "../../components/Footer2";
@@ -27,7 +26,15 @@ export default function MainPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
-        setRole(data.role || "guest");
+
+        console.log("Profile API response:", data);
+
+        // Only allow "employee", otherwise fallback to guest
+        if (data?.role === "employee") {
+          setRole("employee");
+        } else {
+          setRole("guest");
+        }
       } catch (err) {
         console.error("Failed to fetch user info:", err);
         setRole("guest");
@@ -42,7 +49,7 @@ export default function MainPage() {
   if (loading) return <div>Loading...</div>;
 
   let content;
-  if (isLoggedIn) {
+  if (role === "employee") {
     content = <ProgressTracking />;
   } else {
     content = (
@@ -53,7 +60,7 @@ export default function MainPage() {
     );
   }
 
-  const showHeaderFooter = role === "admin" || role === "user";
+  const showHeaderFooter = role === "employee";
 
   return (
     <div className="sa02-body">
@@ -63,3 +70,8 @@ export default function MainPage() {
     </div>
   );
 }
+
+
+
+
+
