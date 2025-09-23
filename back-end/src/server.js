@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import policiesRouter from "./routes/policies.js"; // ✅ Added policies router
+import NotificationRoutes from "./routes/NotificationRoute.js";  // Added notification route
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -42,6 +43,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/notifications", NotificationRoutes);
 
 // ✅ Policies JSON route
 app.use("/api/policies", policiesRouter);

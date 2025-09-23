@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShieldAlt, FaBars, FaTimes, FaUserCircle, FaBell } from "react-icons/fa"; 
 import "../styles/Navbar.css";
 
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -35,7 +36,7 @@ const Navbar = () => {
             <span className="logo-title">Cyber Warriors</span>
             <span className="logo-subtitle">Security Platform</span>
           </div>
-        </div>
+        </div> 
 
         {/* Desktop Links */}
         <ul className="nav-links">
