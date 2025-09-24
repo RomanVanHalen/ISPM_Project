@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  // ADD THESE NEW FIELDS FOR PASSWORD RESET
+  // ADD THESE FOR PASSWORD RESET
   resetPasswordOTP: {
     type: String,
   },
