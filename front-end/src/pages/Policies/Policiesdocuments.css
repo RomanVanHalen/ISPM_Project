@@ -9,7 +9,7 @@
 .shri-policies-container {
   max-width: 1300px;
   width: 95%;
-  margin: 20px auto;
+ margin: 80px auto 20px auto; 
   padding: 20px;
   font-family: Arial, sans-serif;
   color: #333;
