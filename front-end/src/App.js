@@ -19,6 +19,9 @@ import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
 import Ddomain3 from "./pages/Training/components/Ddomain3";
 
+//progress tracking
+import ProgressTracking from "./pages/Analytics&Reports/Components/ProgressTracking";
+
 function App() {
   return (
     <Router>
@@ -44,7 +47,10 @@ function App() {
         <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
         <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
         <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
-        
+
+        {/* Progress Tracking */}
+        <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
+
       </Routes>
     </Router>
   );

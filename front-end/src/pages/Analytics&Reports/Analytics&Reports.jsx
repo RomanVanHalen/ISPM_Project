@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Navbar";
-import Footer from "../../components/Footer2";
 
-import ProgressTracking from "./Components/ProgressTracking";
+import Welcome from "./Components/WelcomePage";
 import AuthPrompt from "./Components/Unregister";
 
 export default function MainPage() {
@@ -50,7 +49,7 @@ export default function MainPage() {
 
   let content;
   if (role === "employee") {
-    content = <ProgressTracking />;
+    content = <Welcome />;
   } else {
     content = (
       <AuthPrompt
@@ -60,16 +59,16 @@ export default function MainPage() {
     );
   }
 
-  const showHeaderFooter = role === "employee";
+  const showHeader = role === "employee";
 
   return (
     <div className="sa02-body">
-      {showHeaderFooter && <Header />}
+      {showHeader && <Header />}
       <main className="sa02-main">{content}</main>
-      {showHeaderFooter && <Footer />}
     </div>
   );
 }
+
 
 
 
