@@ -1,33 +1,53 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
 import Footer2 from "../../components/Footer2";
-import PoliciesHome from "./policiescomponents/PoliciesHome";
+import PoliciesHome from "./PoliciesComponents/PoliciesHome";
+
 import "./Policiesdocuments.css";
 
 export default function Policies() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showHome, setShowHome] = useState(true);
   const [policies, setPolicies] = useState([]);
   const [selectedPolicy, setSelectedPolicy] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch user info and policies from backend JSON
+  // 1. Authentication & back button prevention
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setUser({ role: "employee", name: "Guest" });
+      // redirect to home if not logged in
+      navigate("/", { replace: true });
     } else {
       setUser({ role: "admin", name: "Admin User" });
     }
 
-    // Fetch policies from backend route
+    // Prevent caching/back navigation
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      navigate("/", { replace: true }); // redirect to home on back
+    };
+  }, [navigate]);
+
+  // 2. Fetch policies
+  useEffect(() => {
     const fetchPolicies = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/policies"); 
-        setPolicies(res.data); // dynamically populate from backend/policies.json
+        const res = await axios.get("http://localhost:5000/api/policies");
+        if (Array.isArray(res.data)) {
+          setPolicies(res.data);
+        } else {
+          setPolicies([]);
+        }
       } catch (err) {
-        console.error("Failed to fetch policies:", err);
+        setError("Could not load policies. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -43,47 +63,66 @@ export default function Policies() {
       <Navbar />
 
       <div className="shri-policies-container">
-        {!selectedPolicy ? (
+        {loading ? (
+          <p>Loading policies...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>{error}</p>
+        ) : !selectedPolicy ? (
           <>
             <div className="shri-policies-header">
               <h1 className="shri-policies-main-title">Policies & Standards</h1>
             </div>
 
             <div className="shri-policies-list">
-              {policies.map((policy, idx) => (
-                <section
-                  className="shri-policy-section"
-                  key={idx}
-                  onClick={() => setSelectedPolicy(policy)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="shri-policy-header">
-                    <h2 className="shri-policy-title">{policy.title}</h2>
-                  </div>
-                  <p className="shri-policy-why">
-                    <strong>Why:</strong> {policy.why}
-                  </p>
-                  <div className="shri-policy-elements">
-                    <strong>Key Elements:</strong>
-                    <ul>
-                      {policy.keyElements.map((el, i) => (
-                        <li key={i}>{el}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {policy.pdf && (
-                    <p>
-                      <a
-                        href={`http://localhost:5000${policy.pdf}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View PDF
-                      </a>
-                    </p>
-                  )}
-                </section>
-              ))}
+              {policies.length === 0 ? (
+                <p>No policies available.</p>
+              ) : (
+                policies.map((policy, idx) => (
+                  <section
+                    className="shri-policy-section"
+                    key={idx}
+                    onClick={() => setSelectedPolicy(policy)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="shri-policy-header">
+                      <h2 className="shri-policy-title">
+                        {policy.title || "Untitled Policy"}
+                      </h2>
+                    </div>
+                    {policy.why && (
+                      <p className="shri-policy-why">
+                        <strong>Why:</strong> {policy.why}
+                      </p>
+                    )}
+                    {Array.isArray(policy.keyElements) &&
+                      policy.keyElements.length > 0 && (
+                        <div className="shri-policy-elements">
+                          <strong>Key Elements:</strong>
+                          <ul>
+                            {policy.keyElements.map((el, i) => (
+                              <li key={i}>{el}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    {policy.pdf && (
+                      <p>
+                        <a
+                          href={
+                            policy.pdf.startsWith("http")
+                              ? policy.pdf
+                              : `http://localhost:5000${policy.pdf}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View PDF
+                        </a>
+                      </p>
+                    )}
+                  </section>
+                ))
+              )}
             </div>
           </>
         ) : (
@@ -94,26 +133,39 @@ export default function Policies() {
             >
               ← Back to Policies
             </button>
-            <h2 className="shri-detail-title">{selectedPolicy.title}</h2>
-            <p className="shri-detail-why">
-              <strong>Why:</strong> {selectedPolicy.why}
-            </p>
-            <div className="shri-detail-elements">
-              <strong>Key Elements:</strong>
-              <ul>
-                {selectedPolicy.keyElements.map((el, i) => (
-                  <li key={i}>{el}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="shri-detail-description">
-              <strong>More Details:</strong>
-              <pre>{selectedPolicy.details}</pre>
-            </div>
+            <h2 className="shri-detail-title">
+              {selectedPolicy.title || "Untitled Policy"}
+            </h2>
+            {selectedPolicy.why && (
+              <p className="shri-detail-why">
+                <strong>Why:</strong> {selectedPolicy.why}
+              </p>
+            )}
+            {Array.isArray(selectedPolicy.keyElements) &&
+              selectedPolicy.keyElements.length > 0 && (
+                <div className="shri-detail-elements">
+                  <strong>Key Elements:</strong>
+                  <ul>
+                    {selectedPolicy.keyElements.map((el, i) => (
+                      <li key={i}>{el}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            {selectedPolicy.details && (
+              <div className="shri-detail-description">
+                <strong>More Details:</strong>
+                <pre>{selectedPolicy.details}</pre>
+              </div>
+            )}
             {selectedPolicy.pdf && (
               <p>
                 <a
-                  href={`http://localhost:5000${selectedPolicy.pdf}`}
+                  href={
+                    selectedPolicy.pdf.startsWith("http")
+                      ? selectedPolicy.pdf
+                      : `http://localhost:5000${selectedPolicy.pdf}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >
