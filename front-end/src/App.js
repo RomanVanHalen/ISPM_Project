@@ -10,7 +10,9 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
-import NotificationsPage from "./components/Notifications";   // ✅ keep this
+import NotificationsPage from "./components/Notifications"; 
+import ForgotPassword from './pages/Login/ForgotPassword';
+import VerifyOTP from './pages/Login/VerifyOTP';
 
 import "./App.css";
 
@@ -31,6 +33,8 @@ function App() {
         <Route path="/reports&analytics" element={<Reports />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
 
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
