@@ -3,6 +3,8 @@ import Navbar from "../../../components/Navbar";
 import "./PoliciesHome.css";
 import PolicyImg from "../images/Awareness2.jpg";
 
+
+
 function PoliciesHome({ onContinue }) {
     return (
         <div className="dee-container">
