@@ -18,15 +18,32 @@ export default function EmployeeDashboard() {
   const navigate = useNavigate();
   const roleTabs = ["Trainings", "Courses", "Progress", "Notifications"];
 
-  // Route guard + fetch data
+  // ---------------- Route guard + back button prevention ----------------
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/", { replace: true }); // redirect if not logged in
+      return;
+    }
+
+    // Prevent back navigation to this page
+    window.history.pushState(null, "", window.location.href);
+    const handleBack = () => {
+      navigate("/", { replace: true });
+    };
+    window.addEventListener("popstate", handleBack);
+
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, [navigate]);
+
+  // ---------------- Fetch user and dashboard data ----------------
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        navigate("/login", { replace: true }); // redirect if no token
-        return;
-      }
+      if (!token) return;
 
       try {
         const profileRes = await axios.get("http://localhost:5000/api/users/profile", {
@@ -64,13 +81,15 @@ export default function EmployeeDashboard() {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, []);
 
+  // ---------------- Logout ----------------
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/", { replace: true }); // redirect home & prevent back
   };
 
+  // ---------------- Render ----------------
   return (
     <div className="dashboard-wrapper">
       <Navbar />
@@ -182,4 +201,5 @@ export default function EmployeeDashboard() {
     </div>
   );
 }
+
 
