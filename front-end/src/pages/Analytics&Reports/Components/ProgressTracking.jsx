@@ -1,4 +1,4 @@
-//Employee
+// Employee
 import React, { useEffect, useState } from "react";
 import {
   RadialBarChart,
@@ -7,7 +7,11 @@ import {
 } from "recharts";
 import "../Styles/ProgressTracking.css";
 
-// ✅ Example static data (moved outside component so no dependency warning)
+// Components
+import Header from "../../../components/Navbar";
+import Footer from "../../../components/Footer2";
+
+// ✅ Example static data
 const exampleData = {
   policiesAcknowledged: 0,
   totalPolicies: 0,
@@ -69,7 +73,7 @@ const ProgressTracking = () => {
   useEffect(() => {
     // For now, just set static data
     setUserProgress(exampleData);
-  }, []); // ✅ no dependency warning now
+  }, []);
 
   if (!userProgress) return null;
 
@@ -87,116 +91,125 @@ const ProgressTracking = () => {
   ];
 
   return (
-    <main className="sa01progress-container">
-      <h2 className="sa01progress-title">📊 My Progress </h2>
+    <>
+      {/* ✅ Header */}
+      <Header />
 
-      <div className="sa01progress-grid">
-        {/* Policies */}
-        <div className="sa01progress-card">
-          <h4>Policies Acknowledged</h4>
-          <AnimatedBar progress={policyProgress} />
-          <p>
-            {userProgress.policiesAcknowledged}/{userProgress.totalPolicies}
-          </p>
-        </div>
+      <main className="sa01progress-container">
+        <h2 className="sa01progress-title">📊 My Progress </h2>
 
-        {/* Trainings */}
-        <div className="sa01progress-card">
-          <h4>Trainings Completed</h4>
-          <AnimatedBar progress={trainingProgress} />
-          <p>
-            {userProgress.trainingsCompleted}/{userProgress.totalTrainings}
-          </p>
-        </div>
+        <div className="sa01progress-grid">
+          {/* Policies */}
+          <div className="sa01progress-card">
+            <h4>Policies Acknowledged</h4>
+            <AnimatedBar progress={policyProgress} />
+            <p>
+              {userProgress.policiesAcknowledged}/{userProgress.totalPolicies}
+            </p>
+          </div>
 
-        {/* Quiz Avg Score */}
-        <div className="sa01progress-card sa01chart-card" style={{ position: "relative" }}>
-          <h4>Quiz Avg Score</h4>
-          <ResponsiveContainer width="100%" height={180}>
-            <RadialBarChart
-              cx="50%"
-              cy="50%"
-              innerRadius="70%"
-              outerRadius="100%"
-              barSize={12}
-              data={quizData}
+          {/* Trainings */}
+          <div className="sa01progress-card">
+            <h4>Trainings Completed</h4>
+            <AnimatedBar progress={trainingProgress} />
+            <p>
+              {userProgress.trainingsCompleted}/{userProgress.totalTrainings}
+            </p>
+          </div>
+
+          {/* Quiz Avg Score */}
+          <div className="sa01progress-card sa01chart-card" style={{ position: "relative" }}>
+            <h4>Quiz Avg Score</h4>
+            <ResponsiveContainer width="100%" height={180}>
+              <RadialBarChart
+                cx="50%"
+                cy="50%"
+                innerRadius="70%"
+                outerRadius="100%"
+                barSize={12}
+                data={quizData}
+              >
+                <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
+              </RadialBarChart>
+            </ResponsiveContainer>
+            <div
+              style={{
+                position: "absolute",
+                top: "55%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "20px",
+                fontWeight: "bold",
+                color: "#333",
+              }}
             >
-              <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
-            </RadialBarChart>
-          </ResponsiveContainer>
-          <div
-            style={{
-              position: "absolute",
-              top: "55%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              fontSize: "20px",
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          >
-            <AnimatedNumber value={userProgress.quizAvgScore} />
+              <AnimatedNumber value={userProgress.quizAvgScore} />
+            </div>
+          </div>
+
+          {/* Compliance */}
+          <div className="sa01progress-card sa01chart-card" style={{ position: "relative" }}>
+            <h4>Compliance</h4>
+            <ResponsiveContainer width="100%" height={180}>
+              <RadialBarChart
+                cx="50%"
+                cy="50%"
+                innerRadius="70%"
+                outerRadius="100%"
+                barSize={12}
+                data={complianceData}
+              >
+                <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
+              </RadialBarChart>
+            </ResponsiveContainer>
+            <div
+              style={{
+                position: "absolute",
+                top: "55%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "20px",
+                fontWeight: "bold",
+                color: "#333",
+              }}
+            >
+              <AnimatedNumber value={userProgress.compliance} />
+            </div>
           </div>
         </div>
 
-        {/* Compliance */}
-        <div className="sa01progress-card sa01chart-card" style={{ position: "relative" }}>
-          <h4>Compliance</h4>
-          <ResponsiveContainer width="100%" height={180}>
-            <RadialBarChart
-              cx="50%"
-              cy="50%"
-              innerRadius="70%"
-              outerRadius="100%"
-              barSize={12}
-              data={complianceData}
-            >
-              <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
-            </RadialBarChart>
-          </ResponsiveContainer>
-          <div
-            style={{
-              position: "absolute",
-              top: "55%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              fontSize: "20px",
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          >
-            <AnimatedNumber value={userProgress.compliance} />
-          </div>
-        </div>
-      </div>
-
-      {/* Detailed Progress */}
-      <div className="sa01progress-details">
-        <h3>📖 Detailed Progress</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Item Type</th>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Last Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            {userProgress.details?.map((item, idx) => (
-              <tr key={idx}>
-                <td>{item.type}</td>
-                <td className="sa01highlight">{item.title}</td>
-                <td>{item.status}</td>
-                <td>{item.lastUpdated}</td>
+        {/* Detailed Progress */}
+        <div className="sa01progress-details">
+          <h3>📖 Detailed Progress</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Item Type</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Last Updated</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <button className="sa01download-btn">⬇ Download My Report</button>
-      </div>
-    </main>
+            </thead>
+            <tbody>
+              {userProgress.details?.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{item.type}</td>
+                  <td className="sa01highlight">{item.title}</td>
+                  <td>{item.status}</td>
+                  <td>{item.lastUpdated}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="sa01download-btn">⬇ Download My Report</button>
+        </div>
+      </main>
+
+      {/* ✅ Footer */}
+      <Footer />
+    </>
   );
 };
 
 export default ProgressTracking;
+
