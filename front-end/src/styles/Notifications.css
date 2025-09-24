@@ -8,7 +8,7 @@
 /* Header */
 .subha-notif-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -16,7 +16,7 @@
 
 .subha-notif-title {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   line-height: 1.2;
 }
 
@@ -30,14 +30,15 @@
 .subha-btn {
   appearance: none;
   border: none;
-  background: #2563eb;
+  background: #046f1b;
   color: #fff;
-  padding: 0.6rem 0.95rem;
-  border-radius: 10px;
+  padding: 0.7rem 0.95rem;
+  border-radius: 20px;
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
   transition: transform 0.04s ease, box-shadow 0.2s ease, background 0.2s ease;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 8px 20px rgba(16, 80, 34, 0.2);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -46,23 +47,12 @@
 
 .subha-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 12px 24px rgba(26, 186, 119, 0.28);
 }
 
 .subha-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-}
-
-.subha-btn-outline {
-  background: transparent;
-  color: #2563eb;
-  border: 1.5px solid #2563eb;
-  box-shadow: none;
-}
-
-.subha-btn-outline:hover {
-  background: rgba(37, 99, 235, 0.08);
 }
 
 /* Actions group */
@@ -151,7 +141,7 @@
 
 .subha-badge.subha-system {
   background: #efe8ff;
-  color: #3f1b97;
+  color: #188545;
   border-color: #e2d6ff;
 }
 
@@ -182,7 +172,7 @@
 
 .subha-notif-link {
   font-weight: 600;
-  color: #2563eb;
+  color: #1d6432;
   text-decoration: none;
 }
 

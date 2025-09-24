@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "../styles/Notifications.css";
 
+
+
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,14 +65,14 @@ export default function NotificationsPage() {
 
         <div className="subha-notif-actions">
           <button
-            className="subha-btn subha-btn-outline"
+            className="subha-btn"
             onClick={fetchNotifications}
             disabled={loading}
           >
             ↻ Refresh
           </button>
-          <Link className="subha-btn" to="/dashboard">
-            ← Back to Dashboard
+          <Link className="subha-btn" to="/"> 
+            ← Back
           </Link>
         </div>
       </header>
