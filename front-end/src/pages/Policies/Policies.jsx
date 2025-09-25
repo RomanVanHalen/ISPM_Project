@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import PoliciesHome from "./policiescomponents/PoliciesHome";
 import Footer2 from "../../components/Footer2";
+import PoliciesHome from "./policiescomponents/PoliciesHome";
+import AuthPrompt from "../../components/Unregister";
+// ✅ Import here
 import "./Policiesdocuments.css";
 
 export default function Policies() {

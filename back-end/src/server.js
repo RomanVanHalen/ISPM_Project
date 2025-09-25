@@ -5,6 +5,10 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import policiesRouter from "./routes/policies.js"; // ✅ Added policies router
+import progressRoutes from "./routes/progressRoutes.js"; // Added progress route
+import NotificationRoute from "./routes/NotificationRoute.js"; // Added notification route
+import scoreRoute from "./routes/scoreRoutes.js"; //Added score route
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -40,6 +44,12 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/progress", progressRoutes);  // Added progress route
+app.use("/api/notifications", NotificationRoute); // added notification route
+app.use("/api/score", scoreRoute); //Added score route
+
+// ✅ Policies JSON route
+app.use("/api/policies", policiesRouter);
 
 // Health check
 app.get("/", (req, res) => {

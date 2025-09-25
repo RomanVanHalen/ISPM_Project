@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api from "../../../api/axiosInstance"; // ✅ axios instance with JWT
 import "../styles/DragDropData.css";
 
 const DragDropData = ({ onComplete }) => {
@@ -13,18 +14,18 @@ const DragDropData = ({ onComplete }) => {
   const [score, setScore] = useState(0);
   const [safeZoneItems, setSafeZoneItems] = useState([]);
   const [unsafeZoneItems, setUnsafeZoneItems] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleDrop = (item, zone) => {
-    // Update score if correct
-    if ((item.type === "sensitive" && zone === "safe") ||
-        (item.type === "non-sensitive" && zone === "unsafe")) {
+    if (
+      (item.type === "sensitive" && zone === "safe") ||
+      (item.type === "non-sensitive" && zone === "unsafe")
+    ) {
       setScore((prev) => prev + 1);
     }
 
-    // Remove from draggable list
     setItems((prev) => prev.filter((i) => i.id !== item.id));
 
-    // Add to appropriate zone
     if (zone === "safe") {
       setSafeZoneItems((prev) => [...prev, item]);
     } else {
@@ -32,9 +33,26 @@ const DragDropData = ({ onComplete }) => {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      await api.post("/score", {
+        score,
+        total: initialItems.length,
+        module: "DragDropData",
+      });
+      setSubmitted(true);
+      console.log("✅ Score submitted!");
+      if (onComplete) onComplete();
+    } catch (err) {
+      console.error("❌ Error saving score:", err.response?.data || err.message);
+    }
+  };
+
   return (
     <div className="drag-drop-container">
-      <h3>Drag Sensitive Items to the Correct Zone</h3>
+      {/* ✅ Header with live score */}
+      <h2 className="header-score">Your Score: {score} / {initialItems.length}</h2>
+
       <div className="zones">
         <div
           className="zone safe"
@@ -82,12 +100,18 @@ const DragDropData = ({ onComplete }) => {
         ))}
       </div>
 
-      <p>Score: {score} / {initialItems.length}</p>
-      {score === initialItems.length && (
-        <button onClick={onComplete}>Next Level</button>
-      )}
+      {/* ✅ Submit button */}
+      <button 
+        className="submit-btn"
+        onClick={handleSubmit}
+        disabled={submitted}
+      >
+        {submitted ? "Submitted!" : "Submit Score"}
+      </button>
     </div>
   );
 };
 
 export default DragDropData;
+
+
