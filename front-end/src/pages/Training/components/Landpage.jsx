@@ -8,7 +8,7 @@ function Training() {
     const navigate = useNavigate();
 
     const handleStart = () => {
-        navigate("/training/Courses"); // redirect to Courses page
+        navigate("/training/Courses"); 
     };
 
     return (

@@ -4,6 +4,8 @@ import {
   loginUser,
   forgotPassword,
   resetPassword,
+  updateProfile,
+  googleLogin,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -11,11 +13,8 @@ const router = express.Router();
 // Auth routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-
-// Forgot password → sends reset email
+router.post("/google", googleLogin); // New Google OAuth route
 router.post("/forgot-password", forgotPassword);
-
-// Reset password → actually resets the password
 router.post("/reset-password", resetPassword);
 
 export default router;
