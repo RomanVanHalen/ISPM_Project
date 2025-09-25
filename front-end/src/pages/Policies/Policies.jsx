@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../../components/Navbar";
-import { useNavigate } from "react-router-dom";
-import Footer2 from "../../components/Footer2";
+import Navbar from "../../components/Navbar"; 
 import PoliciesHome from "./policiescomponents/PoliciesHome";
-
+import Footer2 from "../../components/Footer2";
 import "./Policiesdocuments.css";
 
 export default function Policies() {
@@ -18,27 +16,18 @@ export default function Policies() {
 
   // 1. Authentication & back button prevention
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser({ role: "employee", name: "Guest" });
+        return;
+      }
 
-    if (!token) {
-      navigate("/", { replace: true });
-    } else {
-      setUser({ role: "admin", name: "Admin User" });
-    }
-
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = function () {
-      navigate("/", { replace: true });
-    };
-  }, [navigate]);
-
-  // 2. Fetch policies
-  useEffect(() => {
-    const fetchPolicies = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/policies");
-        if (Array.isArray(res.data)) setPolicies(res.data);
-        else setPolicies([]);
+        const res = await axios.get("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser({ role: res.data.role || "employee", name: res.data.name || "User" });
       } catch (err) {
         setError("Could not load policies. Please try again later.");
       } finally {
@@ -72,6 +61,7 @@ export default function Policies() {
 
   return (
     <div className="shri-policies-page">
+    <div className="shri-policies-page">
       <Navbar />
 
       <div className="shri-policies-container">
@@ -84,68 +74,29 @@ export default function Policies() {
             <div className="shri-policies-header">
               <h1 className="shri-policies-main-title">Policies & Standards</h1>
             </div>
+      <div className="shri-policies-container">
+        {loading ? (
+          <p>Loading policies...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>{error}</p>
+        ) : !selectedPolicy ? (
+          <>
+            <div className="shri-policies-header">
+              <h1 className="shri-policies-main-title">Policies & Standards</h1>
+            </div>
 
-            <div className="shri-policies-list">
-              {policies.length === 0 ? (
-                <p>No policies available.</p>
-              ) : (
-                policies.map((policy, idx) => (
-                  <section
-                    className="shri-policy-section"
-                    key={idx}
-                    onClick={() => setSelectedPolicy(policy)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="shri-policy-header">
-                      <h2 className="shri-policy-title">
-                        {policy.title || "Untitled Policy"}
-                      </h2>
-                    </div>
-                    {policy.why && (
-                      <p className="shri-policy-why">
-                        <strong>Why:</strong> {policy.why}
-                      </p>
-                    )}
-                    {Array.isArray(policy.keyElements) &&
-                      policy.keyElements.length > 0 && (
-                        <div className="shri-policy-elements">
-                          <strong>Key Elements:</strong>
-                          <ul>
-                            {policy.keyElements.map((el, i) => (
-                              <li key={i}>{el}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    {policy.pdf && (
-                      <p>
-                        <a
-                          href={
-                            policy.pdf.startsWith("http")
-                              ? policy.pdf
-                              : `http://localhost:5000${policy.pdf}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={async (e) => {
-                            e.preventDefault(); // prevent default temporarily
-                            await handleViewPDF(policy);
-                            // open PDF after logging
-                            window.open(
-                              policy.pdf.startsWith("http")
-                                ? policy.pdf
-                                : `http://localhost:5000${policy.pdf}`,
-                              "_blank"
-                            );
-                          }}
-                        >
-                          View PDF
-                        </a>
-                      </p>
-                    )}
-                  </section>
-                ))
-              )}
+      <div className="shri-policies-list">
+        {policies.map((policy, idx) => (
+          <section className="shri-policy-section" key={idx}>
+            <div className="shri-policy-header">
+              <h2 className="shri-policy-title">{policy.title}</h2>
+            </div>
+            <p className="shri-policy-why"><strong>Why:</strong> {policy.why}</p>
+            <div className="shri-policy-elements">
+              <strong>Key Elements:</strong>
+              <ul>
+                {policy.keyElements.map((el, i) => <li key={i}>{el}</li>)}
+              </ul>
             </div>
           </>
         ) : (
