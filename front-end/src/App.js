@@ -11,9 +11,8 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
-import NotificationsPage from "./components/Notifications"; 
-import ForgotPassword from './pages/Login/ForgotPassword';
-import VerifyOTP from './pages/Login/VerifyOTP';
+import NotificationsPage from "./components/Notifications";   // ✅ keep this
+import Guest from "./components/Unregister";
 
 import "./App.css";
 
@@ -59,9 +58,11 @@ function App() {
           {/* Progress Tracking */}
           <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
 
-        </Routes>
-      </Router>
-    </GoogleOAuthProvider>
+        {/* Unregister */}
+        <Route path="/unregister" element={<Guest />} />
+
+      </Routes>
+    </Router>
   );
 }
 

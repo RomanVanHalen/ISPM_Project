@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Quiz.css";
+import api from "../../../api/axiosInstance"; // ✅ use your axios instance
 
 const Quiz = ({ onComplete }) => {
   const questions = [
@@ -9,7 +10,7 @@ const Quiz = ({ onComplete }) => {
         "Share with colleagues freely",
         "Store in encrypted database",
         "Post on social media",
-        "Send via public email"
+        "Send via public email",
       ],
       answer: "Store in encrypted database",
     },
@@ -19,7 +20,7 @@ const Quiz = ({ onComplete }) => {
         "Only with authorized personnel",
         "With any team member",
         "On company Slack",
-        "Upload to public cloud"
+        "Upload to public cloud",
       ],
       answer: "Only with authorized personnel",
     },
@@ -29,7 +30,7 @@ const Quiz = ({ onComplete }) => {
         "Use for phishing tests",
         "Share externally",
         "Keep internal and secure",
-        "Send to personal accounts"
+        "Send to personal accounts",
       ],
       answer: "Keep internal and secure",
     },
@@ -38,13 +39,48 @@ const Quiz = ({ onComplete }) => {
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = () => {
-    if (selected === questions[current].answer) setScore((s) => s + 1);
-    setSelected("");
-    if (current + 1 < questions.length) setCurrent(current + 1);
-    else onComplete(score + (selected === questions[current].answer ? 1 : 0));
+  const handleSubmit = async () => {
+    let finalScore = score;
+    if (selected === questions[current].answer) finalScore += 1;
+
+    if (current + 1 < questions.length) {
+      // Move to next question
+      setScore(finalScore);
+      setSelected("");
+      setCurrent(current + 1);
+    } else {
+      // ✅ Quiz finished
+      setScore(finalScore);
+      setSubmitted(true);
+
+      try {
+        // ✅ Send score to backend
+        await api.post("/score", {
+          module: "Data Protection Quiz", // module name
+          score: finalScore,
+          total: questions.length,
+        });
+        console.log("✅ Score saved successfully!");
+      } catch (err) {
+        console.error("❌ Failed to save score:", err.response?.data || err.message);
+      }
+
+      if (onComplete) onComplete(finalScore);
+    }
   };
+
+  if (submitted) {
+    return (
+      <div className="quiz-container">
+        <h3>🎉 Quiz Completed!</h3>
+        <p>
+          Final Score: {score} / {questions.length}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="quiz-container">
@@ -62,10 +98,13 @@ const Quiz = ({ onComplete }) => {
           {opt}
         </label>
       ))}
-      <button onClick={handleSubmit} disabled={!selected}>Submit</button>
+      <button onClick={handleSubmit} disabled={!selected}>
+        {current + 1 < questions.length ? "Next" : "Finish"}
+      </button>
       <p>Current Score: {score}</p>
     </div>
   );
 };
 
 export default Quiz;
+
