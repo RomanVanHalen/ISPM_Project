@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import createTransporter from "../config/gmail.js";
+import { OAuth2Client } from "google-auth-library";
+
+// Initialize Google OAuth client
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ================== Register User ==================
 export const registerUser = async (req, res) => {
@@ -72,6 +76,78 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// ================== Google OAuth Login ==================
+export const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ message: "Google token is required" });
+    }
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub: googleId } = payload;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user if doesn't exist
+      user = await User.create({
+        name,
+        email,
+        googleId,
+        profilePic: picture || "https://via.placeholder.com/150",
+        role: "employee", // default role
+        isVerified: true,
+        // Generate a secure random password for Google OAuth users
+        password: await bcrypt.hash(googleId + process.env.JWT_SECRET + Date.now(), 10),
+      });
+    } else {
+      // Update existing user with googleId if not present
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.isVerified = true;
+      }
+
+      // Update profile picture if available and different
+      if (picture && user.profilePic !== picture) {
+        user.profilePic = picture;
+      }
+
+      await user.save();
+    }
+
+    // Generate JWT token
+    const jwtToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.json({
+      token: jwtToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role.toLowerCase(),
+        profilePic: user.profilePic,
+      },
+    });
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(400).json({ 
+      message: "Google authentication failed", 
+      error: error.message 
+    });
+  }
+};
+
 // ================== Forgot Password ==================
 export const forgotPassword = async (req, res) => {
   try {
@@ -81,6 +157,13 @@ export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if user registered via Google OAuth
+    if (user.googleId) {
+      return res.status(400).json({ 
+        message: "This account is registered with Google. Please use Google Sign-In." 
+      });
     }
 
     // Generate 6-digit OTP
@@ -139,6 +222,13 @@ export const resetPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Check if user registered via Google OAuth
+    if (user.googleId) {
+      return res.status(400).json({ 
+        message: "This account is registered with Google. Please use Google Sign-In." 
+      });
+    }
+
     // Check if OTP matches and is not expired
     if (user.resetPasswordOTP !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -174,10 +264,17 @@ export const updateProfile = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Don't allow Google OAuth users to change password via this method
+    if (password && user.googleId) {
+      return res.status(400).json({ 
+        message: "Google OAuth users cannot change password here. Use Google account settings." 
+      });
+    }
+
     user.name = name || user.name;
     user.email = email || user.email;
 
-    if (password) {
+    if (password && !user.googleId) {
       const hashedPassword = await bcrypt.hash(password, 10);
       user.password = hashedPassword;
     }

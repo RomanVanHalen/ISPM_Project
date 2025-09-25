@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GoogleLogin } from '@react-oauth/google';
 import "./Login.css";
 import myimg from "../../images/warrior.jpg";
 
@@ -20,40 +21,62 @@ const Login = () => {
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-
-      // Save token and role
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.user.role);
-
-      // Optional: set default Authorization header for all future axios calls
-      axios.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
-
-      // 🔔 Create a notification that this user has logged in (non-blocking)
-      try {
-        await axios.post("http://localhost:5000/api/notifications", {
-          title: "Login Successful",
-          body: `${res.data.user?.name || "User"} has logged into the system.`,
-          link: res.data.user?.role === "admin" ? "/admin-dashboard" : "/employee-dashboard",
-          type: "login",
-          // If your schema supports per-user notifications, uncomment the next line:
-          // userId: res.data.user?._id,
-        });
-      } catch (notifyErr) {
-        // Do not block navigation if notification fails
-        console.warn("Login notification failed:", notifyErr?.response?.data || notifyErr.message);
-      }
-
-      // Redirect based on role
-      if (res.data.user.role === "admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/employee-dashboard");
-      }
-
+      handleLoginSuccess(res.data);
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed!");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/google", {
+        token: credentialResponse.credential,
+      });
+      handleLoginSuccess(res.data);
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Google login failed!");
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setMessage("Google login failed. Please try again.");
+  };
+
+  const handleLoginSuccess = (data) => {
+    // Save token and role
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role);
+
+    // Set default Authorization header
+    axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+
+    // Send login notification (non-blocking)
+    sendLoginNotification(data.user);
+
+    // Redirect based on role
+    if (data.user.role === "admin") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/employee-dashboard");
+    }
+  };
+
+  const sendLoginNotification = async (user) => {
+    try {
+      await axios.post("http://localhost:5000/api/notifications", {
+        title: "Login Successful",
+        body: `${user.name || "User"} has logged into the system.`,
+        link: user.role === "admin" ? "/admin-dashboard" : "/employee-dashboard",
+        type: "login",
+      });
+    } catch (notifyErr) {
+      console.warn("Login notification failed:", notifyErr?.response?.data || notifyErr.message);
     }
   };
 
@@ -69,11 +92,7 @@ const Login = () => {
         {/* Welcome Section */}
         <div className="welcome-section">
           <div className="welcome-content">
-            <img
-              src={myimg}
-              alt="Welcome"
-              className="welcome-image"
-            />
+            <img src={myimg} alt="Welcome" className="welcome-image" />
             <h2>Welcome Back</h2>
             <p>Secure your digital world with Cyber Warriors</p>
           </div>
@@ -84,6 +103,23 @@ const Login = () => {
           <div className="form-header">
             <h3>Sign In</h3>
             <p>Enter your credentials to access your account</p>
+          </div>
+
+          {/* Google Login Button */}
+          <div className="google-login-section">
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={handleGoogleError}
+              shape="rectangular"
+              size="large"
+              text="signin_with"
+              width="100%"
+              useOneTap={false} // Optional: disable one-tap sign-in
+            />
+          </div>
+
+          <div className="divider">
+            <span>or continue with email</span>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -144,16 +180,12 @@ const Login = () => {
 
           {message && (
             <div className="message-container">
-              <div className="error-message">
-                <span className="error-icon">⚠</span>
+              <div className={`message ${message.includes('failed') ? 'error-message' : 'success-message'}`}>
+                <span className="message-icon">⚠</span>
                 {message}
               </div>
             </div>
           )}
-
-          <div className="divider">
-            <span>or</span>
-          </div>
 
           <div className="register-section">
             <p>New to Cyber Warriors?</p>
