@@ -11,6 +11,9 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
+import NotificationsPage from "./components/Notifications";
+import Guest from "./components/Unregister";
+
 import NotificationsPage from "./components/Notifications"; 
 import ForgotPassword from './pages/Login/ForgotPassword';
 import VerifyOTP from './pages/Login/VerifyOTP';
@@ -24,6 +27,10 @@ import Ddomain3 from "./pages/Training/components/Ddomain3";
 
 // Progress tracking
 import ProgressTracking from "./pages/Analytics&Reports/Components/ProgressTracking";
+
+// ❌ You’re using these but forgot to import them
+import ForgotPassword from "./pages/Login/ForgotPassword";
+import VerifyOTP from "./pages/Login/VerifyOTP";
 
 function App() {
   return (
@@ -58,6 +65,8 @@ function App() {
           {/* Progress Tracking */}
           <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
 
+          {/* Unregister */}
+          <Route path="/unregister" element={<Guest />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

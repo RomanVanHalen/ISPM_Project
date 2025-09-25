@@ -4,23 +4,16 @@ import {
   RadialBarChart,
   RadialBar,
   ResponsiveContainer,
+  PolarAngleAxis,
 } from "recharts";
+import api from "../../../api/axiosInstance";   // ✅ import axios instance
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import "../Styles/ProgressTracking.css";
 
 // Components
 import Header from "../../../components/Navbar";
 import Footer from "../../../components/Footer2";
-
-// ✅ Example static data
-const exampleData = {
-  policiesAcknowledged: 0,
-  totalPolicies: 0,
-  trainingsCompleted: 0,
-  totalTrainings: 0,
-  quizAvgScore: 0,
-  compliance: 0,
-  details: [],
-};
 
 // ✅ Animated number counter
 const AnimatedNumber = ({ value, duration = 1000 }) => {
@@ -71,11 +64,81 @@ const ProgressTracking = () => {
   const [userProgress, setUserProgress] = useState(null);
 
   useEffect(() => {
-    // For now, just set static data
-    setUserProgress(exampleData);
+    const fetchProgress = async () => {
+      try {
+        // ✅ Get all scores from backend
+        const res = await api.get("/score");
+        const scores = res.data; // array of score objects
+
+        // Example: compute quiz average
+        let quizAvgScore = 0;
+        if (scores.length > 0) {
+          const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
+          const totalMax = scores.reduce((sum, s) => sum + (s.total || 0), 0);
+          quizAvgScore = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
+        }
+
+        // You can extend this with policies/trainings once you track them
+        setUserProgress({
+          policiesAcknowledged: 0,
+          totalPolicies: 0,
+          trainingsCompleted: 0,
+          totalTrainings: 0,
+          quizAvgScore,
+          compliance: quizAvgScore, // for now use same as quiz average
+          details: scores.map((s) => ({
+            type: "Quiz",
+            title: s.module,
+            status: `${s.score}/${s.total}`,
+            lastUpdated: new Date(s.updatedAt).toLocaleDateString(),
+          })),
+        });
+      } catch (err) {
+        console.error("❌ Failed to fetch progress:", err.response?.data || err.message);
+      }
+    };
+
+    fetchProgress();
   }, []);
 
-  if (!userProgress) return null;
+  // ✅ Generate PDF Report
+  const downloadReport = () => {
+    if (!userProgress) return;
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("My Progress Report", 14, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Quiz Average Score: ${userProgress.quizAvgScore}%`, 14, 35);
+    doc.text(`Compliance: ${userProgress.compliance}%`, 14, 45);
+    doc.text(
+      `Policies Acknowledged: ${userProgress.policiesAcknowledged}/${userProgress.totalPolicies}`,
+      14,
+      55
+    );
+    doc.text(
+      `Trainings Completed: ${userProgress.trainingsCompleted}/${userProgress.totalTrainings}`,
+      14,
+      65
+    );
+
+    // ✅ Add table for details
+    autoTable(doc, {
+     startY: 75,
+     head: [["Item Type", "Title", "Status", "Last Updated"]],
+     body: userProgress.details.map((item) => [
+     item.type,
+     item.title,
+     item.status,
+     item.lastUpdated,
+   ]),
+  });
+
+    doc.save("progress_report.pdf");
+  };
+
+  if (!userProgress) return <p>Loading progress...</p>;
 
   const policyProgress =
     (userProgress.policiesAcknowledged / userProgress.totalPolicies) * 100 || 0;
@@ -92,7 +155,6 @@ const ProgressTracking = () => {
 
   return (
     <>
-      {/* ✅ Header */}
       <Header />
 
       <main className="sa01progress-container">
@@ -129,6 +191,7 @@ const ProgressTracking = () => {
                 barSize={12}
                 data={quizData}
               >
+                <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
                 <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
               </RadialBarChart>
             </ResponsiveContainer>
@@ -159,6 +222,7 @@ const ProgressTracking = () => {
                 barSize={12}
                 data={complianceData}
               >
+                <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
                 <RadialBar minAngle={15} clockWise dataKey="value" cornerRadius={10} />
               </RadialBarChart>
             </ResponsiveContainer>
@@ -201,15 +265,21 @@ const ProgressTracking = () => {
               ))}
             </tbody>
           </table>
-          <button className="sa01download-btn">⬇ Download My Report</button>
+
+          {/* ✅ PDF download button */}
+          <button className="sa01download-btn" onClick={downloadReport}>
+            ⬇ Download My Report
+          </button>
         </div>
       </main>
 
-      {/* ✅ Footer */}
       <Footer />
     </>
   );
 };
 
 export default ProgressTracking;
+
+
+
 

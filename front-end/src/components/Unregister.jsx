@@ -1,6 +1,6 @@
 //Guest
 import React from "react";
-import "../Styles/Unregister.css";
+import "../styles/Unregister.css";
 
 const AuthPrompt = ({ onLogin, onRegister }) => {
   return (
@@ -32,5 +32,6 @@ const AuthPrompt = ({ onLogin, onRegister }) => {
     </div>
   );
 };
+
 
 export default AuthPrompt;

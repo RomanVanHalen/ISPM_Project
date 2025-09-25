@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer2 from "../../components/Footer2";
 import PoliciesHome from "./policiescomponents/PoliciesHome";
-import AuthPrompt from "../Analytics&Reports/Components/Unregister";
-// ✅ Import here
 import "./Policiesdocuments.css";
+import Navbar from "../../components/Navbar";
 
 export default function Policies() {
   const navigate = useNavigate();
@@ -16,40 +14,32 @@ export default function Policies() {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [unregistered, setUnregistered] = useState(false); // track unregistered users
 
-  // Authentication & back button prevention
+  // 1. Authentication & back button prevention
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/", { replace: true });
-    } else {
-      // Fetch user info from backend to check registration status
-      axios.get("http://localhost:5000/api/users/profile", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        const profile = res.data;
-        setUser({ role: profile.role, name: profile.name });
-        if (profile.status === "unregistered") {
-          setUnregistered(true); // mark unregistered
-        }
-      })
-      .catch(err => {
-        console.error("Error fetching profile:", err);
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
         navigate("/", { replace: true });
-      });
-    }
+        return;
+      }
 
-    // Prevent caching/back navigation
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = function () {
-      navigate("/", { replace: true });
+      try {
+        const res = await axios.get("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser({ role: res.data.role || "employee", name: res.data.name || "User" });
+      } catch (err) {
+        setError("Could not load policies. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchUser();
   }, [navigate]);
 
-  // Fetch policies
+  // 2. Fetch policies
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
@@ -58,17 +48,30 @@ export default function Policies() {
         else setPolicies([]);
       } catch (err) {
         setError("Could not load policies. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
+
     fetchPolicies();
   }, []);
 
   const handleContinue = () => setShowHome(false);
 
-  // ✅ If user is unregistered, show AuthPrompt
-  if (unregistered) return <AuthPrompt />;
+  // ✅ Function to log PDF view
+  const handleViewPDF = async (policy) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/policy-views",
+        { policyId: policy._id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Failed to log PDF view:", err);
+    }
+  };
 
   if (showHome) return <PoliciesHome user={user} onContinue={handleContinue} />;
 
@@ -85,36 +88,59 @@ export default function Policies() {
             <div className="shri-policies-header">
               <h1 className="shri-policies-main-title">Policies & Standards</h1>
             </div>
+
             <div className="shri-policies-list">
               {policies.length === 0 ? (
                 <p>No policies available.</p>
               ) : (
-                policies.map((policy, idx) => (
+                policies.map((policy) => (
                   <section
                     className="shri-policy-section"
-                    key={idx}
-                    onClick={() => setSelectedPolicy(policy)}
+                    key={policy._id}
                     style={{ cursor: "pointer" }}
+                    onClick={() => setSelectedPolicy(policy)}
                   >
                     <div className="shri-policy-header">
                       <h2 className="shri-policy-title">{policy.title || "Untitled Policy"}</h2>
                     </div>
                     {policy.why && (
-                      <p className="shri-policy-why"><strong>Why:</strong> {policy.why}</p>
+                      <p className="shri-policy-why">
+                        <strong>Why:</strong> {policy.why}
+                      </p>
                     )}
                     {Array.isArray(policy.keyElements) && policy.keyElements.length > 0 && (
                       <div className="shri-policy-elements">
                         <strong>Key Elements:</strong>
-                        <ul>{policy.keyElements.map((el, i) => <li key={i}>{el}</li>)}</ul>
+                        <ul>
+                          {policy.keyElements.map((el, i) => (
+                            <li key={i}>{el}</li>
+                          ))}
+                        </ul>
                       </div>
                     )}
                     {policy.pdf && (
                       <p>
                         <a
-                          href={policy.pdf.startsWith("http") ? policy.pdf : `http://localhost:5000${policy.pdf}`}
+                          href={
+                            policy.pdf.startsWith("http")
+                              ? policy.pdf
+                              : `http://localhost:5000${policy.pdf}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
-                        >View PDF</a>
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            await handleViewPDF(policy);
+                            window.open(
+                              policy.pdf.startsWith("http")
+                                ? policy.pdf
+                                : `http://localhost:5000${policy.pdf}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          View PDF
+                        </a>
                       </p>
                     )}
                   </section>
@@ -124,13 +150,23 @@ export default function Policies() {
           </>
         ) : (
           <div className="shri-policy-detail">
-            <button className="shri-back-btn" onClick={() => setSelectedPolicy(null)}>← Back to Policies</button>
+            <button className="shri-back-btn" onClick={() => setSelectedPolicy(null)}>
+              ← Back to Policies
+            </button>
             <h2 className="shri-detail-title">{selectedPolicy.title || "Untitled Policy"}</h2>
-            {selectedPolicy.why && <p className="shri-detail-why"><strong>Why:</strong> {selectedPolicy.why}</p>}
+            {selectedPolicy.why && (
+              <p className="shri-detail-why">
+                <strong>Why:</strong> {selectedPolicy.why}
+              </p>
+            )}
             {Array.isArray(selectedPolicy.keyElements) && selectedPolicy.keyElements.length > 0 && (
               <div className="shri-detail-elements">
                 <strong>Key Elements:</strong>
-                <ul>{selectedPolicy.keyElements.map((el, i) => <li key={i}>{el}</li>)}</ul>
+                <ul>
+                  {selectedPolicy.keyElements.map((el, i) => (
+                    <li key={i}>{el}</li>
+                  ))}
+                </ul>
               </div>
             )}
             {selectedPolicy.details && (
@@ -142,10 +178,26 @@ export default function Policies() {
             {selectedPolicy.pdf && (
               <p>
                 <a
-                  href={selectedPolicy.pdf.startsWith("http") ? selectedPolicy.pdf : `http://localhost:5000${selectedPolicy.pdf}`}
+                  href={
+                    selectedPolicy.pdf.startsWith("http")
+                      ? selectedPolicy.pdf
+                      : `http://localhost:5000${selectedPolicy.pdf}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
-                >View PDF</a>
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleViewPDF(selectedPolicy);
+                    window.open(
+                      selectedPolicy.pdf.startsWith("http")
+                        ? selectedPolicy.pdf
+                        : `http://localhost:5000${selectedPolicy.pdf}`,
+                      "_blank"
+                    );
+                  }}
+                >
+                  View PDF
+                </a>
               </p>
             )}
           </div>
@@ -155,4 +207,3 @@ export default function Policies() {
     </div>
   );
 }
-
