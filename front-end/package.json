@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.11.0",
     "crypto": "^1.0.1",
-    "framer-motion": "^12.23.19",
+    "framer-motion": "^12.23.21",
     "jspdf": "^3.0.2",
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.536.0",
