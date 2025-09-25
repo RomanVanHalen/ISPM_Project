@@ -6,13 +6,12 @@ const notificationSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // optional: null = broadcast
     title: { type: String, required: true },
     body:  { type: String, required: true },
-    link:  { type: String },
-    read:  { type: Boolean, default: false },
+    type: {type: String, default: "info"},
   },
   { timestamps: true }
 );
 
-const Notification = mongoose.model("Notification", notificationSchema);
+notificationSchema.index({ userId: 1, type: 1, createdAt: -1 });
 
-// 👇 This line is critical
-export default Notification;
+const Notification = mongoose.model("Notification", notificationSchema);
+export default Notification; 

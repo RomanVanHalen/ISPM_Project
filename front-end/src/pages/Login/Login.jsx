@@ -28,21 +28,6 @@ const Login = () => {
       // Optional: set default Authorization header for all future axios calls
       axios.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
 
-      // 🔔 Create a notification that this user has logged in (non-blocking)
-      try {
-        await axios.post("http://localhost:5000/api/notifications", {
-          title: "Login Successful",
-          body: `${res.data.user?.name || "User"} has logged into the system.`,
-          link: res.data.user?.role === "admin" ? "/admin-dashboard" : "/employee-dashboard",
-          type: "login",
-          // If your schema supports per-user notifications, uncomment the next line:
-          // userId: res.data.user?._id,
-        });
-      } catch (notifyErr) {
-        // Do not block navigation if notification fails
-        console.warn("Login notification failed:", notifyErr?.response?.data || notifyErr.message);
-      }
-
       // Redirect based on role
       if (res.data.user.role === "admin") {
         navigate("/admin-dashboard");

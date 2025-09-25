@@ -3,9 +3,8 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer2 from "../../components/Footer2";
-import PoliciesHome from "./PoliciesComponents/PoliciesHome";
+import PoliciesHome from "./policiescomponents/PoliciesHome.jsx"; 
 import AuthPrompt from "../Analytics&Reports/Components/Unregister";
-// ✅ Import here
 import "./Policiesdocuments.css";
 
 export default function Policies() {

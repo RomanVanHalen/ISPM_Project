@@ -19,6 +19,7 @@ import Courses from "./pages/Training/components/Courses";
 import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
 import Ddomain3 from "./pages/Training/components/Ddomain3";
+import Ddomain4 from "./pages/Training/components/Ddomain4";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
         <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
         <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
+        <Route path="/training/Courses/Ddomain4" element={<Ddomain4 />} />
       </Routes>
     </Router>
   );

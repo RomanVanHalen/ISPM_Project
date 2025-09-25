@@ -8,6 +8,7 @@ const modules = [
   { id: 1, domain: "Domain 1", title: "Information Security & Data Privacy", link: "/training/Courses/Ddomain1" },
   { id: 2, domain: "Domain 2", title: "Quality & Accountability in NGOs", link: "/training/Courses/Ddomain2" },
   { id: 3, domain: "Domain 3", title: "Child Protection & Rights", link: "/training/Courses/Ddomain3" },
+   { id: 4, domain: "Domain 4", title: "Child Protection & Rights", link: "/training/Courses/Ddomain4" },
 ];
 
 
