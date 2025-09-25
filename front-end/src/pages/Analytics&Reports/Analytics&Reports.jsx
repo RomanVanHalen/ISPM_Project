@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Navbar";
-
 import Welcome from "./Components/WelcomePage";
-import AuthPrompt from "./Components/Unregister";
+import AuthPrompt from "../../components/Unregister";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -28,9 +27,9 @@ export default function MainPage() {
 
         console.log("Profile API response:", data);
 
-        // Only allow "employee", otherwise fallback to guest
-        if (data?.role === "employee") {
-          setRole("employee");
+        // ✅ Allow both "employee" and "admin"
+        if (data?.role === "employee" || data?.role === "admin") {
+          setRole(data.role);
         } else {
           setRole("guest");
         }
@@ -48,7 +47,7 @@ export default function MainPage() {
   if (loading) return <div>Loading...</div>;
 
   let content;
-  if (role === "employee") {
+  if (role === "employee" || role === "admin") {
     content = <Welcome />;
   } else {
     content = (
@@ -59,7 +58,8 @@ export default function MainPage() {
     );
   }
 
-  const showHeader = role === "employee";
+  // ✅ Show header for employee or admin
+  const showHeader = role === "employee" || role === "admin";
 
   return (
     <div className="sa02-body">
@@ -68,6 +68,7 @@ export default function MainPage() {
     </div>
   );
 }
+
 
 
 

@@ -11,6 +11,7 @@ import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import NotificationsPage from "./components/Notifications";   // ✅ keep this
+import Guest from "./components/Unregister";
 
 import "./App.css";
 
@@ -54,6 +55,9 @@ function App() {
 
         {/* Progress Tracking */}
         <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
+
+        {/* Unregister */}
+        <Route path="/unregister" element={<Guest />} />
 
       </Routes>
     </Router>
