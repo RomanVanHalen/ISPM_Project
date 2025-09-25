@@ -1,18 +1,21 @@
 /* Container for all cards */
 .vik-course-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 420px));
   gap: 60px;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-  padding: 100px;
+  place-content: center;   /* centers the whole grid block */
+  place-items: center;     /* centers items inside cells */
+  min-height: 80vh;
+  padding: 110px 20px;
   flex-wrap: wrap;
   background-color: #f5f7fa; /* light background */
   font-family: "Poppins", sans-serif;
+ 
 }
 
 /* Individual course card */
 .vik-course-card {
+  position: relative;                /* for :before underline */
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);  
@@ -90,15 +93,10 @@
   animation: fadeSlideIn 0.6s ease-out forwards;
 }
 
-.vik-course-card:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.vik-course-card:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.vik-course-card:nth-child(3) {
-  animation-delay: 0.6s;
-}
+.vik-course-card:nth-child(1) { animation-delay: 0.2s;}
+.vik-course-card:nth-child(2) {animation-delay: 0.4s;}
+.vik-course-card:nth-child(3) {animation-delay: 0.6s;}
+.vik-course-card:nth-child(4) { animation-delay: 0.8s;}
 
 .vik-course-title {
 
@@ -108,8 +106,6 @@
   margin-bottom: 1rem;
 
 }
-
-
 
 
 /* Domain text (top line) */

@@ -1,11 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import createTransporter from "../config/gmail.js";
-import { OAuth2Client } from "google-auth-library";
-
-// Initialize Google OAuth client
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+import Notification from "../models/Notification.js";
 
 // ================== Register User ==================
 export const registerUser = async (req, res) => {
@@ -59,6 +55,16 @@ export const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: "1h",
+    });
+
+    // ✅ record this login (admins will see all; user will be served only their latest)
+    await Notification.create({
+      userId: user._id,
+      title: "Login Successful",
+      body: `${user.name} logged in successfully.`,
+      link: user.role?.toLowerCase() === "admin" ? "/admin-dashboard" : "/employee-dashboard",
+      type: "login",
+    // read: false by default
     });
 
     res.json({
@@ -299,3 +305,14 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
