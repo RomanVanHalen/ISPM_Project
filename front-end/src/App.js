@@ -12,16 +12,17 @@ import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import NotificationsPage from "./components/Notifications";
-import Guest from "./components/Unregister";
-
+import Guest from "./components/Unregister"; 
+import ForgotPassword from './pages/Login/ForgotPassword';
+import VerifyOTP from './pages/Login/VerifyOTP';
 import "./App.css";
-
-// Courses
 import Courses from "./pages/Training/components/Courses";
 import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
 import Ddomain3 from "./pages/Training/components/Ddomain3";
-import Ddomain4 from "./pages/Training/components/Ddomain4";
+import ProgressTracking from "./pages/Analytics&Reports/Components/ProgressTracking";
+import ComplianceReportingDashboard from "./pages/Analytics&Reports/Components/ComplianceReportingDashboard";
+
 
 function App() {
   return (
@@ -47,14 +48,21 @@ function App() {
           {/* Employee */}
           <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
 
-        {/* Courses */}
-        <Route path="/training/Courses" element={<Courses />}/>
-        <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
-        <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
-        <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
-        <Route path="/training/Courses/Ddomain4" element={<Ddomain4 />} />
-      </Routes>
-    </Router>
+          {/* Courses */}
+          <Route path="/training/Courses" element={<Courses />}/>
+          <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
+          <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
+          <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
+
+          {/* Progress Tracking */}
+          <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
+          <Route path="/compliance-reporting-dashboard" element={<ComplianceReportingDashboard />} />
+
+          {/* Unregister */}
+          <Route path="/unregister" element={<Guest />} />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 
