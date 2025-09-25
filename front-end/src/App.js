@@ -14,7 +14,6 @@ import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import NotificationsPage from "./components/Notifications"; 
 import ForgotPassword from './pages/Login/ForgotPassword';
 import VerifyOTP from './pages/Login/VerifyOTP';
-
 import "./App.css";
 
 // Courses
