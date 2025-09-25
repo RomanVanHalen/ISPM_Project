@@ -3,9 +3,7 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer2 from "../../components/Footer2";
-import PoliciesHome from "./PoliciesComponents/PoliciesHome";
-
-
+import PoliciesHome from "./policiescomponents/PoliciesHome";
 
 import "./Policiesdocuments.css";
 
@@ -23,16 +21,14 @@ export default function Policies() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      // redirect to home if not logged in
       navigate("/", { replace: true });
     } else {
       setUser({ role: "admin", name: "Admin User" });
     }
 
-    // Prevent caching/back navigation
     window.history.pushState(null, "", window.location.href);
     window.onpopstate = function () {
-      navigate("/", { replace: true }); // redirect to home on back
+      navigate("/", { replace: true });
     };
   }, [navigate]);
 
@@ -41,11 +37,8 @@ export default function Policies() {
     const fetchPolicies = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/policies");
-        if (Array.isArray(res.data)) {
-          setPolicies(res.data);
-        } else {
-          setPolicies([]);
-        }
+        if (Array.isArray(res.data)) setPolicies(res.data);
+        else setPolicies([]);
       } catch (err) {
         setError("Could not load policies. Please try again later.");
       } finally {
@@ -57,6 +50,23 @@ export default function Policies() {
   }, []);
 
   const handleContinue = () => setShowHome(false);
+
+  // ✅ Function to log PDF view
+  const handleViewPDF = async (policy) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/policy-views",
+        { policyId: policy._id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Failed to log PDF view:", err);
+    }
+  };
 
   if (showHome) return <PoliciesHome user={user} onContinue={handleContinue} />;
 
@@ -117,6 +127,17 @@ export default function Policies() {
                           }
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={async (e) => {
+                            e.preventDefault(); // prevent default temporarily
+                            await handleViewPDF(policy);
+                            // open PDF after logging
+                            window.open(
+                              policy.pdf.startsWith("http")
+                                ? policy.pdf
+                                : `http://localhost:5000${policy.pdf}`,
+                              "_blank"
+                            );
+                          }}
                         >
                           View PDF
                         </a>
@@ -170,6 +191,16 @@ export default function Policies() {
                   }
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleViewPDF(selectedPolicy);
+                    window.open(
+                      selectedPolicy.pdf.startsWith("http")
+                        ? selectedPolicy.pdf
+                        : `http://localhost:5000${selectedPolicy.pdf}`,
+                      "_blank"
+                    );
+                  }}
                 >
                   View PDF
                 </a>
