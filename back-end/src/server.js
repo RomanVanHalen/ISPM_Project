@@ -1,16 +1,20 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import connectDB from "./config/db.js";
+
+// Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import policiesRouter from "./routes/policies.js"; // ✅ Added policies router
-import progressRoutes from "./routes/progressRoutes.js"; // Added progress route
-import NotificationRoute from "./routes/NotificationRoute.js"; // Added notification route
-import scoreRoute from "./routes/scoreRoutes.js"; //Added score route
-import path from "path";
-import { fileURLToPath } from "url";
+import adminProgressRoutes from "./routes/adminProgressRoutes.js"; // ✅ Make sure filename matches exactly
+import progressRoutes from "./routes/progressRoutes.js";
+import policiesRouter from "./routes/policies.js";
+import NotificationRoute from "./routes/NotificationRoute.js";
+import scoreRoute from "./routes/scoreRoutes.js";
 
 dotenv.config();
 
@@ -21,13 +25,12 @@ const __dirname = path.dirname(__filename);
 // Create the express app
 const app = express();
 
-// Connect to DB
+// Connect to MongoDB
 connectDB();
 
 // Middleware
 app.use(express.json());
 
-// Enable CORS for frontend
 app.use(
   cors({
     origin: "http://localhost:3000", // frontend URL
@@ -35,28 +38,26 @@ app.use(
   })
 );
 
-// ✅ Serve static files from uploads directory
-// Example: http://localhost:5000/uploads/filename.jpg
-// Serve PDFs from the correct folder
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/progress", progressRoutes);  // Added progress route
-app.use("/api/notifications", NotificationRoute); // added notification route
-app.use("/api/score", scoreRoute); //Added score route
 
-// ✅ Policies JSON route
+// ✅ Mount admin progress route on a **sub-path**
+app.use("/api/admin/progress", adminProgressRoutes);
+
+// Other routes
+app.use("/api/progress", progressRoutes);
+app.use("/api/notifications", NotificationRoute);
+app.use("/api/score", scoreRoute);
 app.use("/api/policies", policiesRouter);
 
 // Health check
-app.get("/", (req, res) => {
-  res.send("✅ API is running...");
-});
+app.get("/", (req, res) => res.send("✅ API is running..."));
 
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-
