@@ -12,22 +12,17 @@ import AdminUsers from './pages/Admin/adminComponents/AdminUsers';
 import AccountSettings from './pages/Admin/adminComponents/AccountSettings';
 import EmployeeDashboard from "./pages/Emp/EmployeeDashboard";
 import NotificationsPage from "./components/Notifications";
-import Guest from "./components/Unregister";
-
+import Guest from "./components/Unregister"; 
+import ForgotPassword from './pages/Login/ForgotPassword';
+import VerifyOTP from './pages/Login/VerifyOTP';
 import "./App.css";
-
-// Courses
 import Courses from "./pages/Training/components/Courses";
 import Ddomain1 from "./pages/Training/components/Ddomain1";
 import Ddomain2 from "./pages/Training/components/Ddomain2";
 import Ddomain3 from "./pages/Training/components/Ddomain3";
-
-// Progress tracking
 import ProgressTracking from "./pages/Analytics&Reports/Components/ProgressTracking";
+import ComplianceReportingDashboard from "./pages/Analytics&Reports/Components/ComplianceReportingDashboard";
 
-// ❌ You’re using these but forgot to import them
-import ForgotPassword from "./pages/Login/ForgotPassword";
-import VerifyOTP from "./pages/Login/VerifyOTP";
 
 function App() {
   return (
@@ -61,6 +56,7 @@ function App() {
 
           {/* Progress Tracking */}
           <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
+          <Route path="/compliance-reporting-dashboard" element={<ComplianceReportingDashboard />} />
 
           {/* Unregister */}
           <Route path="/unregister" element={<Guest />} />
