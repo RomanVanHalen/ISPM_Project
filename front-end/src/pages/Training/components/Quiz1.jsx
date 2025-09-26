@@ -147,31 +147,41 @@ export default function TrainingModule() {
   const currentQuestion = questions[step];
   const totalQuestions = questions.length;
 
-    useEffect(() => {
-    if (step >= totalQuestions) {
-      const saveScore = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          await axios.post(
-            "/api/score",
-            {
-              score,
-              total: totalQuestions,
-              module: "Core Information Security Standards",
-            },
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          console.log("Score saved successfully!");
-        } catch (err) {
-          console.error("Error saving score:", err);
-        }
-      };
+useEffect(() => {
+  if (step >= totalQuestions) {
+    const saveProgress = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-      saveScore();
-    }
-  }, [step, score, totalQuestions]);
+        // Save quiz score
+        await axios.post(
+          "/api/score",
+          {
+            score,
+            total: totalQuestions,
+            module: "Core Information Security Standards", // <- your module title
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        // Mark training as completed in progress
+        await axios.post(
+          "/api/progress/complete-training",
+          { moduleName: "domain1" }, // <-- change this per module
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        console.log("✅ Score and module completion saved!");
+      } catch (err) {
+        console.error("Error saving progress:", err);
+      }
+    };
+
+    saveProgress();
+  }
+}, [step, score, totalQuestions]);
 
   const handleNext = (points = 0) => {
     setScore(score + points);

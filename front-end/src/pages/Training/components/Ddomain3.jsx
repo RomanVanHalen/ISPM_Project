@@ -158,32 +158,35 @@ const PhishingSimulator = () => {
     }
   };
 
-  const saveScoreToAPI = async (finalScore, totalQuestions) => {
-    try {
-      // Replace with your actual API endpoint
-      const response = await fetch('/api/save-score', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: 'current-user-id',
-          score: finalScore,
-          totalQuestions: totalQuestions,
-          percentage: Math.round((finalScore / totalQuestions) * 100),
-          timestamp: new Date().toISOString()
-        })
-      });
+  //Updated API call
+const saveScoreToAPI = async (finalScore, totalQuestions) => {
+  try {
+    const token = localStorage.getItem("token"); // make sure you store token at login
 
-      if (!response.ok) {
-        throw new Error('Failed to save score');
-      }
+    const response = await fetch("/api/score", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,   //required for authMiddleware
+      },
+      body: JSON.stringify({
+        score: finalScore,
+        total: totalQuestions,
+        module: "Phishing Simulator"
+      }),
+    });
 
-      console.log('Score saved successfully');
-    } catch (error) {
-      console.error('Error saving score:', error);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to save score");
     }
-  };
+
+    console.log("Score saved successfully");
+  } catch (error) {
+    console.error("Error saving score:", error);
+  }
+};
+
 
   const restartGame = () => {
     const shuffledEmails = [...sampleEmails].sort(() => Math.random() - 0.5);

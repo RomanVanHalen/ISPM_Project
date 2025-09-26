@@ -2,23 +2,39 @@
 import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import Progress from "../models/Progress.js";
-import Score from "../models/Score.js"; // ✅ Import Score model
-import PDFDocument from "pdfkit"; // ✅ For PDF generation
+import Score from "../models/Score.js"; // Import Score model
+import PDFDocument from "pdfkit"; // For PDF generation
 
 const router = express.Router();
 
-/**
- * ✅ Get logged-in user progress (with quiz scores + details)
- */
+//Get logged-in user progress (with quiz scores + details)
+ 
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     // 1. Fetch base progress record
     let progress = await Progress.findOne({ userId: req.user.id });
+
+    // 🔥 If no record, create one with defaults
     if (!progress) {
-      return res.status(404).json({ message: "Progress not found" });
+      progress = await Progress.create({
+        userId: req.user.id,
+        policiesAcknowledged: 0,
+        totalPolicies: 0,
+        trainingsCompleted: 0,
+        totalTrainings: 4, // since you have 4 modules
+        quizAvgScore: 0,
+        compliance: 0,
+        trainings: {
+          phishingSimulator: false,
+          domain1: false,
+          domain2: false,
+          domain3: false,
+        },
+        details: [],
+      });
     }
 
-    // 2. Fetch quiz scores for this user
+    // 2. Fetch quiz scores
     const scores = await Score.find({ userId: req.user.id });
 
     // 3. Compute quiz average
@@ -30,7 +46,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
     }
 
-    // 4. Build quiz details (fresh each request so they don’t duplicate)
+    // 4. Build quiz details
     const quizDetails = scores.map((s) => ({
       type: "Quiz",
       title: s.module,
@@ -38,25 +54,60 @@ router.get("/me", authMiddleware, async (req, res) => {
       lastUpdated: new Date(s.updatedAt).toLocaleDateString(),
     }));
 
-    // 5. Merge static details (policies/trainings) + quiz details
+    // 5. Merge progress data
     const enrichedProgress = {
       ...progress.toObject(),
       quizAvgScore,
-      compliance: quizAvgScore, // ✅ using quiz avg as compliance for now
+      compliance: quizAvgScore,
+      trainings: progress.trainings,
       details: [...(progress.details || []), ...quizDetails],
     };
 
     res.json(enrichedProgress);
   } catch (err) {
-    console.error("❌ Error fetching progress:", err);
+    console.error("Error fetching progress:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-/**
- * ✅ Add or update progress manually (policies/trainings)
- * This keeps history in `details` instead of overwriting.
- */
+//Mark a training as completed
+ 
+router.post("/complete-training", authMiddleware, async (req, res) => {
+  try {
+    const { moduleName } = req.body; // e.g. "phishingSimulator"
+
+    const validModules = ["phishingSimulator", "domain1", "domain2", "domain3"];
+
+    if (!validModules.includes(moduleName)) {
+      return res.status(400).json({ message: "Invalid module name" });
+    }
+
+    const progress = await Progress.findOneAndUpdate(
+      { userId: req.user.id },
+      {
+        $set: { [`trainings.${moduleName}`]: true }, // ✅ mark as completed
+        $setOnInsert: { totalTrainings: validModules.length },
+      },
+      { new: true, upsert: true }
+    );
+
+    // Count completed trainings
+    const trainingsCompleted = Object.values(progress.trainings).filter(
+      (v) => v
+    ).length;
+    progress.trainingsCompleted = trainingsCompleted;
+
+    await progress.save();
+    res.json(progress);
+  } catch (err) {
+    console.error("Error updating training:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+//Add or update progress manually (policies/trainings/other)
+//This keeps history in `details` instead of overwriting.
+
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { type, title, status } = req.body;
@@ -68,9 +119,15 @@ router.post("/", authMiddleware, async (req, res) => {
           policiesAcknowledged: 0,
           totalPolicies: 0,
           trainingsCompleted: 0,
-          totalTrainings: 0,
+          totalTrainings: 4,
           quizAvgScore: 0,
           compliance: 0,
+          trainings: {
+            phishingSimulator: false,
+            domain1: false,
+            domain2: false,
+            domain3: false,
+          },
         },
         $push: {
           details: {
@@ -86,13 +143,13 @@ router.post("/", authMiddleware, async (req, res) => {
 
     res.status(201).json(progress);
   } catch (err) {
-    console.error("❌ Error saving progress:", err);
+    console.error("Error saving progress:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 /**
- * ✅ Generate and download progress report (PDF)
+ * Generate and download progress report (PDF)
  */
 router.get("/report", authMiddleware, async (req, res) => {
   try {
@@ -102,14 +159,19 @@ router.get("/report", authMiddleware, async (req, res) => {
       updatedAt: -1,
     });
 
-    // Ensure we always have a progress object
     const safeProgress = progress
       ? progress.toObject()
       : {
           policiesAcknowledged: 0,
           totalPolicies: 0,
           trainingsCompleted: 0,
-          totalTrainings: 0,
+          totalTrainings: 4,
+          trainings: {
+            phishingSimulator: false,
+            domain1: false,
+            domain2: false,
+            domain3: false,
+          },
           quizAvgScore: 0,
           compliance: 0,
           details: [],
@@ -133,7 +195,7 @@ router.get("/report", authMiddleware, async (req, res) => {
       .text(`Generated: ${new Date().toLocaleString()}`, { align: "center" });
     doc.moveDown();
 
-    // User info
+    // --- User info ---
     const userName = req.user?.name || req.user?.email || "User";
     doc.fontSize(12).text(`User: ${userName}`);
     doc.text(`User ID: ${req.user._id}`);
@@ -154,8 +216,28 @@ router.get("/report", authMiddleware, async (req, res) => {
       .text(`Compliance: ${safeProgress.compliance || 0}%`);
     doc.moveDown();
 
-    // --- Detailed progress ---
-    doc.fontSize(14).text("Detailed Progress", { underline: true });
+    // --- Training Modules ---
+    doc.fontSize(14).text("Training Modules", { underline: true });
+    doc.moveDown(0.2);
+    Object.entries(safeProgress.trainings || {}).forEach(([name, done], i) => {
+      const labelMap = {
+        phishingSimulator: "Phishing Simulator",
+        domain1: "Domain 1",
+        domain2: "Domain 2",
+        domain3: "Domain 3",
+      };
+      doc
+        .fontSize(11)
+        .text(
+          `${i + 1}. ${labelMap[name] || name} — ${
+            done ? "✅ Completed" : "Not Completed"
+          }`
+        );
+    });
+    doc.moveDown();
+
+    // --- Detailed progress log ---
+    doc.fontSize(14).text("Detailed Progress Log", { underline: true });
     doc.moveDown(0.2);
     if ((safeProgress.details || []).length === 0) {
       doc.fontSize(11).text("No saved progress details.");
@@ -201,12 +283,13 @@ router.get("/report", authMiddleware, async (req, res) => {
 
     doc.end();
   } catch (err) {
-    console.error("❌ Error generating report:", err);
+    console.error("Error generating report:", err);
     res.status(500).json({ message: "Server error while generating report" });
   }
 });
 
 export default router;
+
 
 
 

@@ -8,7 +8,7 @@ const scoreSchema = new mongoose.Schema(
       required: true,
     },
     module: {
-      type: String, // e.g. "DragDropData"
+      type: String, // "DragDropData"
       required: true,
     },
     score: {
