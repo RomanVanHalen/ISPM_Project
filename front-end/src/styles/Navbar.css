@@ -27,6 +27,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+  flex-wrap: nowrap; /* prevent shifting of center links */
 }
 
 /* ===== Logo ===== */
@@ -138,6 +139,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  /* Fix width to prevent center tabs from moving */
+  min-width: 220px; /* adjust if needed based on your content */
+  justify-content: flex-end;
 }
 
 /* Notification button */

@@ -52,4 +52,3 @@ function PoliciesHome({ onContinue }) {
 }
 
 export default PoliciesHome;
-

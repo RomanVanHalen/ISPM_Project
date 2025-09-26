@@ -7,7 +7,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-
 const router = express.Router();
 
 // Ensure 'uploads' folder exists
@@ -32,28 +31,25 @@ router.get("/profile", authMiddleware, async (req, res) => {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Send consistent field names
-    const userObj = {
+    res.json({
       name: user.name,
       email: user.email,
       bio: user.bio || "",
-      role : user.role,
-      profilePicture: user.profilePicture
-        ? `${req.protocol}://${req.get("host")}${user.profilePicture}`
+      role: user.role,
+      profilePic: user.profilePic
+        ? `${req.protocol}://${req.get("host")}${user.profilePic}`
         : null,
-    };
-
-    res.json(userObj);
+    });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
-// ================== Update logged-in user's profile ==================
+// ================== Update logged-in user's profile =================
 router.put(
   "/profile",
   authMiddleware,
-  upload.single("profilePicture"),
+  upload.single("profilePic"), // ⚡ Must match frontend field name
   async (req, res) => {
     try {
       const { name, email, password, bio } = req.body;
@@ -67,29 +63,30 @@ router.put(
       if (bio) user.bio = bio;
 
       if (req.file) {
-        // Store relative path in DB
-        user.profilePicture = `/uploads/${req.file.filename}`;
+        user.profilePic = `/uploads/${req.file.filename}`;
       }
 
       await user.save();
 
-      const updatedUser = {
-        name: user.name,
-        email: user.email,
-        bio: user.bio || "",
-        profilePicture: user.profilePicture
-          ? `${req.protocol}://${req.get("host")}${user.profilePicture}`
-          : null,
-      };
-
-      res.json({ message: "Profile updated successfully", user: updatedUser });
+      res.json({
+        message: "Profile updated successfully",
+        user: {
+          name: user.name,
+          email: user.email,
+          bio: user.bio || "",
+          role: user.role,
+          profilePic: user.profilePic
+            ? `${req.protocol}://${req.get("host")}${user.profilePic}`
+            : null,
+        },
+      });
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
   }
 );
 
-// ================== Admin-only route: get all users ==================
+// ================== Admin-only route: get all users =================
 router.get(
   "/all-users",
   authMiddleware,
@@ -102,8 +99,8 @@ router.get(
         name: u.name,
         email: u.email,
         bio: u.bio || "",
-        profilePicture: u.profilePicture
-          ? `${req.protocol}://${req.get("host")}${u.profilePicture}`
+        profilePic: u.profilePic
+          ? `${req.protocol}://${req.get("host")}${u.profilePic}`
           : null,
       }));
 
@@ -114,11 +111,4 @@ router.get(
   }
 );
 
-export default router;    
-
-
-
-
-
-
-
+export default router;
