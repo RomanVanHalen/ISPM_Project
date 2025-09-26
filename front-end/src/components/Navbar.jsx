@@ -25,8 +25,16 @@ const Navbar = ({ notifications = [] }) => {
         const token = localStorage.getItem("token");
         if (token) {
           const res = await api.get("/users/profile");
-          setUser(res.data);
-          localStorage.setItem("user", JSON.stringify(res.data));
+          const userData = res.data;
+
+          // Ensure profilePic has a default
+          if (!userData.profilePic) {
+            userData.profilePic =
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+          }
+
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
         } else {
           setUser(null);
           localStorage.removeItem("user");
@@ -68,7 +76,7 @@ const Navbar = ({ notifications = [] }) => {
   return (
     <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
       <div className="nav-container">
-        {/* ===== Logo ===== */}
+        {/* Logo */}
         <div className="nav-left" onClick={() => navigate("/")}>
           <div className="logo-icon-wrapper">
             <FaShieldAlt className="logo-icon" />
@@ -77,118 +85,129 @@ const Navbar = ({ notifications = [] }) => {
             <span className="logo-title">Cyber Warriors</span>
             <span className="logo-subtitle">Security Platform</span>
           </div>
-        </div> 
+        </div>
 
-        {/* ===== Center Links ===== */}
+        {/* Center Links */}
         <ul className="nav-links">
           <li>
-            <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/policies" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/policies"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Policies
             </NavLink>
           </li>
           <li>
-            <NavLink to="/training" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/training"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Training
             </NavLink>
           </li>
           <li>
-            <NavLink to="/reports&analytics" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to={user?.role === "admin" ? "/compliance-reporting-dashboard" : "/reports&analytics"}
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Reports & Analytics
             </NavLink>
           </li>
-          {user && user.role === "admin" && (
-            <li>
-              <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                Admin
-              </NavLink>
-            </li>
-          )}
         </ul>
 
-        {/* ===== Right Side ===== */}
+        {/* Right Side */}
         <div className="nav-actions">
           {isLoading ? (
             <div className="auth-loading">
               <div className="loading-skeleton"></div>
             </div>
           ) : user ? (
-            <>
-              <div className="profile-wrapper">
-                <div 
-                  className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  {user.profilePic ? (
-                    <img
-                      src={user.profilePic}
-                      alt="Profile"
-                      className="profile-pic"
-                    />
-                  ) : (
-                    <div className="profile-circle">
-                      <FaUser />
-                    </div>
-                  )}
-                  {user.role === "admin" && (
-                    <span className="admin-indicator" title="Admin User">
-                      <FaCog />
-                    </span>
-                  )}
-                </div>
-                
-                {dropdownOpen && (
-                  <div className="profile-dropdown">
-                    <div className="dropdown-user-info">
-                      <span className="dropdown-username">{user.name}</span>
-                      <span className="dropdown-userrole">{user.role}</span>
-                    </div>
-                    <hr className="dropdown-divider" />
-                    
-                    {/* Profile → EmployeeDashboard */}
-                    <button 
-                      className="dropdown-btn" 
-                      onClick={() => {
-                        navigate("/employee-dashboard");
-                        setDropdownOpen(false);
-                      }}
-                    >
-                      <FaUser /> Profile
-                    </button>
-
-                    {/* Notifications */}
-                    <button 
-                      className="dropdown-btn" 
-                      onClick={() => {
-                        navigate("/notifications");
-                        setDropdownOpen(false);
-                      }}
-                    >
-                      <FaBell /> Notifications
-                    </button>
-
-                    {user.role === "admin" && (
-                      <button 
-                        className="dropdown-btn" 
-                        onClick={() => {
-                          navigate("/admin");
-                          setDropdownOpen(false);
-                        }}
-                      >
-                        <FaCog /> Admin Panel
-                      </button>
-                    )}
-                    <button className="dropdown-btn logout-btn" onClick={handleLogout}>
-                      <FaSignOutAlt /> Logout
-                    </button>
+            <div className="profile-wrapper">
+              <div
+                className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                {user.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    alt="Profile"
+                    className="profile-pic"
+                  />
+                ) : (
+                  <div className="profile-circle">
+                    <FaUser />
                   </div>
                 )}
+                {user.role === "admin" && (
+                  <span className="admin-indicator" title="Admin User">
+                    <FaCog />
+                  </span>
+                )}
               </div>
-            </>
+
+              {dropdownOpen && (
+                <div className="profile-dropdown">
+                  <div className="dropdown-user-info">
+                    <span className="dropdown-username">Hello, {user.name}</span>
+                    <span className="dropdown-userrole">{user.role}</span>
+                  </div>
+                  <hr className="dropdown-divider" />
+
+                  <button
+                    className="dropdown-btn"
+                    onClick={() => {
+                      navigate(user.role === "admin" ? "/admin-dashboard" : "/employee-dashboard");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    <FaUser /> Profile
+                  </button>
+
+                  <button
+                    className="dropdown-btn"
+                    onClick={() => {
+                      navigate("/notifications");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    <FaBell /> Notifications
+                  </button>
+
+                  {user.role === "admin" && (
+                    <button
+                      className="dropdown-btn"
+                      onClick={() => {
+                        navigate("/account-settings");
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      <FaCog /> Account Settings
+                    </button>
+                  )}
+
+                  <button className="dropdown-btn logout-btn" onClick={handleLogout}>
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="auth-buttons">
               <button className="login-btn" onClick={() => navigate("/login")}>
