@@ -42,8 +42,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     if (scores.length > 0) {
       const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
       const totalMax = scores.reduce((sum, s) => sum + (s.total || 0), 0);
-      quizAvgScore =
-        totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
+      quizAvgScore = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
     }
 
     // 4. Build quiz details
@@ -56,7 +55,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 
     // 5. Merge progress data
     const enrichedProgress = {
-      ...progress.toObject(),
+      ...progress,
       quizAvgScore,
       compliance: quizAvgScore,
       trainings: progress.trainings,

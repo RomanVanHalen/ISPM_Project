@@ -1,0 +1,37 @@
+/* Error message styling */
+.error-text {
+  color: red;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* Compliance chart container with green + white theme */
+.dew {
+  background: #f9f9f9;  /* Light grey background */
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card styling */
+.dull-card-section {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.dull-card-section h2,
+.dull-card-section h3 {
+  color: #2e7d32; /* Darker green */
+}
+
+.dull-card-section p {
+  margin: 6px 0;
+}
