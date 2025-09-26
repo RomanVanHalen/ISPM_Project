@@ -22,6 +22,7 @@ import Ddomain2 from "./pages/Training/components/Ddomain2";
 import Ddomain3 from "./pages/Training/components/Ddomain3";
 import ProgressTracking from "./pages/Analytics&Reports/Components/ProgressTracking";
 import ComplianceReportingDashboard from "./pages/Analytics&Reports/Components/ComplianceReportingDashboard";
+import Ddomain4 from "./pages/Training/components/Ddomain4";
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/training/Courses/Ddomain1" element={<Ddomain1 />} />
           <Route path="/training/Courses/Ddomain2" element={<Ddomain2 />} />
           <Route path="/training/Courses/Ddomain3" element={<Ddomain3 />} />
+          <Route path="/training/Courses/Ddomain4" element={<Ddomain4 />} />
 
           {/* Progress Tracking */}
           <Route path="/reports&analytics/ProgressTracking" element={<ProgressTracking />} />
