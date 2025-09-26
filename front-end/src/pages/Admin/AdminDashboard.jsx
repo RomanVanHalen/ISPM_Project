@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaChartLine, FaBell } from "react-icons/fa";
 import Header from "../../components/Navbar"; 
-import AdminActions from "./adminComponents/AdminActions";
 import AdminCharts from "./adminComponents/AdminCharts"; 
 import api from "../../api/axiosInstance"; 
 import "./AdminDashboard.css";
@@ -45,7 +44,6 @@ function AdminDashboard() {
 
       {/* Wrapper for all dashboard content */}
       <div className="admin-dashboard-wrapper">
-        <AdminActions />
 
         {/* Cards Container */}
         <div className="dashboard-cards">
