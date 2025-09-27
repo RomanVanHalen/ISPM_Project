@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // ✅ Import axios
 import "../styles/ScenarioQuiz.css";
@@ -173,6 +173,21 @@ export default function ScenarioQuiz({ onComplete }) {
     }
   };
 
+  // ✅ Mark training complete in backend
+  const markTrainingComplete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "/api/progress/complete-training",
+        { moduleName: "Data Privacy & Protection" }, // <-- module name for this training
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Training marked as complete in backend");
+    } catch (err) {
+      console.error("Failed to mark training as complete:", err);
+    }
+  };
+
   // ✅ Go to next question
   const handleNextQuestion = () => {
     const next = current + 1;
@@ -187,6 +202,13 @@ export default function ScenarioQuiz({ onComplete }) {
     }
   };
 
+  // after quiz finished → also mark complete
+  useEffect(() => {
+    if (submitted) {
+      markTrainingComplete();
+    }
+  }, [submitted]);
+
   return (
     <div className="quiz-container">
       {/* ✅ Live score */}
@@ -197,7 +219,7 @@ export default function ScenarioQuiz({ onComplete }) {
 
       {submitted ? (
         <div className="score-section">
-          <h3>🎉 Quiz Completed!</h3>
+          <h3>Quiz Completed!</h3>
           <p>
             Questions Answered: {questionsAnswered} / {questions.length}
           </p>
@@ -261,3 +283,4 @@ export default function ScenarioQuiz({ onComplete }) {
     </div>
   );
 }
+

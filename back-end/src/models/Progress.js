@@ -1,89 +1,44 @@
-// routes/progressRoutes.js
-import express from "express";
-import Progress from "../models/Progress.js";
-import authMiddleware from "../middleware/authMiddleware.js";
+// models/Progress.js
+import mongoose from "mongoose";
 
-const router = express.Router();
-
-/**
- * ✅ Mark a training module as completed
- */
-router.post("/complete-training", authMiddleware, async (req, res) => {
-  try {
-    const { moduleName } = req.body; // e.g. "phishingSimulator"
-
-    const validModules = ["phishingSimulator", "domain1", "domain2", "domain3"];
-
-    if (!validModules.includes(moduleName)) {
-      return res.status(400).json({ message: "Invalid module name" });
-    }
-
-    const progress = await Progress.findOneAndUpdate(
-      { userId: req.user.id },
-      {
-        $set: { [`trainings.${moduleName}`]: true },
-        $setOnInsert: { totalTrainings: validModules.length },
-      },
-      { new: true, upsert: true }
-    );
-
-    // Recalculate dynamically
-    progress.trainingsCompleted = Object.values(progress.trainings).filter(
-      (v) => v
-    ).length;
-
-    progress.totalTrainings = Object.keys(progress.trainings).length;
-
-    await progress.save();
-
-    res.json(progress);
-  } catch (err) {
-    console.error("Error completing training:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-/**
- * Get current user's progress
- */
-router.get("/me", authMiddleware, async (req, res) => {
-  try {
-    const progress = await Progress.findOne({ userId: req.user.id });
-
-    if (!progress) {
-      return res.json({
-        policiesAcknowledged: 0,
-        totalPolicies: 0,
-        trainingsCompleted: 0,
-        totalTrainings: 4,
-        trainings: {
-          phishingSimulator: false,
-          domain1: false,
-          domain2: false,
-          domain3: false,
+const progressSchema = new mongoose.Schema(
+  {
+    userId: {   // 👈 match what you're using in routes
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    policiesAcknowledged: { type: Number, default: 0 },
+    totalPolicies: { type: Number, default: 0 },
+    trainingsCompleted: { type: Number, default: 0 },
+    totalTrainings: { type: Number, default: 4 },
+    quizAvgScore: { type: Number, default: 0 },
+    compliance: { type: Number, default: 0 },
+    trainings: {
+      phishingSimulator: { type: Boolean, default: false },
+      domain1: { type: Boolean, default: false },
+      domain2: { type: Boolean, default: false },
+      domain3: { type: Boolean, default: false },
+    },
+    details: {
+      type: [
+        {
+          type: { type: String },
+          title: { type: String },
+          status: { type: String },
+          lastUpdated: { type: Date, default: Date.now },
         },
-        quizAvgScore: 0,
-        compliance: 0,
-        details: [],
-      });
-    }
+      ],
+      default: [],
+    },
+  },
+  { timestamps: true }
+);
 
-    // Recalculate quiz/compliance safely
-    const quizAvgScore = progress.quizAvgScore || 0;
+const Progress = mongoose.model("Progress", progressSchema);
 
-    const enrichedProgress = {
-      ...progress.toObject(),
-      quizAvgScore,
-      compliance: quizAvgScore, // adjust later if compliance formula changes
-    };
+export default Progress;
 
-    res.json(enrichedProgress);
-  } catch (err) {
-    console.error("Error fetching progress:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 
-export default router;
 
 

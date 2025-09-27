@@ -158,35 +158,59 @@ const PhishingSimulator = () => {
     }
   };
 
-  //Updated API call
-const saveScoreToAPI = async (finalScore, totalQuestions) => {
-  try {
-    const token = localStorage.getItem("token"); // make sure you store token at login
+  // ✅ Updated API call
+  const saveScoreToAPI = async (finalScore, totalQuestions) => {
+    try {
+      const token = localStorage.getItem("token"); // make sure you store token at login
 
-    const response = await fetch("/api/score", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,   //required for authMiddleware
-      },
-      body: JSON.stringify({
-        score: finalScore,
-        total: totalQuestions,
-        module: "Phishing Simulator"
-      }),
-    });
+      const response = await fetch("/api/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   //required for authMiddleware
+        },
+        body: JSON.stringify({
+          score: finalScore,
+          total: totalQuestions,
+          module: "Phishing Awareness"
+        }),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to save score");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save score");
+      }
+
+      console.log("Score saved successfully");
+    } catch (error) {
+      console.error("Error saving score:", error);
     }
+  };
 
-    console.log("Score saved successfully");
-  } catch (error) {
-    console.error("Error saving score:", error);
-  }
-};
+  // ✅ Mark training complete in backend
+  const markTrainingComplete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("/api/progress/complete-training", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ moduleName: "module3" }), // adjust module name
+      });
+      console.log("Training marked as complete in backend");
+    } catch (err) {
+      console.error("Failed to mark training as complete:", err);
+    }
+  };
 
+  // ✅ When game completes → mark training complete
+  useEffect(() => {
+    if (gameCompleted) {
+      markTrainingComplete();
+    }
+  }, [gameCompleted]);
 
   const restartGame = () => {
     const shuffledEmails = [...sampleEmails].sort(() => Math.random() - 0.5);
@@ -381,3 +405,4 @@ const saveScoreToAPI = async (finalScore, totalQuestions) => {
 };
 
 export default PhishingSimulator;
+

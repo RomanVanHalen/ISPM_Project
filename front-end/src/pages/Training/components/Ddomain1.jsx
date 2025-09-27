@@ -18,7 +18,7 @@ export default function TrainingModule() {
       <div className="training-container">
         <h1>Core Information Security Standards</h1>
 
-        {/* ✅ Only Quiz1 now */}
+        {/* Only Quiz1 now */}
         <div className="level-section">
           <Quiz1 onComplete={handleQuizComplete} />
         </div>

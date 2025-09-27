@@ -147,41 +147,54 @@ export default function TrainingModule() {
   const currentQuestion = questions[step];
   const totalQuestions = questions.length;
 
-useEffect(() => {
-  if (step >= totalQuestions) {
-    const saveProgress = async () => {
-      try {
-        const token = localStorage.getItem("token");
+  // New helper function to mark training complete
+  const markTrainingComplete = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-        // Save quiz score
-        await axios.post(
-          "/api/score",
-          {
-            score,
-            total: totalQuestions,
-            module: "Core Information Security Standards", // <- your module title
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+      await axios.post(
+        "/api/progress/complete-training",
+        { moduleName: "module1" }, // <-- module name for this training
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-        // Mark training as completed in progress
-        await axios.post(
-          "/api/progress/complete-training",
-          { moduleName: "domain1" }, // <-- change this per module
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+      console.log("Training marked as complete in backend");
+    } catch (err) {
+      console.error("Failed to mark training as complete:", err);
+    }
+  };
 
-        console.log("✅ Score and module completion saved!");
-      } catch (err) {
-        console.error("Error saving progress:", err);
-      }
-    };
+  useEffect(() => {
+    if (step >= totalQuestions) {
+      const saveProgress = async () => {
+        try {
+          const token = localStorage.getItem("token");
 
-    saveProgress();
-  }
-}, [step, score, totalQuestions]);
+          // Save quiz score
+          await axios.post(
+            "/api/score",
+            {
+              score,
+              total: totalQuestions,
+              module: "Core Information Security Standards", // <- your module title
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          // Call new function to mark training complete
+          await markTrainingComplete();
+
+          console.log("Score and training completion saved!");
+        } catch (err) {
+          console.error("Error saving progress:", err);
+        }
+      };
+
+      saveProgress();
+    }
+  }, [step, score, totalQuestions]);
 
   const handleNext = (points = 0) => {
     setScore(score + points);
@@ -252,35 +265,34 @@ useEffect(() => {
   // ---------- Progress ----------
   const progressPercentage = Math.round((score / totalQuestions) * 100);
 
-// ---------- Render ----------
-if (step >= totalQuestions) {
-    
-  return (
-    <div className="sa06-training-wrapper">
-      <div className="sa06-training-complete">
-        <h2>Training Complete!</h2>
-        <h3>
-          Your Score: {score} / {totalQuestions}
-        </h3>
-        <div className="sa06-progress-bar">
-          <div
-            className="sa06-progress-fill"
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
-        </div>
-        <p>{progressPercentage}%</p>
+  // ---------- Render ----------
+  if (step >= totalQuestions) {
+    return (
+      <div className="sa06-training-wrapper">
+        <div className="sa06-training-complete">
+          <h2>Training Complete!</h2>
+          <h3>
+            Your Score: {score} / {totalQuestions}
+          </h3>
+          <div className="sa06-progress-bar">
+            <div
+              className="sa06-progress-fill"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
+          <p>{progressPercentage}%</p>
 
-        {/* ✅ Back Button */}
-        <button
+          {/* ✅ Back Button */}
+          <button
             className="sa06-button"
-            onClick={() => navigate("/training/Courses")}  // <-- change path as needed
-        >
-          Back to Modules
-        </button>
+            onClick={() => navigate("/training/Courses")} // <-- change path as needed
+          >
+            Back to Modules
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="sa06-training-container">
@@ -457,6 +469,7 @@ if (step >= totalQuestions) {
     </div>
   );
 }
+
 
 
 

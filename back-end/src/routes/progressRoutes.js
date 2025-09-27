@@ -2,26 +2,26 @@
 import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import Progress from "../models/Progress.js";
-import Score from "../models/Score.js"; // Import Score model
-import PDFDocument from "pdfkit"; // For PDF generation
+import Score from "../models/Score.js";
+import Policy from "../models/Policy.js";
+import PolicyView from "../models/PolicyView.js";
+import PDFDocument from "pdfkit";
 
 const router = express.Router();
 
-//Get logged-in user progress (with quiz scores + details)
- 
+// ➤ Get logged-in user progress
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     // 1. Fetch base progress record
     let progress = await Progress.findOne({ userId: req.user.id });
 
-    // 🔥 If no record, create one with defaults
     if (!progress) {
       progress = await Progress.create({
         userId: req.user.id,
         policiesAcknowledged: 0,
         totalPolicies: 0,
         trainingsCompleted: 0,
-        totalTrainings: 4, // since you have 4 modules
+        totalTrainings: 4,
         quizAvgScore: 0,
         compliance: 0,
         trainings: {
@@ -35,31 +35,85 @@ router.get("/me", authMiddleware, async (req, res) => {
     }
 
     // 2. Fetch quiz scores
-    const scores = await Score.find({ userId: req.user.id });
+    const scores = await Score.find({ userId: req.user.id }).sort({ updatedAt: -1 });
 
-    // 3. Compute quiz average
+    // ✅ Deduplicate quizzes by module → keep only latest attempt
+    const latestScores = scores.reduce((acc, s) => {
+      if (
+        !acc[s.module] ||
+        new Date(s.updatedAt) > new Date(acc[s.module].updatedAt)
+      ) {
+        acc[s.module] = s;
+      }
+      return acc;
+    }, {});
+
+    const quizList = Object.values(latestScores);
+
+    const totalQuizzes = quizList.length;
+    const quizzesPassed = quizList.filter(
+      (s) => s.total > 0 && (s.score / s.total) * 100 >= 70
+    ).length;
+
+    // Calculate quiz average
     let quizAvgScore = 0;
-    if (scores.length > 0) {
-      const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
-      const totalMax = scores.reduce((sum, s) => sum + (s.total || 0), 0);
+    if (quizList.length > 0) {
+      const totalScore = quizList.reduce((sum, s) => sum + s.score, 0);
+      const totalMax = quizList.reduce((sum, s) => sum + (s.total || 0), 0);
       quizAvgScore = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
     }
 
-    // 4. Build quiz details
-    const quizDetails = scores.map((s) => ({
+    // ✅ Link quiz modules to trainings
+    quizList.forEach((s) => {
+      if (progress.trainings[s.module] !== undefined) {
+        progress.trainings[s.module] = true;
+      }
+    });
+
+    const quizDetails = quizList.map((s) => ({
       type: "Quiz",
       title: s.module,
       status: `${s.score}/${s.total}`,
       lastUpdated: new Date(s.updatedAt).toLocaleDateString(),
     }));
 
-    // 5. Merge progress data
+    // 3. Fetch policy acknowledgements
+    const totalPolicies = await Policy.countDocuments();
+    const userPolicyViews = await PolicyView.find({ user: req.user.id })
+      .populate("policyId", "title")
+      .sort({ viewedAt: -1 });
+
+    const uniquePolicyIds = [
+      ...new Set(userPolicyViews.map((v) => v.policyId?._id?.toString())),
+    ];
+    const policiesAcknowledged = uniquePolicyIds.length;
+
+    const policyDetails = userPolicyViews.map((view) => ({
+      type: "Policy",
+      title: view.policyId?.title || "Policy",
+      status: "Acknowledged",
+      lastUpdated: new Date(view.viewedAt).toLocaleDateString(),
+    }));
+
+    // 4. Merge everything
+    const details = [...policyDetails, ...quizDetails];
+
+    // ✅ Persist updated details + trainingsCompleted in DB
+    progress.details = details;
+    progress.trainingsCompleted = Object.values(progress.trainings).filter(Boolean).length;
+    await progress.save();
+
     const enrichedProgress = {
-      ...progress,
+      ...progress.toObject(),
+      trainingsCompleted: progress.trainingsCompleted,
+      totalTrainings: progress.totalTrainings,
+      quizzesPassed,
+      totalQuizzes,
       quizAvgScore,
-      compliance: quizAvgScore,
-      trainings: progress.trainings,
-      details: [...(progress.details || []), ...quizDetails],
+      compliance: quizAvgScore, // 👈 compliance = quiz avg for now
+      policiesAcknowledged,
+      totalPolicies,
+      details, // send updated details
     };
 
     res.json(enrichedProgress);
@@ -69,12 +123,10 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
-//Mark a training as completed
- 
+// ➤ Mark training completed (manual trigger if needed)
 router.post("/complete-training", authMiddleware, async (req, res) => {
   try {
-    const { moduleName } = req.body; // e.g. "phishingSimulator"
-
+    const { moduleName } = req.body;
     const validModules = ["phishingSimulator", "domain1", "domain2", "domain3"];
 
     if (!validModules.includes(moduleName)) {
@@ -84,19 +136,15 @@ router.post("/complete-training", authMiddleware, async (req, res) => {
     const progress = await Progress.findOneAndUpdate(
       { userId: req.user.id },
       {
-        $set: { [`trainings.${moduleName}`]: true }, // ✅ mark as completed
+        $set: { [`trainings.${moduleName}`]: true },
         $setOnInsert: { totalTrainings: validModules.length },
       },
       { new: true, upsert: true }
     );
 
-    // Count completed trainings
-    const trainingsCompleted = Object.values(progress.trainings).filter(
-      (v) => v
-    ).length;
-    progress.trainingsCompleted = trainingsCompleted;
-
+    progress.trainingsCompleted = Object.values(progress.trainings).filter(Boolean).length;
     await progress.save();
+
     res.json(progress);
   } catch (err) {
     console.error("Error updating training:", err);
@@ -104,9 +152,7 @@ router.post("/complete-training", authMiddleware, async (req, res) => {
   }
 });
 
-//Add or update progress manually (policies/trainings/other)
-//This keeps history in `details` instead of overwriting.
-
+// ➤ Add/update manual progress entry
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { type, title, status } = req.body;
@@ -129,12 +175,7 @@ router.post("/", authMiddleware, async (req, res) => {
           },
         },
         $push: {
-          details: {
-            type,
-            title,
-            status,
-            lastUpdated: new Date().toISOString(),
-          },
+          details: { type, title, status, lastUpdated: new Date().toISOString() },
         },
       },
       { new: true, upsert: true }
@@ -147,16 +188,11 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-/**
- * Generate and download progress report (PDF)
- */
+// ➤ Generate report (PDF)
 router.get("/report", authMiddleware, async (req, res) => {
   try {
-    // Fetch progress & scores
     const progress = await Progress.findOne({ userId: req.user.id });
-    const scores = await Score.find({ userId: req.user.id }).sort({
-      updatedAt: -1,
-    });
+    const scores = await Score.find({ userId: req.user.id }).sort({ updatedAt: -1 });
 
     const safeProgress = progress
       ? progress.toObject()
@@ -176,7 +212,6 @@ router.get("/report", authMiddleware, async (req, res) => {
           details: [],
         };
 
-    // Setup headers
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
@@ -186,25 +221,19 @@ router.get("/report", authMiddleware, async (req, res) => {
     const doc = new PDFDocument({ size: "A4", margin: 50 });
     doc.pipe(res);
 
-    // --- Header ---
     doc.fontSize(20).text("Progress Report", { align: "center" });
     doc.moveDown(0.5);
-    doc
-      .fontSize(10)
-      .text(`Generated: ${new Date().toLocaleString()}`, { align: "center" });
+    doc.fontSize(10).text(`Generated: ${new Date().toLocaleString()}`, { align: "center" });
     doc.moveDown();
 
-    // --- User info ---
     const userName = req.user?.name || req.user?.email || "User";
     doc.fontSize(12).text(`User: ${userName}`);
     doc.text(`User ID: ${req.user._id}`);
     doc.moveDown();
 
-    // --- Summary ---
     doc.fontSize(14).text("Summary", { underline: true });
     doc.moveDown(0.2);
-    doc
-      .fontSize(12)
+    doc.fontSize(12)
       .text(
         `Policies Acknowledged: ${safeProgress.policiesAcknowledged} / ${safeProgress.totalPolicies}`
       )
@@ -215,7 +244,6 @@ router.get("/report", authMiddleware, async (req, res) => {
       .text(`Compliance: ${safeProgress.compliance || 0}%`);
     doc.moveDown();
 
-    // --- Training Modules ---
     doc.fontSize(14).text("Training Modules", { underline: true });
     doc.moveDown(0.2);
     Object.entries(safeProgress.trainings || {}).forEach(([name, done], i) => {
@@ -227,15 +255,10 @@ router.get("/report", authMiddleware, async (req, res) => {
       };
       doc
         .fontSize(11)
-        .text(
-          `${i + 1}. ${labelMap[name] || name} — ${
-            done ? "✅ Completed" : "Not Completed"
-          }`
-        );
+        .text(`${i + 1}. ${labelMap[name] || name} — ${done ? "✅ Completed" : "Not Completed"}`);
     });
     doc.moveDown();
 
-    // --- Detailed progress log ---
     doc.fontSize(14).text("Detailed Progress Log", { underline: true });
     doc.moveDown(0.2);
     if ((safeProgress.details || []).length === 0) {
@@ -244,14 +267,11 @@ router.get("/report", authMiddleware, async (req, res) => {
       safeProgress.details.forEach((d, i) => {
         doc
           .fontSize(11)
-          .text(
-            `${i + 1}. [${d.type}] ${d.title} — ${d.status} (${d.lastUpdated})`
-          );
+          .text(`${i + 1}. [${d.type}] ${d.title} — ${d.status} (${d.lastUpdated})`);
       });
     }
     doc.moveDown();
 
-    // --- Quiz/Score Entries ---
     doc.addPage();
     doc.fontSize(16).text("Quiz / Module Scores", { underline: true });
     doc.moveDown(0.5);
@@ -259,7 +279,6 @@ router.get("/report", authMiddleware, async (req, res) => {
     if (!scores || scores.length === 0) {
       doc.fontSize(12).text("No quiz/module scores found.");
     } else {
-      // Header row
       const tableTop = doc.y;
       doc.fontSize(12).text("No.", 50, tableTop);
       doc.text("Module", 90, tableTop);
@@ -268,7 +287,6 @@ router.get("/report", authMiddleware, async (req, res) => {
       doc.text("Updated", 470, tableTop);
       doc.moveDown(0.5);
 
-      // Rows
       scores.forEach((s, idx) => {
         const y = doc.y;
         doc.fontSize(11).text(String(idx + 1), 50, y);
@@ -288,6 +306,13 @@ router.get("/report", authMiddleware, async (req, res) => {
 });
 
 export default router;
+
+
+
+
+
+
+
 
 
 

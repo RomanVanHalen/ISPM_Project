@@ -6,10 +6,12 @@ const scoreSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",   // link to User model
       required: true,
+      index: true,
     },
     module: {
       type: String, // "DragDropData"
       required: true,
+      index: true,
     },
     score: {
       type: Number,
