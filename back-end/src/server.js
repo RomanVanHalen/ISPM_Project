@@ -5,7 +5,10 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import policiesRouter from "./routes/policies.js"; // ✅ Added policies router
+import policiesRouter from "./routes/policies.js"; 
+import PolicyViewsRouter from "./routes/PolicyViews.js"; 
+ // ✅ add this
+// ✅ Added policies router
 import progressRoutes from "./routes/progressRoutes.js"; // Added progress route
 import NotificationRoute from "./routes/NotificationRoute.js"; // Added notification route
 import scoreRoute from "./routes/scoreRoutes.js"; //Added score route
@@ -50,6 +53,8 @@ app.use("/api/score", scoreRoute); //Added score route
 
 // ✅ Policies JSON route
 app.use("/api/policies", policiesRouter);
+app.use("/api/policy-views", PolicyViewsRouter); // ✅ add this
+
 
 // Health check
 app.get("/", (req, res) => {

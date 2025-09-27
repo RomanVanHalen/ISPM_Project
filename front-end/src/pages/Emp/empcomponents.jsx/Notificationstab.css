@@ -1,0 +1,113 @@
+/* ===== Notifications container ===== */
+.mol-notifications-container {
+  background-color: #ffffff; /* white background */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.mol-notifications-container h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #0f734b; /* dark green */
+}
+
+/* ===== Notifications list ===== */
+.mol-notifications-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mol-notifications-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s, font-weight 0.2s;
+  border: 1px solid #e2f0e6; /* subtle green border */
+}
+
+/* Unread notification */
+.mol-notifications-list li.mol-unread {
+  font-weight: bold;
+  background-color: #e6f7ee; /* light green */
+}
+
+/* Read notification */
+.mol-notifications-list li.mol-read {
+  font-weight: normal;
+  background-color: #f9fafb; /* light gray/white */
+}
+
+/* Notification content */
+.mol-notification-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Notification title + body */
+.mol-notification-content strong {
+  margin-right: 5px;
+  color: #0f734b; /* dark green title */
+}
+
+.mol-notification-content small {
+  color: #4b5563; /* gray text for date */
+  margin-top: 4px;
+}
+
+/* Notification link */
+.mol-notification-content a {
+  color: #10b981; /* green link */
+  text-decoration: none;
+  margin-top: 5px;
+}
+
+.mol-notification-content a:hover {
+  text-decoration: underline;
+}
+
+/* Mark as read button */
+.mol-notification-action button {
+  padding: 6px 12px;
+  background-color: #10b981; /* green button */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.mol-notification-action button:hover {
+  background-color: #059669; /* darker green on hover */
+}
+
+/* Mark all as read button */
+.mol-mark-all-btn {
+  padding: 8px 14px;
+  background-color: #10b981; /* green */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.mol-mark-all-btn:hover {
+  background-color: #059669; /* darker green on hover */
+}
+
+/* Empty state */
+.mol-notifications-empty {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 20px 0;
+}

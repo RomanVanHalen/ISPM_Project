@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
+import AuthPrompt from "../../components/Unregister";
 import PoliciesHome from "./policiescomponents/PoliciesHome";
 import "./Policiesdocuments.css";
-import Navbar from "../../components/Navbar";
-import AuthPrompt from "../../components/Unregister"; // reuse from Training.jsx
 
 export default function Policies() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function Policies() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 1. Fetch user role if token exists
+  // Fetch user role
   useEffect(() => {
     const fetchUserRole = async () => {
       const token = localStorage.getItem("token");
@@ -31,14 +31,9 @@ export default function Policies() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
-
-        if (data?.role === "employee" || data?.role === "admin") {
-          setRole(data.role);
-        } else {
-          setRole("guest");
-        }
+        setRole(data?.role === "employee" || data?.role === "admin" ? data.role : "guest");
       } catch (err) {
-        console.error("Failed to fetch user info:", err);
+        console.error(err);
         setRole("guest");
       } finally {
         setLoading(false);
@@ -48,28 +43,47 @@ export default function Policies() {
     fetchUserRole();
   }, []);
 
-  // 2. Fetch all policies (accessible to everyone)
+  // Fetch all policies
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/policies");
-        if (Array.isArray(res.data)) setPolicies(res.data);
-        else setPolicies([]);
+        setPolicies(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
-        console.error("Failed to fetch policies:", err);
+        console.error(err);
         setError("Could not load policies. Please try again later.");
       }
     };
-
     fetchPolicies();
   }, []);
 
   const handleContinue = () => setShowHome(false);
 
+  // Log PDF view
+  const handleViewPdf = async (policy) => {
+    const pdfUrl = policy.pdf.startsWith("http")
+      ? policy.pdf
+      : `http://localhost:5000${policy.pdf}`;
+    const token = localStorage.getItem("token");
+
+    try {
+      if (token && policy._id) {
+        await axios.post(
+          "http://localhost:5000/api/policy-views",
+          { policyId: policy._id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("PDF view logged for policy:", policy._id);
+      }
+    } catch (err) {
+      console.error("Failed to log PDF view:", err);
+    } finally {
+      window.open(pdfUrl, "_blank"); // always open PDF
+    }
+  };
+
   if (loading) return <p>Loading policies...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-
-  // Show AuthPrompt for guests (optional, can remove later)
   if (role === "guest") {
     return (
       <div className="shri-policies-page">
@@ -107,37 +121,18 @@ export default function Policies() {
                     onClick={() => setSelectedPolicy(policy)}
                   >
                     <div className="shri-policy-header">
-                      <h2 className="shri-policy-title">{policy.title || "Untitled Policy"}</h2>
+                      <h2>{policy.title}</h2>
                     </div>
-                    {policy.why && (
-                      <p className="shri-policy-why">
-                        <strong>Why:</strong> {policy.why}
-                      </p>
-                    )}
-                    {Array.isArray(policy.keyElements) && policy.keyElements.length > 0 && (
-                      <div className="shri-policy-elements">
-                        <strong>Key Elements:</strong>
-                        <ul>
-                          {policy.keyElements.map((el, i) => (
-                            <li key={i}>{el}</li>
-                          ))}
-                        </ul>
-                      </div>
+                    <p><strong>Why:</strong> {policy.why}</p>
+                    {Array.isArray(policy.keyElements) && (
+                      <ul>
+                        {policy.keyElements.map((el, i) => <li key={i}>{el}</li>)}
+                      </ul>
                     )}
                     {policy.pdf && (
-                      <p>
-                        <a
-                          href={
-                            policy.pdf.startsWith("http")
-                              ? policy.pdf
-                              : `http://localhost:5000${policy.pdf}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View PDF
-                        </a>
-                      </p>
+                      <button onClick={() => handleViewPdf(policy)}>
+                        View PDF
+                      </button>
                     )}
                   </section>
                 ))
@@ -146,45 +141,17 @@ export default function Policies() {
           </>
         ) : (
           <div className="shri-policy-detail">
-            <button className="shri-back-btn" onClick={() => setSelectedPolicy(null)}>
-              ← Back to Policies
-            </button>
-            <h2 className="shri-detail-title">{selectedPolicy.title || "Untitled Policy"}</h2>
-            {selectedPolicy.why && (
-              <p className="shri-detail-why">
-                <strong>Why:</strong> {selectedPolicy.why}
-              </p>
+            <button onClick={() => setSelectedPolicy(null)}>← Back to Policies</button>
+            <h2>{selectedPolicy.title}</h2>
+            <p><strong>Why:</strong> {selectedPolicy.why}</p>
+            {Array.isArray(selectedPolicy.keyElements) && (
+              <ul>
+                {selectedPolicy.keyElements.map((el, i) => <li key={i}>{el}</li>)}
+              </ul>
             )}
-            {Array.isArray(selectedPolicy.keyElements) && selectedPolicy.keyElements.length > 0 && (
-              <div className="shri-detail-elements">
-                <strong>Key Elements:</strong>
-                <ul>
-                  {selectedPolicy.keyElements.map((el, i) => (
-                    <li key={i}>{el}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {selectedPolicy.details && (
-              <div className="shri-detail-description">
-                <strong>More Details:</strong>
-                <pre>{selectedPolicy.details}</pre>
-              </div>
-            )}
+            {selectedPolicy.details && <pre>{selectedPolicy.details}</pre>}
             {selectedPolicy.pdf && (
-              <p>
-                <a
-                  href={
-                    selectedPolicy.pdf.startsWith("http")
-                      ? selectedPolicy.pdf
-                      : `http://localhost:5000${selectedPolicy.pdf}`
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View PDF
-                </a>
-              </p>
+              <button onClick={() => handleViewPdf(selectedPolicy)}>View PDF</button>
             )}
           </div>
         )}
