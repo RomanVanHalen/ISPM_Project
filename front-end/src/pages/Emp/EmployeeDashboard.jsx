@@ -4,17 +4,19 @@ import { LogOut } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
 import axios from "axios";
+
 import UserProfile from "./UserProfile";
 import TrainingsTab from "./empcomponents.jsx/Trainingstab";
 import ProgressTab from "./empcomponents.jsx/Progresstab";
-import NotificationsTab from "./empcomponents.jsx/Notificationstab";
+import NotificationsContainer from "./empcomponents.jsx/Notificationscontainer"; // ✅ Updated import
+
 import "./EmployeeDashboard.css";
 
 export default function EmployeeDashboard() {
   const [user, setUser] = useState({ name: "", role: "", avatar: "" });
   const [currentTab, setCurrentTab] = useState("Trainings");
   const [trainings, setTrainings] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+  const [progress, setProgress] = useState([]); // Optional if needed
 
   const navigate = useNavigate();
   const roleTabs = ["Trainings", "Progress", "Notifications"];
@@ -33,49 +35,45 @@ export default function EmployeeDashboard() {
     };
     window.addEventListener("popstate", handleBack);
 
-    return () => {
-      window.removeEventListener("popstate", handleBack);
-    };
+    return () => window.removeEventListener("popstate", handleBack);
   }, [navigate]);
 
   // ---------------- Fetch user and dashboard data ----------------
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
+    const fetchUserAndDashboard = async () => {
       try {
+        // User profile
         const profileRes = await axios.get("http://localhost:5000/api/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         const profile = profileRes.data;
-
         setUser({
           name: profile.name || "Employee",
           role: profile.role || "employee",
-          avatar: profile.profilePic ? `${profile.profilePic}?t=${Date.now()}` : "",
+          avatar: profile.profilePic
+            ? `${profile.profilePic}?t=${Date.now()}`
+            : "",
         });
-      } catch (err) {
-        console.error("Profile fetch error:", err.response?.data || err.message);
-        setUser({ name: "Employee", role: "employee", avatar: "" });
-      }
 
-      try {
+        // Trainings
         const dataRes = await axios.get("http://localhost:5000/api/dashboard", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setTrainings(dataRes.data.trainings || []);
-        setNotifications(dataRes.data.notifications || []);
+
+        // Optional: progress if returned from dashboard
+        setProgress(dataRes.data.progress || []);
       } catch (err) {
         console.error("Dashboard fetch error:", err.response?.data || err.message);
         setTrainings([]);
-        setNotifications([]);
+        setProgress([]);
       }
     };
 
-    fetchUserData();
+    fetchUserAndDashboard();
   }, []);
 
   // ---------------- Logout ----------------
@@ -127,24 +125,26 @@ export default function EmployeeDashboard() {
 
         <main className="dull-main-content">
           {currentTab === "Trainings" && <TrainingsTab trainings={trainings} />}
-          
-          {/* Pass token to ProgressTab so it fetches the current user's progress */}
-          {currentTab === "Progress" && <ProgressTab token={localStorage.getItem("token")} />}
-          
-          {currentTab === "Notifications" && <NotificationsTab notifications={notifications} />}
-          
+
+          {currentTab === "Progress" && (
+            <ProgressTab token={localStorage.getItem("token")} progress={progress} />
+          )}
+
+          {/* ✅ Notifications tab now uses NotificationsContainer */}
+          {currentTab === "Notifications" && <NotificationsContainer />}
+
           {currentTab === "Profile" && (
             <UserProfile
               onClose={() => setCurrentTab("Trainings")}
-              onProfileUpdate={(updatedUser) => {
+              onProfileUpdate={(updatedUser) =>
                 setUser({
                   name: updatedUser.username || updatedUser.name || "Employee",
                   role: updatedUser.role || "employee",
                   avatar: updatedUser.avatar
                     ? `${updatedUser.avatar}?t=${Date.now()}`
                     : "https://via.placeholder.com/50?text=User",
-                });
-              }}
+                })
+              }
             />
           )}
         </main>

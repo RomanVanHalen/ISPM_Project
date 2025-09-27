@@ -1,5 +1,6 @@
 [
   {
+    "_id": "policy1",
     "title": "ISO 27001 / ISO 27000 Series – Information Security Management",
     "why": "They’ll be holding sensitive child and donor data — breaches could be devastating.",
     "keyElements": [
@@ -12,6 +13,7 @@
     "pdf": "/uploads/ISO27001.pdf"
   },
   {
+    "_id": "policy2",
     "title": "ISO 9001 – Quality Management System",
     "why": "Builds trust with partners & donors through consistent program delivery quality.",
     "keyElements": [
@@ -23,6 +25,7 @@
     "pdf": "/uploads/ISO9001.pdf"
   },
   {
+    "_id": "policy3",
     "title": "ISO 26000 – Social Responsibility",
     "why": "Reinforces NGO ethics, human rights, and sustainable development goals.",
     "keyElements": [
@@ -34,6 +37,7 @@
     "pdf": "/uploads/ISO26000.pdf"
   },
   {
+    "_id": "policy4",
     "title": "UN Convention on the Rights of the Child (UNCRC)",
     "why": "As a child-focused NGO, all programs should be aligned with children’s rights.",
     "keyElements": [
@@ -45,6 +49,7 @@
     "pdf": "/uploads/UNCRC.pdf"
   },
   {
+    "_id": "policy5",
     "title": "GDPR (or Equivalent Local Data Protection Law)",
     "why": "Protects personal information of children, families, and donors.",
     "keyElements": [
@@ -56,6 +61,7 @@
     "pdf": "/uploads/GDPR.pdf"
   },
   {
+    "_id": "policy6",
     "title": "Sphere Standards – Humanitarian Response Quality",
     "why": "Ensures aid meets international quality & dignity standards.",
     "keyElements": [
@@ -67,6 +73,7 @@
     "pdf": "/uploads/SphereStandards.pdf"
   },
   {
+    "_id": "policy7",
     "title": "ILO Labour Standards",
     "why": "Ensures hr practices meet fair labor laws & protect staff rights.",
     "keyElements": [
@@ -78,6 +85,7 @@
     "pdf": "/uploads/ILO.pdf"
   },
   {
+    "_id": "policy8",
     "title": "ISO 37001 – Anti-Bribery Management",
     "why": "NGOs handling donor funds must prove they’re corruption-free.",
     "keyElements": [
@@ -89,6 +97,7 @@
     "pdf": "/uploads/ISO37001.pdf"
   },
   {
+    "_id": "policy9",
     "title": "Child Safeguarding Alliance Guidelines",
     "why": "Provides practical implementation of child protection principles for NGOs.",
     "keyElements": [
@@ -100,6 +109,7 @@
     "pdf": "/uploads/ChildSafeguarding.pdf"
   },
   {
+    "_id": "policy10",
     "title": "Disaster Recovery & Business Continuity Framework",
     "why": "Ensures the NGO can keep operating during crises.",
     "keyElements": [
@@ -111,4 +121,3 @@
     "pdf": "/uploads/DisasterRecovery.pdf"
   }
 ]
-

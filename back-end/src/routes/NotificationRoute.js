@@ -2,6 +2,7 @@
 import express from "express";
 import Notification from "../models/Notification.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import PolicyView from "../models/PolicyView.js";
 
 const router = express.Router();
 
@@ -10,7 +11,9 @@ router.get("/", authMiddleware, async (req, res) => {
   try {
     const role = String(req.user.role || "").toLowerCase();
     const me = req.user._id;
+    
 
+    
     if (role === "admin") {
       // Admin → see all login notifications (history, newest first)
       const allLogins = await Notification.find({ type: "login" })
