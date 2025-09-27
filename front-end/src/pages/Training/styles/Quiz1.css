@@ -1,0 +1,253 @@
+/* ---------- Main Training Layout ---------- */
+.sa06-training-container {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: #f7fcf8;
+}
+
+/* ---------- Header / Score ---------- */
+.sa06-header-score {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* ---------- Progress Bar ---------- */
+.sa06-progress-bar {
+  width: 80%;
+  max-width: 600px;
+  height: 14px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  margin: 10px 0 20px;
+  overflow: hidden;
+}
+
+.sa06-progress-fill {
+  height: 100%;
+  background: #4caf50;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* ---------- Shared Buttons ---------- */
+.sa06-button {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.sa06-button:hover {
+  background: #1b5e20;
+  transform: scale(1.05);
+}
+
+.sa06-button:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+}
+
+/* ---------- Drag & Drop (Categorize & Match) ---------- */
+.sa06-drag-drop-container {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+.sa06-zones {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.sa06-zone {
+  flex: 1;
+  min-width: 280px;
+  border: 2px dashed #81c784;
+  border-radius: 10px;
+  padding: 15px;
+  min-height: 180px;
+  background: #f1f8f4;
+  transition: background 0.2s ease;
+}
+
+.sa06-zone h4 {
+  margin-bottom: 10px;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.sa06-dropped-item {
+  background: #a5d6a7;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 6px;
+  color: #1b5e20;
+  font-weight: 500;
+  text-align: center;
+}
+
+.sa06-draggable-items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.sa06-draggable-item {
+  background: #c8e6c9;
+  border: 1px solid #81c784;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 6px;
+  cursor: grab;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.sa06-draggable-item:hover {
+  transform: scale(1.05);
+  background: #a5d6a7;
+}
+
+/* ---------- Quiz Questions (MCQ, True/False, Fill) ---------- */
+.sa06-quiz-container {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  text-align: left;
+}
+
+.sa06-quiz-container h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #2e7d32;
+}
+
+/* Options */
+.sa06-quiz-option {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px 14px;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  background: #f9fff9;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sa06-quiz-option:hover {
+  background: #e8f5e9;
+  transform: scale(1.02);
+}
+
+.sa06-quiz-option input {
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #2e7d32;
+}
+
+/* ---------- Fill in the Blank ---------- */
+.sa06-fill-blank-input {
+  padding: 10px;
+  border: 2px solid #81c784;
+  border-radius: 6px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.sa06-fill-blank-input:focus {
+  outline: none;
+  border-color: #388e3c;
+  background: #f1f8f4;
+}
+
+/* ---------- Completion Screen ---------- */
+
+.sa06-training-wrapper {
+  display: flex;
+  justify-content: center;   
+  align-items: center;      
+  min-height: 10vh;         
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.sa06-training-complete {
+  background: #ffffff;
+  padding: 50px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.sa06-training-complete h2 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.sa06-training-complete h3 {
+  color: #388e3c;
+  margin-top: 10px;
+}
+
+/* ✅ Green Themed Button */
+.sa06-button {
+  background-color: #2e7d32; /* rich green */
+  color: #fff;
+  padding: 10px 20px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+}
+
+.sa06-button:hover {
+  background-color: #1b5e20; /* darker green on hover */
+  box-shadow: 0 6px 12px rgba(46, 125, 50, 0.4);
+  transform: translateY(-2px);
+}
+
+.sa06-button:active {
+  background-color: #388e3c; /* slightly lighter green when clicked */
+  transform: translateY(0);
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+

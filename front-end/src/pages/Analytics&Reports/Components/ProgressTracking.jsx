@@ -6,7 +6,7 @@ import {
   ResponsiveContainer,
   PolarAngleAxis,
 } from "recharts";
-import api from "../../../api/axiosInstance";   // ✅ import axios instance
+import api from "../../../api/axiosInstance";   // ✅ axios instance
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "../Styles/ProgressTracking.css";
@@ -14,6 +14,18 @@ import "../Styles/ProgressTracking.css";
 // Components
 import Header from "../../../components/Navbar";
 import Footer from "../../../components/Footer2";
+
+// ✅ Mapping backend keys -> friendly names (moved OUTSIDE component to avoid eslint warning)
+const moduleFriendlyNames = {
+  module1: "Core Information Security Standards",
+  module2: "Data Privacy & Protection",
+  module3: "Phishing Awareness",
+  module4: "Cyber Governance & Compliance",
+  domain1: "Network Security Basics",
+  domain2: "Application Security",
+  domain3: "Incident Response",
+  phishingSimulator: "Phishing Simulator",
+};
 
 // ✅ Animated number counter
 const AnimatedNumber = ({ value, duration = 1000 }) => {
@@ -66,11 +78,18 @@ const ProgressTracking = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        // ✅ Get all scores from backend
-        const res = await api.get("/score");
-        const scores = res.data; // array of score objects
+        // ✅ Fetch data separately
+        const [scoreRes, policyRes, progressRes] = await Promise.all([
+          api.get("/score"),
+          api.get("/policies"),
+          api.get("/progress/me"),
+        ]);
 
-        // Example: compute quiz average
+        const scores = scoreRes.data || [];
+        const policies = policyRes.data || [];
+        const progress = progressRes.data || {};
+
+        // ✅ Compute quiz average
         let quizAvgScore = 0;
         if (scores.length > 0) {
           const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
@@ -78,30 +97,42 @@ const ProgressTracking = () => {
           quizAvgScore = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
         }
 
-        // You can extend this with policies/trainings once you track them
+        // ✅ Compute policies
+        const totalPolicies = policies.length || 0;
+        const policiesAcknowledged = policies.filter((p) => p.acknowledged === true).length;
+
+        // ✅ Set combined progress
         setUserProgress({
-          policiesAcknowledged: 0,
-          totalPolicies: 0,
-          trainingsCompleted: 0,
-          totalTrainings: 0,
+          policiesAcknowledged,
+          totalPolicies,
+          trainingsCompleted: progress.trainingsCompleted || 0,
+          totalTrainings: progress.totalTrainings || 0,
           quizAvgScore,
-          compliance: quizAvgScore, // for now use same as quiz average
-          details: scores.map((s) => ({
-            type: "Quiz",
-            title: s.module,
-            status: `${s.score}/${s.total}`,
-            lastUpdated: new Date(s.updatedAt).toLocaleDateString(),
-          })),
+          compliance: quizAvgScore, // compliance same as quiz avg
+          details: [
+            ...scores.map((s) => ({
+              type: "Quiz",
+              title: moduleFriendlyNames[s.module] || s.module,  // 👈 use friendly name
+              status: `${s.score}/${s.total}`,
+              lastUpdated: new Date(s.updatedAt).toLocaleDateString(),
+            })),
+            ...policies.map((p) => ({
+              type: "Policy",
+              title: p.title,
+              status: p.acknowledged ? "Acknowledged" : "Pending",
+              lastUpdated: p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : "N/A",
+            })),
+          ],
         });
       } catch (err) {
-        console.error("❌ Failed to fetch progress:", err.response?.data || err.message);
+        console.error("Failed to fetch progress:", err.response?.data || err.message);
       }
     };
 
     fetchProgress();
-  }, []);
+  }, []); // ✅ clean dependency array
 
-  // ✅ Generate PDF Report
+  // Generate PDF Report
   const downloadReport = () => {
     if (!userProgress) return;
 
@@ -123,17 +154,16 @@ const ProgressTracking = () => {
       65
     );
 
-    // ✅ Add table for details
     autoTable(doc, {
-     startY: 75,
-     head: [["Item Type", "Title", "Status", "Last Updated"]],
-     body: userProgress.details.map((item) => [
-     item.type,
-     item.title,
-     item.status,
-     item.lastUpdated,
-   ]),
-  });
+      startY: 75,
+      head: [["Item Type", "Title", "Status", "Last Updated"]],
+      body: userProgress.details.map((item) => [
+        item.type,
+        item.title,
+        item.status,
+        item.lastUpdated,
+      ]),
+    });
 
     doc.save("progress_report.pdf");
   };
@@ -244,7 +274,7 @@ const ProgressTracking = () => {
 
         {/* Detailed Progress */}
         <div className="sa01progress-details">
-          <h3>📖 Detailed Progress</h3>
+          <h3>Detailed Progress</h3>
           <table>
             <thead>
               <tr>
@@ -266,7 +296,6 @@ const ProgressTracking = () => {
             </tbody>
           </table>
 
-          {/* ✅ PDF download button */}
           <button className="sa01download-btn" onClick={downloadReport}>
             ⬇ Download My Report
           </button>
@@ -279,6 +308,11 @@ const ProgressTracking = () => {
 };
 
 export default ProgressTracking;
+
+
+
+
+
 
 
 

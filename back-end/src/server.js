@@ -54,6 +54,8 @@ app.use("/api/progress", progressRoutes);
 app.use("/api/notifications", NotificationRoute);
 app.use("/api/score", scoreRoute);
 app.use("/api/policies", policiesRouter);
+app.use("/api/policy-views", PolicyViewsRouter); // ✅ add this
+
 
 // Health check
 app.get("/", (req, res) => res.send("✅ API is running..."));

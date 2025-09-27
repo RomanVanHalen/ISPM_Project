@@ -1,18 +1,22 @@
+// models/PolicyView.js
 import mongoose from "mongoose";
 
 const policyViewSchema = new mongoose.Schema(
   {
-    policyId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Policy",
-      required: true,
-    },
     user: {
-      type: mongoose.Schema.Types.ObjectId, // ✅ store actual user reference
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    viewedAt: {
+    policyId: {
+      type: String,
+      required: true,
+    },
+    count: {
+      type: Number,
+      default: 1,
+    },
+    lastViewedAt: {
       type: Date,
       default: Date.now,
     },
@@ -20,6 +24,7 @@ const policyViewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const PolicyView = mongoose.model("PolicyView", policyViewSchema);
+policyViewSchema.index({ user: 1, policyId: 1 }, { unique: true });
 
+const PolicyView = mongoose.model("PolicyView", policyViewSchema);
 export default PolicyView;
