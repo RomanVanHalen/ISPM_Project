@@ -4,8 +4,8 @@ import PolicyView from "../models/PolicyView.js";
 
 const router = express.Router();
 
-// ➤ Log a new PDF view
-// ✅ User is taken from authMiddleware (req.user)
+//  Log a new PDF view
+// User is taken from authMiddleware (req.user)
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { policyId } = req.body;
@@ -29,7 +29,7 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-// ➤ (Optional) Get all views
+//  (Optional) Get all views
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const views = await PolicyView.find().populate("policyId", "title");
@@ -40,6 +40,4 @@ router.get("/", authMiddleware, async (req, res) => {
 });
 
 export default router;
-
-
 
