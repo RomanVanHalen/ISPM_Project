@@ -23,7 +23,7 @@ const FeaturesSection = () => (
       <FaChartPie className="feature-icon" />
       <h3>Reports</h3>
       <p>Track compliance and generate real-time reports for your team.</p>
-      <Link to="/reports" className="feature-btn"><span>View Reports</span></Link>
+      <Link to="/reports&analytics" className="feature-btn"><span>View Reports</span></Link>
     </div>
   </section>
 );

@@ -22,7 +22,7 @@
 .dull-dashboard-container {
   display: flex;
   flex: 1;
-  padding-top: 70px; /* leave space for fixed navbar */
+  padding-top: 70px;
 }
 
 /* Sidebar */
@@ -63,11 +63,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.dull-user-icon {
-  font-size: 2rem;
-  margin-right: 10px;
-}
-
 .dull-user-info-text {
   display: flex;
   flex-direction: column;
@@ -106,11 +101,9 @@
   background: rgba(255, 255, 255, 0.15);
   transform: translateX(5px);
 }
-
-/* Active tab highlight */
 .dull-sidebar-menu button.active-tab {
   background: rgba(255, 255, 255, 0.25);
-  border-left: 3px solid #ffffff;
+  border-left: 3px solid #fff;
   font-weight: bold;
 }
 
@@ -177,6 +170,4 @@
 .dull-card-section li {
   margin: 5px 0;
 }
-
-
 

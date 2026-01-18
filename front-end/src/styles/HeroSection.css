@@ -1,8 +1,21 @@
-/* Hero Section */
-.hero {
+/* ========== RESET (scoped) ========== */
+.landing-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.landing-page {
+  font-family: system-ui, sans-serif;
+  background: #111; /* fallback background */
+  overflow: hidden;
+}
+
+/* ========== HERO SECTION ========== */
+.landing-page .hero {
   text-align: center;
-  min-height: 70vh; 
-  padding: 100px 2rem;
+  min-height: 90vh; /* fill most of the screen */
+  padding: 80px 2rem;
   background: linear-gradient(135deg, #7ADAA5 30%, #4caf87 100%);
   color: white;
   position: relative;
@@ -14,7 +27,7 @@
 }
 
 /* Background pattern */
-.hero-bg-pattern {
+.landing-page .hero-bg-pattern {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   opacity: 0.1;
@@ -27,8 +40,8 @@
   transform: skewY(-12deg);
 }
 
-/* Grid lines - vertical & horizontal */
-.cyber-grid {
+/* Grid lines */
+.landing-page .cyber-grid {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 0;
@@ -36,21 +49,19 @@
     linear-gradient(to right, rgba(0,255,255,0.2) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0,255,255,0.2) 1px, transparent 1px);
   background-size: 50px 50px;
-  animation: moveGrid 10s linear infinite;
+  animation: landing-moveGrid 10s linear infinite;
 }
 
-/* Animate the grid for cyberpunk HUD effect */
-@keyframes moveGrid {
+@keyframes landing-moveGrid {
   0% { background-position: 0 0, 0 0; }
   50% { background-position: 25px 25px, 25px 25px; }
   100% { background-position: 50px 50px, 50px 50px; }
 }
 
-/* Abstract animated lines */
-.falling-lines {
+/* Falling lines */
+.landing-page .falling-lines {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -58,10 +69,10 @@
   z-index: 1;
 }
 
-.line {
+.landing-page .line {
   position: absolute;
-  width: 5px; /* bolder lines */
-  height: 100px; /* taller lines for visibility */
+  width: 5px;
+  height: 100px;
   border-radius: 2px;
   background: linear-gradient(
     180deg,
@@ -69,26 +80,26 @@
     rgba(0, 255, 255, 0.8),
     rgba(255, 0, 255, 0.8)
   );
-  animation: moveLine linear infinite;
+  animation: landing-moveLine linear infinite;
   opacity: 0.85;
 }
 
-@keyframes moveLine {
+@keyframes landing-moveLine {
   0% { transform: translateY(-120px) rotate(0deg); opacity: 0; }
   10% { opacity: 1; }
   100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
 /* Hero content */
-.hero-content {
+.landing-page .hero-content {
   max-width: 800px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
 }
 
-/* Hero badge, title, buttons - keep existing colors */
-.hero-badge {
+/* Badge */
+.landing-page .hero-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -101,42 +112,43 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.status-dot {
+.landing-page .status-dot {
   width: 8px;
   height: 8px;
   background: #4ade80;
   border-radius: 50%;
-  animation: pulse 2s infinite;
+  animation: landing-pulse 2s infinite;
 }
 
-@keyframes pulse {
+@keyframes landing-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.5); opacity: 0.6; }
 }
 
-.hero h1 {
+/* Titles */
+.landing-page .hero h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
   margin-bottom: 1.5rem;
   line-height: 1.1;
 }
 
-.hero p {
+.landing-page .hero p {
   font-size: 1.25rem;
   margin-bottom: 3rem;
   line-height: 1.6;
   font-weight: 300;
 }
 
-/* Call to Action Buttons */
-.cta-buttons {
+/* CTA Buttons */
+.landing-page .cta-buttons {
   display: flex;
   gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.btn {
+.landing-page .btn {
   padding: 1rem 2rem;
   border-radius: 16px;
   font-weight: 700;
@@ -150,42 +162,42 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.btn-primary {
+.landing-page .btn-primary {
   background: white;
   color: #4caf87;
 }
 
-.btn-primary:hover {
+.landing-page .btn-primary:hover {
   background: #f9fafb;
   color: #3a9a70;
   transform: translateY(-3px) scale(1.03);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
-.btn-alt {
+.landing-page .btn-alt {
   border: 2px solid white;
   color: white;
   background: transparent;
 }
 
-.btn-alt:hover {
+.landing-page .btn-alt:hover {
   background: white;
   color: #4caf87;
   transform: translateY(-3px) scale(1.03);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
 }
 
-.btn-icon {
+.landing-page .btn-icon {
   font-size: 1.2rem;
   transition: transform 0.3s ease;
 }
 
-.btn:hover .btn-icon {
+.landing-page .btn:hover .btn-icon {
   transform: translateX(4px);
 }
 
-/* Cyberpunk Animation Hub + Pulses + Particles */
-.cyberpunk-animation {
+/* Cyberpunk Animation */
+.landing-page .cyberpunk-animation {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -196,7 +208,7 @@
   z-index: 1;
 }
 
-.cyberhub {
+.landing-page .cyberhub {
   position: absolute;
   top: 50%; left: 50%;
   width: 12px; height: 12px;
@@ -206,7 +218,7 @@
   transform: translate(-50%, -50%);
 }
 
-.pulse {
+.landing-page .pulse {
   position: absolute;
   top: 50%; left: 50%;
   width: 12px; height: 12px;
@@ -214,30 +226,30 @@
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(1);
   opacity: 0.7;
-  animation: pulseCyber 2s infinite;
+  animation: landing-pulseCyber 2s infinite;
 }
 
-.pulse1 { animation-delay: 0s; }
-.pulse2 { animation-delay: 0.5s; }
-.pulse3 { animation-delay: 1s; }
+.landing-page .pulse1 { animation-delay: 0s; }
+.landing-page .pulse2 { animation-delay: 0.5s; }
+.landing-page .pulse3 { animation-delay: 1s; }
 
-@keyframes pulseCyber {
+@keyframes landing-pulseCyber {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
   50% { opacity: 0.4; }
   100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
 }
 
-.particle {
+.landing-page .particle {
   position: absolute;
   width: 4px;
   height: 4px;
   background: #ff00ff;
   border-radius: 50%;
   opacity: 0.6;
-  animation: particleMove linear infinite;
+  animation: landing-particleMove linear infinite;
 }
 
-@keyframes particleMove {
+@keyframes landing-particleMove {
   0% { transform: translate(0,0) scale(1); opacity: 0.5; }
   50% { transform: translate(-10px, -20px) scale(1.2); opacity: 0.8; }
   100% { transform: translate(10px, 10px) scale(0.8); opacity: 0; }

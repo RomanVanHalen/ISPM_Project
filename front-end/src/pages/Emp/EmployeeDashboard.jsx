@@ -1,69 +1,85 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer2 from "../../components/Footer2";
 import axios from "axios";
-import UserProfile from "./UserProfile"; 
+
+import UserProfile from "./UserProfile";
+import TrainingsTab from "./empcomponents.jsx/Trainingstab";
+import ProgressTab from "./empcomponents.jsx/Progresstab";
+import NotificationsContainer from "./empcomponents.jsx/Notificationscontainer"; // ✅ Updated import
+
 import "./EmployeeDashboard.css";
 
 export default function EmployeeDashboard() {
   const [user, setUser] = useState({ name: "", role: "", avatar: "" });
   const [currentTab, setCurrentTab] = useState("Trainings");
   const [trainings, setTrainings] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [progress, setProgress] = useState(0);
-  const [notifications, setNotifications] = useState([]);
+  const [progress, setProgress] = useState([]); // Optional if needed
 
-  const roleTabs = ["Trainings", "Courses", "Progress", "Notifications"];
+  const navigate = useNavigate();
+  const roleTabs = ["Trainings", "Progress", "Notifications"];
 
+  // ---------------- Route guard + back button prevention ----------------
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/", { replace: true });
+      return;
+    }
 
+    window.history.pushState(null, "", window.location.href);
+    const handleBack = () => {
+      navigate("/", { replace: true });
+    };
+    window.addEventListener("popstate", handleBack);
+
+    return () => window.removeEventListener("popstate", handleBack);
+  }, [navigate]);
+
+  // ---------------- Fetch user and dashboard data ----------------
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const fetchUserAndDashboard = async () => {
       try {
+        // User profile
         const profileRes = await axios.get("http://localhost:5000/api/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         const profile = profileRes.data;
-
         setUser({
           name: profile.name || "Employee",
           role: profile.role || "employee",
           avatar: profile.profilePic
             ? `${profile.profilePic}?t=${Date.now()}`
-            : "", // fallback empty string if no profilePic
+            : "",
         });
-      } catch (err) {
-        console.error("Profile fetch error:", err.response?.data || err.message);
-        setUser({ name: "Employee", role: "employee", avatar: "" });
-      }
 
-      try {
+        // Trainings
         const dataRes = await axios.get("http://localhost:5000/api/dashboard", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setTrainings(dataRes.data.trainings || []);
-        setCourses(dataRes.data.courses || []);
-        setProgress(dataRes.data.progress || 0);
-        setNotifications(dataRes.data.notifications || []);
+
+        // Optional: progress if returned from dashboard
+        setProgress(dataRes.data.progress || []);
       } catch (err) {
         console.error("Dashboard fetch error:", err.response?.data || err.message);
         setTrainings([]);
-        setCourses([]);
-        setProgress(0);
-        setNotifications([]);
+        setProgress([]);
       }
     };
 
-    fetchUserData();
+    fetchUserAndDashboard();
   }, []);
 
+  // ---------------- Logout ----------------
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login"; // ✅ redirect to login page
+    navigate("/", { replace: true });
   };
 
   return (
@@ -76,31 +92,20 @@ export default function EmployeeDashboard() {
           <div
             className="dull-sidebar-user"
             onClick={() => setCurrentTab("Profile")}
-            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "10px" }}
           >
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt="User Avatar"
-                className="dull-user-avatar"
-                style={{ width: "50px", height: "50px", borderRadius: "50%", objectFit: "cover" }}
-              />
-            ) : (
-              <img
-                src="https://via.placeholder.com/50?text=User"
-                alt="Default Avatar"
-                className="dull-user-avatar"
-                style={{ width: "50px", height: "50px", borderRadius: "50%", objectFit: "cover" }}
-              />
-            )}
+            <img
+              src={user.avatar || "https://via.placeholder.com/50?text=User"}
+              alt="User Avatar"
+              className="dull-user-avatar"
+            />
             <div className="dull-user-info-text">
-              <p className="dull-username" style={{ margin: 0 }}>{user.name || "Guest"}</p>
-              <p className="dull-user-role" style={{ margin: 0 }}>{user.role}</p>
+              <p className="dull-username">{user.name || "Guest"}</p>
+              <p className="dull-user-role">{user.role}</p>
             </div>
           </div>
 
           {/* Sidebar Tabs */}
-          <nav className="dull-sidebar-menu" style={{ marginTop: "20px" }}>
+          <nav className="dull-sidebar-menu">
             {roleTabs.map((tab) => (
               <button
                 key={tab}
@@ -113,61 +118,33 @@ export default function EmployeeDashboard() {
           </nav>
 
           {/* Logout */}
-          <button className="dull-logout-btn" onClick={handleLogout} style={{ marginTop: "auto" }}>
+          <button className="dull-logout-btn" onClick={handleLogout}>
             <LogOut /> Logout
           </button>
         </aside>
 
         <main className="dull-main-content">
-          {currentTab === "Trainings" && (
-            <div className="dull-card-section">
-              <h2>Trainings</h2>
-              <p>Total Trainings Assigned: {trainings.length}</p>
-            </div>
-          )}
-
-          {currentTab === "Courses" && (
-            <div className="dull-card-section">
-              <h2>Courses</h2>
-              <p>Total Courses Available: {courses.length}</p>
-            </div>
-          )}
+          {currentTab === "Trainings" && <TrainingsTab trainings={trainings} />}
 
           {currentTab === "Progress" && (
-            <div className="dull-card-section">
-              <h2>Overall Progress</h2>
-              <p>Progress: {progress}%</p>
-            </div>
+            <ProgressTab token={localStorage.getItem("token")} progress={progress} />
           )}
 
-          {currentTab === "Notifications" && (
-            <div className="dull-card-section">
-              <h2>Notifications</h2>
-              {notifications.length === 0 ? (
-                <p>No notifications</p>
-              ) : (
-                <ul>
-                  {notifications.map((note, idx) => (
-                    <li key={idx}>{note.message}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
+          {/* ✅ Notifications tab now uses NotificationsContainer */}
+          {currentTab === "Notifications" && <NotificationsContainer />}
 
-          {/* Profile Tab */}
           {currentTab === "Profile" && (
             <UserProfile
               onClose={() => setCurrentTab("Trainings")}
-              onProfileUpdate={(updatedUser) => {
+              onProfileUpdate={(updatedUser) =>
                 setUser({
                   name: updatedUser.username || updatedUser.name || "Employee",
                   role: updatedUser.role || "employee",
                   avatar: updatedUser.avatar
                     ? `${updatedUser.avatar}?t=${Date.now()}`
                     : "https://via.placeholder.com/50?text=User",
-                });
-              }}
+                })
+              }
             />
           )}
         </main>
@@ -177,5 +154,3 @@ export default function EmployeeDashboard() {
     </div>
   );
 }
-
-

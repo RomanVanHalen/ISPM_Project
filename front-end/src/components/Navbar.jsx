@@ -4,7 +4,7 @@ import { FaShieldAlt, FaBell, FaSignOutAlt, FaUser, FaCog } from "react-icons/fa
 import api from "../api/axiosInstance";
 import "../styles/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ notifications = [] }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,13 +22,19 @@ const Navbar = () => {
     const fetchUser = async () => {
       try {
         setIsLoading(true);
-        // Check for token first
         const token = localStorage.getItem("token");
         if (token) {
           const res = await api.get("/users/profile");
-          setUser(res.data);
-          // Store user data in localStorage for consistency
-          localStorage.setItem("user", JSON.stringify(res.data));
+          const userData = res.data;
+
+          // Ensure profilePic has a default
+          if (!userData.profilePic) {
+            userData.profilePic =
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+          }
+
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
         } else {
           setUser(null);
           localStorage.removeItem("user");
@@ -40,8 +46,7 @@ const Navbar = () => {
         setIsLoading(false);
       }
     };
-    
-    // Check if we have user data in localStorage first
+
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -49,16 +54,15 @@ const Navbar = () => {
     } else {
       fetchUser();
     }
-    
-    // Listen for storage events to sync across tabs
+
     const handleStorageChange = (e) => {
       if (e.key === "token" || e.key === "user") {
         fetchUser();
       }
     };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleLogout = () => {
@@ -72,7 +76,7 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
       <div className="nav-container">
-        {/* ===== Logo ===== */}
+        {/* Logo */}
         <div className="nav-left" onClick={() => navigate("/")}>
           <div className="logo-icon-wrapper">
             <FaShieldAlt className="logo-icon" />
@@ -83,114 +87,128 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* ===== Center Links ===== */}
+        {/* Center Links */}
         <ul className="nav-links">
           <li>
-            <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/policies" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/policies"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Policies
             </NavLink>
           </li>
           <li>
-            <NavLink to="/training" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink
+              to="/training"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
               Training
             </NavLink>
           </li>
           <li>
-            <NavLink to="/reports" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-              Reports
+            <NavLink
+              to={user?.role === "admin" ? "/compliance-reporting-dashboard" : "/reports&analytics"}
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              Reports & Analytics
             </NavLink>
           </li>
-          {/* Admin-only link */}
-          {user && user.role === "admin" && (
-            <li>
-              <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                Admin
-              </NavLink>
-            </li>
-          )}
         </ul>
 
-        {/* ===== Right Icons ===== */}
+        {/* Right Side */}
         <div className="nav-actions">
           {isLoading ? (
-            // Show loading skeleton while checking auth state
             <div className="auth-loading">
               <div className="loading-skeleton"></div>
             </div>
           ) : user ? (
-            <>
-              {/* Bell icon - only show for employees and admins */}
-              {(user.role === "employee" || user.role === "admin") && (
-                <button className="notification-btn" onClick={() => navigate("/notifications")}>
-                  <FaBell />
-                </button>
-              )}
+            <div className="profile-wrapper">
+              <div
+                className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                {user.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    alt="Profile"
+                    className="profile-pic"
+                  />
+                ) : (
+                  <div className="profile-circle">
+                    <FaUser />
+                  </div>
+                )}
+                {user.role === "admin" && (
+                  <span className="admin-indicator" title="Admin User">
+                    <FaCog />
+                  </span>
+                )}
+              </div>
 
-              {/* Profile circle / picture */}
-              <div className="profile-wrapper">
-                <div 
-                  className={`profile-pic-container ${user.role === "admin" ? "admin-badge" : ""}`}
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  {user.profilePic ? (
-                    <img
-                      src={user.profilePic}
-                      alt="Profile"
-                      className="profile-pic"
-                    />
-                  ) : (
-                    <div className="profile-circle">
-                      <FaUser />
-                    </div>
-                  )}
+              {dropdownOpen && (
+                <div className="profile-dropdown">
+                  <div className="dropdown-user-info">
+                    <span className="dropdown-username">Hello, {user.name}</span>
+                    <span className="dropdown-userrole">{user.role}</span>
+                  </div>
+                  <hr className="dropdown-divider" />
+
+                  <button
+                    className="dropdown-btn"
+                    onClick={() => {
+                      navigate(user.role === "admin" ? "/admin-dashboard" : "/employee-dashboard");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    <FaUser /> Profile
+                  </button>
+
+                  <button
+                    className="dropdown-btn"
+                    onClick={() => {
+                      navigate("/notifications");
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    <FaBell /> Notifications
+                  </button>
+
                   {user.role === "admin" && (
-                    <span className="admin-indicator" title="Admin User">
-                      <FaCog />
-                    </span>
-                  )}
-                </div>
-                
-                {dropdownOpen && (
-                  <div className="profile-dropdown">
-                    <div className="dropdown-user-info">
-                      <span className="dropdown-username">{user.name}</span>
-                      <span className="dropdown-userrole">{user.role}</span>
-                    </div>
-                    <hr className="dropdown-divider" />
-                    <button 
-                      className="dropdown-btn" 
+                    <button
+                      className="dropdown-btn"
                       onClick={() => {
-                        navigate("/profile");
+                        navigate("/account-settings");
                         setDropdownOpen(false);
                       }}
                     >
-                      <FaUser /> Profile
+                      <FaCog /> Account Settings
                     </button>
-                    {user.role === "admin" && (
-                      <button 
-                        className="dropdown-btn" 
-                        onClick={() => {
-                          navigate("/admin");
-                          setDropdownOpen(false);
-                        }}
-                      >
-                        <FaCog /> Admin Panel
-                      </button>
-                    )}
-                    <button className="dropdown-btn logout-btn" onClick={handleLogout}>
-                      <FaSignOutAlt /> Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
+                  )}
+
+                  <button className="dropdown-btn logout-btn" onClick={handleLogout}>
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
-            // Show login/signup buttons when no user is logged in
             <div className="auth-buttons">
               <button className="login-btn" onClick={() => navigate("/login")}>
                 Login
