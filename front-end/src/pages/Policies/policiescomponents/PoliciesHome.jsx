@@ -1,63 +1,54 @@
 import React from "react";
 import Navbar from "../../../components/Navbar";
-import Footer2 from "../../../components/Footer2"; // ✅ import footer
 import "./PoliciesHome.css";
-import awarenessImg from "../images/policy.png"; // <-- put your downloaded image in src
+import PolicyImg from "../images/Awareness2.jpg";
 
-export default function PoliciesHome({ onContinue }) {
-  return (
-    <div className="yash-policies-home-container">
-      {/* Navbar */}
-      <Navbar />
 
-      {/* Hero Section */}
-      <section className="yash-policies-hero">
-        <div className="yash-hero-content">
-          <h1>Policies & Security Awareness</h1>
-          <p>
-            Our security policies guide everyone in the organization to protect
-            data, stay compliant, and reduce risks. Explore these resources to
-            strengthen your knowledge and safeguard our digital world.
-          </p>
-        </div>
-      </section>
 
-      {/* Awareness Image (instead of video) */}
-      <section className="yash-policies-image">
-        <div className="yash-image-card">
-          <img src={awarenessImg} alt="Security Awareness" />
-        </div>
-      </section>
+function PoliciesHome({ onContinue }) {
+    return (
+        <div className="dee-container">
+            <Navbar />
 
-      {/* Feature Highlights */}
-      <section className="yash-policies-features">
-        <div className="yash-feature-card">
-          <h3>Compliance</h3>
-          <p>Understand and follow mandatory rules that protect our company.</p>
-        </div>
-        <div className="yash-feature-card">
-          <h3>Security Awareness</h3>
-          <p>Recognize threats and learn how to respond effectively.</p>
-        </div>
-        <div className="yash-feature-card">
-          <h3>Productivity</h3>
-          <p>Policies bring clarity, enabling smoother work without confusion.</p>
-        </div>
-        <div className="yash-feature-card">
-          <h3>Risk Reduction</h3>
-          <p>Strong policies lower the chances of costly incidents.</p>
-        </div>
-      </section>
+            <div className="dee-main">
+                {/* Left Column - Text */}
+                <div className="dee-left">
+                    <h1 className="dee-title">
+                        <span>Policies and Awareness</span>
+                    </h1>
+                    <p className="dee-text">
+                        Welcome to the Policies Awareness training. This program helps you understand 
+                        company policies, workplace safety, and best practices. By completing this 
+                        training, you will gain the knowledge needed to act responsibly, comply with 
+                        regulations, and contribute to a safe and ethical work environment
+                    </p>
 
-      {/* Continue Button */}
-      <section className="yash-policies-actions">
-        <button className="yash-continue-btn" onClick={onContinue}>
-          Continue to Policies
-        </button>
-      </section>
+                    {/* Continue button */}
+                    <section className="dee-actions">
+                        <button
+                            className="dee-btn"
+                            onClick={onContinue}
+                        >
+                            Continue to Policies
+                        </button>
+                    </section>
 
-      {/* Footer */}
-      <Footer2 />
-    </div>
-  );
+                    <p className="dee-footer">
+                        Policy Awareness for a Safer Workplace.
+                    </p>
+                </div>
+
+                {/* Right Column - Image */}
+                <div className="dee-right">
+                    <img
+                        src={PolicyImg}
+                        alt="Policy Training"
+                        className="dee-image"
+                    />
+                </div>
+            </div>
+        </div>
+    );
 }
+
+export default PoliciesHome;

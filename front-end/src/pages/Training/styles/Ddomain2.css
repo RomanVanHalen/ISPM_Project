@@ -1,0 +1,45 @@
+.domain-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f9fff9; /* light green background */
+}
+
+.domain-content {
+  flex: 1;
+  padding: 20px;
+  margin-top: 70px; /* ✅ pushes content below navbar */
+}
+
+.domain-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.domain-header h1 {
+  font-size: 2rem;
+  color: #2e7d32; /* dark green */
+  margin-bottom: 10px;
+}
+
+.domain-header p {
+  font-size: 1.1rem;
+  color: #388e3c; /* medium green */
+  margin-bottom: 20px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .domain-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .domain-header p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+}

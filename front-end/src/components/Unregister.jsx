@@ -1,6 +1,6 @@
 //Guest
 import React from "react";
-import "../Styles/Unregister.css";
+import "../styles/Unregister.css";
 
 const AuthPrompt = ({ onLogin, onRegister }) => {
   return (
@@ -8,7 +8,7 @@ const AuthPrompt = ({ onLogin, onRegister }) => {
       <div className="sa03auth-box">
         {/* Left section with branding */}
         <div className="sa03auth-left">
-          <h2>Access Restricted</h2>
+          <h2>Access Denied</h2>
           <p>
             To view this content, please sign in with your registered account.  
             If you are new here, create an account to continue.
@@ -32,5 +32,6 @@ const AuthPrompt = ({ onLogin, onRegister }) => {
     </div>
   );
 };
+
 
 export default AuthPrompt;
