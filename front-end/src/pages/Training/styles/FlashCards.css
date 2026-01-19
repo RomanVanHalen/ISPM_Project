@@ -1,0 +1,277 @@
+/* Container */
+.nawoo-fc-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 92px;
+  text-align: center;
+}
+
+.nawoo-fc-progress {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.nawoo-fc-title {
+  margin-bottom: 50px;
+  color: #2e7d32;
+}
+
+.nawoo-fc-question {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #0b0b0b;
+}
+
+/* Grid layout */
+.nawoo-fc-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Flashcard */
+.nawoo-fc-card {
+  width: 185px;
+  height: 185px;
+  perspective: 1000px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Front and back */
+.nawoo-fc-card .nawoo-fc-front,
+.nawoo-fc-card .nawoo-fc-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 6px rgba(3, 72, 30, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.6s;
+  background-color: #ace8ba;
+  font-weight: bold;
+}
+
+/* Front styling */
+.nawoo-fc-card .nawoo-fc-front {
+  font-size: 2.5rem;
+  color: #333;
+}
+
+/* Back styling */
+.nawoo-fc-card .nawoo-fc-back {
+  transform: rotateY(180deg);
+  font-size: 1rem;
+  padding: 10px;
+  text-align: center;
+  color: #222;
+}
+
+/* Flip effect */
+.nawoo-fc-card.flipped .nawoo-fc-front {
+  transform: rotateY(180deg);
+}
+
+.nawoo-fc-card.flipped .nawoo-fc-back {
+  transform: rotateY(0deg);
+}
+
+/* Correct / wrong highlight */
+.nawoo-fc-card.correct {
+  border: 3px solid #2e7d32;
+  background-color: #c8e6c9;
+}
+
+.nawoo-fc-card.wrong {
+  border: 3px solid #c62828;
+  background-color: #ffcdd2;
+}
+
+/* Feedback */
+.nawoo-fc-feedback {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* Hint on back */
+.nawoo-fc-hint {
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 5px;
+}
+
+/* Label on front */
+.nawoo-fc-label {
+  font-size: 2.5rem;
+}
+
+/* Text on back */
+.nawoo-fc-text {
+  font-size: 1rem;
+}
+
+/* Next button */
+.nawoo-fc-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #04380b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.nawoo-fc-btn:hover {
+  background-color: #1b6b2f;
+}
+
+/* Hover scale effect */
+.nawoo-fc-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s;
+}
+/* Container for Next Quiz button */
+.nawoo-next-quiz-container {
+  display: flex;
+  justify-content: flex-end; /* aligns button to right */
+  margin-top: 20px;
+}
+
+
+/*  Done screen container */
+.nawoo-next-quiz-container {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 5rem;
+  border-radius: 12px;
+  background: #f9f9fb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.6s ease-in-out;
+
+  display: flex;              /*  stack items */
+  flex-direction: column;     /* put text above button */
+  align-items: center;        /* center horizontally */
+  gap: 1rem;   
+}
+
+/* Message text */
+.nawoo-next-quiz-container p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Next Quiz button (works for both <button> and <Link>) */
+.nawoo-next-quiz-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover + focus effects */
+.nawoo-next-quiz-btn:hover,
+.nawoo-next-quiz-btn:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  outline: none;
+}
+
+/* Click effect */
+.nawoo-next-quiz-btn:active {
+  transform: scale(0.97);
+}
+
+/*  Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Inline score on header line */
+.nawoo-fc-score {
+  margin-left: 1rem;
+  font-weight: 700;
+  color: #0b7a2a;
+}
+
+/* Scoreboard block on finish */
+.nawoo-scoreboard {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+
+.nawoo-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #e6e6e6;
+}
+
+.nawoo-score-row:last-child {
+  border-bottom: none;
+}
+
+.nawoo-score-accent span:last-child {
+  color: #0b7a2a;
+}
+
+/* Finish screen actions */
+.nawoo-finish-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.nawoo-restart-btn {
+  padding: 0.9rem 1.2rem;
+  border-radius: 8px;
+  border: 2px solid #0b7a2a;
+  background: #078640;
+  color: #e5ede8;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.nawoo-restart-btn:hover,
+.nawoo-restart-btn:focus {
+  background: #0b7a2a;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(11,122,42,0.25);
+  outline: none;
+  transform: translateY(-1px);
+}

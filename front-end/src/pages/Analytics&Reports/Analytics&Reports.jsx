@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Navbar";
-import Footer from "../../components/Footer2";
-
-import ComplianceReportingDashboard from "./Components/ComplianceReportingDashboard";
-import ProgressTracking from "./Components/ProgressTracking";
-import AuthPrompt from "./Components/Unregister";
+import Welcome from "./Components/WelcomePage";
+import AuthPrompt from "../../components/Unregister";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -27,7 +24,15 @@ export default function MainPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
-        setRole(data.role || "guest");
+
+        console.log("Profile API response:", data);
+
+        // ✅ Allow both "employee" and "admin"
+        if (data?.role === "employee" || data?.role === "admin") {
+          setRole(data.role);
+        } else {
+          setRole("guest");
+        }
       } catch (err) {
         console.error("Failed to fetch user info:", err);
         setRole("guest");
@@ -42,10 +47,8 @@ export default function MainPage() {
   if (loading) return <div>Loading...</div>;
 
   let content;
-  if (role === "admin") {
-    content = <ComplianceReportingDashboard />;
-  } else if (role === "user") {
-    content = <ProgressTracking />;
+  if (role === "employee" || role === "admin") {
+    content = <Welcome />;
   } else {
     content = (
       <AuthPrompt
@@ -55,13 +58,20 @@ export default function MainPage() {
     );
   }
 
-  const showHeaderFooter = role === "admin" || role === "user";
+  // ✅ Show header for employee or admin
+  const showHeader = role === "employee" || role === "admin";
 
   return (
     <div className="sa02-body">
-      {showHeaderFooter && <Header />}
+      {showHeader && <Header />}
       <main className="sa02-main">{content}</main>
-      {showHeaderFooter && <Footer />}
     </div>
   );
 }
+
+
+
+
+
+
+

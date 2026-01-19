@@ -5,9 +5,10 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer2";
 
 const modules = [
-  { id: 1, domain: "Domain 1", title: "Information Security & Data Privacy", link: "/training/Courses/Ddomain1" },
-  { id: 2, domain: "Domain 2", title: "Quality & Accountability in NGOs", link: "/training/Courses/Ddomain2" },
-  { id: 3, domain: "Domain 3", title: "Child Protection & Rights", link: "/training/Courses/Ddomain3" },
+  { id: 1, domain: "Modules 1", title: "Information Security & Data Privacy", link: "/training/Courses/Ddomain1" },
+  { id: 2, domain: "Modules 2", title: "Data Privacy & Protection", link: "/training/Courses/Ddomain2" },
+  { id: 3, domain: "Modules 3", title: "Phishing Awareness", link: "/training/Courses/Ddomain3" },
+   { id: 4, domain: "Modules 4", title: "Cyber Governance & Compliance", link: "/training/Courses/Ddomain4" },
 ];
 
 

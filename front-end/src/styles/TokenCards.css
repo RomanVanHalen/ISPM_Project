@@ -1,0 +1,118 @@
+.sa5yugioh-card {
+  width: 380px;
+  height: 350px;
+  perspective: 1000px; /* ✅ allows 3D flipping */
+  cursor: pointer;
+}
+
+.sa5card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  animation: cardPopSpin 0.8s ease forwards; /* entrance animation */
+}
+
+.sa5yugioh-card:hover .sa5card-inner {
+  transform: rotateY(180deg); /* ✅ flip on hover */
+}
+
+/* Front & Back faces */
+.sa5card-front,
+.sa5card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* ✅ hides the backside when turned */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Front Face */
+.sa5card-front {
+  background: #1a5f3f;
+  border: 8px solid #006b54;
+}
+
+/* Back Face */
+.sa5card-back {
+  background: linear-gradient(135deg, #4caf87, #1a5f3f);
+  border: 8px solid #333;
+  color: white;
+  transform: rotateY(180deg); /* ✅ flipped back */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Title */
+.sa5card-title {
+  background: #4caf87;
+  color: #000;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 6px;
+  border-bottom: 2px solid #333;
+}
+
+/* Image Section */
+.sa5card-image {
+  background: #fff;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sa5card-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Type Bar */
+.sa5card-type {
+  background: #7ADAA5;
+  text-align: center;
+  font-size: 14px;
+  padding: 4px;
+  font-weight: bold;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+/* Description */
+.sa5card-description {
+  background: #ffffff;
+  font-size: 14px;
+  padding: 8px;
+  text-align: center;
+  min-height: 100px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+/* ===================== */
+/* Animations */
+/* ===================== */
+@keyframes cardPopSpin {
+  0% {
+    transform: scale(0.5) rotateY(360deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotateY(0);
+    opacity: 1;
+  }
+}
+
+
+
